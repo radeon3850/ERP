@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+
+ <h2> Вы вошли как: {{ current_user.first_name }}!</h2>
+    <style>
+      .button {
+      background-color: green;
+      border: none;
+      color: white;
+      padding: 15px 24px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 20px;
+      margin: 4px 2px;
+      cursor: pointer;
+      }
+    </style>
+
+    <form action="{{ url_for('add_order') }}" method="get" target="_blank">
+        <button type="submit" class="button"> Добавить заказ </button>
+    </form>
+    {% for order in order_by_client %}
+    <div><p><h4>{{ order }}</h4></p></div>
+    {% endfor %}
+
+{% endblock %}

@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Заполните форму для создания заказа</h1>
+ <style>
+      .open-button {
+      background-color: red;
+      border: none;
+      color: white;
+      padding: 15px 24px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 20px;
+      margin: 4px 2px;
+      cursor: pointer;
+      }
+      {box-sizing: border-box;}
+
+    /* Всплывающая форма-скрыта по умолчанию */
+    .form-popup {
+      display: none;
+      position: fixed;
+      bottom: 100;
+      right: 600px;
+      border: 10px solid #f1f1f1;
+      z-index: 9;
+    }
+
+    /* Добавить стили для контейнера формы */
+    .form-container {
+      max-width: 500px;
+      padding: 10px;
+      background-color: white;
+    }
+
+    /* Поля ввода полной ширины */
+    .form-container input[type=text], .form-container input[type=password] {
+      width: 100%;
+      padding: 15px;
+      margin: 5px 0 22px 0;
+      border: none;
+      background: #f1f1f1;
+    }
+
+    /* Когда входы получают фокус, сделайте что-нибудь */
+    .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+      background-color: #ddd;
+      outline: none;
+    }
+
+    /* Установите стиль для кнопки отправить/войти */
+    .form-container .btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 16px 20px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom:10px;
+      opacity: 1;
+    }
+
+    /* Добавить красный цвет фона для кнопки "Отмена" */
+    .form-container .cancel {
+      background-color: red;
+    }
+
+    /* Добавить некоторые эффекты наведения на кнопки */
+    .form-container .btn:hover, .open-button:hover {
+      opacity: 1;
+    }
+    </style>
+
+    <script>
+        function openForm() {document.getElementById("myForm").style.display = "block";}
+
+        function closeForm() {document.getElementById("myForm").style.display = "none";}
+    </script>
+
+    <button class="open-button" onclick="openForm()">Добавить клиента</button>
+
+    <div class="form-popup" id="myForm">
+      <form action="" class="form-container" method="post">
+        <h1> Введите данные клиента </h1>
+
+         <p>
+            {{ form_add_client.first_name.label }}<br>
+            {{ form_add_client.first_name(size=64) }}<br>
+            {% for error in form_add_client.first_name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+         <p>
+            {{ form_add_client.last_name.label }}<br>
+            {{ form_add_client.last_name(size=64) }}<br>
+            {% for error in form_add_client.last_name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form_add_client.phone.label }}<br>
+            {{ form_add_client.phone(size=64) }}<br>
+            {% for error in form_add_client.phone.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+
+        <button class="btn" { form_add_client.submit()}> Добавить клиента </button>
+        <button type="submit" class="btn cancel" onclick="closeForm()">Закрыть</button>
+      </form>
+    </div>
+
+    <div>
+        <form action="" method="post">
+         {{ form.hidden_tag() }}
+        <p>
+            <h3>
+            <span style="color: red;">
+                {{form.client_id.label}}<br>
+            </span>
+            </h3>
+            {{form.client_id}}<br>
+        </p>
+        <p>
+            {{ form.name_order.label }}<br>
+            {{ form.name_order(size=64) }}<br>
+            {% for error in form.name_order.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.stone.label }}<br>
+            {{ form.stone(size=64) }}<br>
+            {% for error in form.stone.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.object_description.label }}<br>
+            {{ form.object_description(size=64) }}<br>
+            {% for error in form.object_description.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.address.label }}<br>
+            {{ form.address(size=64) }}<br>
+            {% for error in form.address.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.deadline.label }}<br>
+            {{ form.deadline(size=64) }}<br>
+            {% for error in form.deadline.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    </div>
+
+
+    <script>
+        function openForm() {
+  document.getElementById("myForm").style.display = "block";
+}
+
+function closeForm() {
+  document.getElementById("myForm").style.display = "none";
+}
+    </script>
+{% endblock %}

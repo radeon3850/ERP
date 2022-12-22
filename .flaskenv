@@ -1,0 +1,8 @@
+FLASK_APP=erp.py
+FLASK_DEBUG=TRUE
+
+MAIL_SERVER=smtp.ukr.net
+MAIL_PORT=465
+MAIL_USE_TLS=TRUE
+MAIL_PASSWORD=BIddEKkqjd6KJrfH
+MAIL_USERNAME=vosmoechudosveta@ukr.net
