@@ -13,18 +13,8 @@ from app.models import User, Clients, OrderClient
 @app.route('/index')
 @login_required
 def index():
-    # posts = [
-    #     {
-    #         'author': {'username': 'John'},
-    #         'body': 'Beautiful day in Portland!'
-    #     },
-    #     { 'author': {'username': 'Susan'},
-    #     #         'body': 'The Avengers movie was so cool!'
-    #     #     }
-    #
-    # ]
     order_by_client = OrderClient.query.all()
-    return render_template('index.html', title='Home', order_by_client=order_by_client)
+    return render_template('index.html', title='Главная', order_by_client=order_by_client)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -42,7 +32,7 @@ def login():
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
         return redirect(next_page)
-    return render_template('login.html', title='Sign In', form=form)
+    return render_template('login.html', title='Войти', form=form)
 
 
 @app.route('/logout')
@@ -83,24 +73,23 @@ def user(username):
 @login_required
 def add_order():
     form_add_client = AddClient()
-    if 'first_name' in request.form:
+    if 'first_name' in request.form: # Chesk that flask-form (AddClient) from add_order send data
         if form_add_client.is_submitted():
-            client = Clients(first_name=form_add_client.first_name.data, last_name=form_add_client.last_name.data, phone_number=form_add_client.phone.data)
-            db.session.add(client)
-            db.session.commit()
+            client = Clients(first_name=form_add_client.first_name.data, last_name=form_add_client.last_name.data, phone_number=form_add_client.phone.data) # geta form AddClient
+            db.session.add(client)  # add data to table Client
+            db.session.commit() # connect to data base
             flash('Клиент добавлен в базу')
             return redirect(url_for('add_order'))
     form = AddOrder()
-    form.client_id.choices = [(client.id, (client.first_name, client.last_name, client.phone_number)) for client in
+    form.client_id.choices = [(client.id, (client.first_name, client.last_name, client.phone_number)) for client in # update data from table Client for choices flask-form (AddOrder)
                               (db.session.query(Clients).all())]
-    if 'name_order' in request.form:
-        form=AddOrder()
+    if 'name_order' in request.form: # Chesk that flask-form (AddOrder) from add_order send data
         if form.is_submitted():
-            client_order=OrderClient(clients_id=form.client_id.data, title_order=form.name_order.data, title_stone=form.stone.data,
+            client_order=OrderClient(clients_id=form.client_id.data, title_order=form.name_order.data, title_stone=form.stone.data, # получение данных c формы AddOrder для добавления в базу данных
                                      object_description=form.object_description.data, address=form.address.data,
                                      deadline=form.deadline.data)
-            db.session.add(client_order)
-            db.session.commit()
+            db.session.add(client_order) # add data to table OrderClient
+            db.session.commit() # connect to data base
             flash('Заказ покупателя добавлен')
             return redirect(url_for('index'))
     return render_template("add_order.html", title='Создание заказа клиента', form=form, form_add_client=form_add_client)
