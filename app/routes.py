@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import flask
 import flask_sqlalchemy
-from flask import render_template, flash, redirect, url_for, request, g
+from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import LoginForm, RegistrationForm,AddClient ,AddOrder
+from app.forms import LoginForm, RegistrationForm,AddClient ,AddOrder, Checkbox
 from app.models import User, Clients, OrderClient
 
 
@@ -13,8 +13,8 @@ from app.models import User, Clients, OrderClient
 @app.route('/index')
 @login_required
 def index():
-    order_by_client = OrderClient.query.all()
-    return render_template('index.html', title='Главная', order_by_client=order_by_client)
+    client_order= OrderClient.query.all()
+    return render_template('index.html', title='Главная', client_order=client_order)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -79,9 +79,10 @@ def add_order():
             db.session.add(client)  # add data to table Client
             db.session.commit() # connect to data base
             flash('Клиент добавлен в базу')
+            flash('Клиент добавлен в базу')
             return redirect(url_for('add_order'))
     form = AddOrder()
-    form.client_id.choices = [(client.id, (client.first_name, client.last_name, client.phone_number)) for client in # update data from table Client for choices flask-form (AddOrder)
+    form.client_id.choices = [(client.id, " ".join((client.first_name, client.last_name, client.phone_number)))for client in # update data from table Client for choices flask-form (AddOrder)
                               (db.session.query(Clients).all())]
     if 'name_order' in request.form: # Chesk that flask-form (AddOrder) from add_order send data
         if form.is_submitted():
@@ -96,9 +97,18 @@ def add_order():
 
 
 @app.route('/kanban')
+@login_required
 def kanban():
     posts = [
         {'worker': 'Starchenko', 'body': ' wokr with slab №1'},
         {'worker': 'Ivanov', 'body': ' wokr with part №5'}
     ]
     return render_template("kanban.html", title='Заполните форму для создания заказа',  posts=posts )
+
+@app.route('/order_client', methods=['GET', 'POST'])
+@login_required
+def order_client():
+    form=Checkbox()
+    q=request.args.get('q')
+    order_client = OrderClient.query.get(q)
+    return render_template("order_client.html", title="Заказ клиента", order_client=order_client, form=form )

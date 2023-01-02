@@ -1,29 +1,99 @@
 {% extends "base.html" %}
 
-
 {% block content %}
-
- <h2> Вы вошли как: {{ current_user.first_name }}!</h2>
-    <style>
+ <h4> Вы вошли как: {{ current_user.first_name }}!</h4>
+<style>
       .button {
       background-color: green;
       border: none;
       color: white;
-      padding: 15px 24px;
+      padding: 10px 18px;
       text-align: center;
       text-decoration: none;
       display: inline-block;
-      font-size: 20px;
+      font-size: 15px;
       margin: 4px 2px;
       cursor: pointer;
       }
-    </style>
+         /* Style the buttons that are used to open and close the accordion panel */
+    .accordion {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 10px;
+        width: 100%;
+        text-align: left;
+        border: none;
+        outline: none;
+        transition: 0.4s;
+    }
 
-    <form action="{{ url_for('add_order') }}" method="get" target="_blank">
-        <button type="submit" class="button"> Добавить заказ </button>
+    /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+    .active, .accordion:hover {
+        background-color: #ccc;
+    }
+
+    /* Style the accordion panel. Note: hidden by default */
+    .panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    }
+    .accordion:after {
+    content: '\02795'; /* Unicode character for "plus" sign (+) */
+    font-size: 0px;
+    color: #777;
+    float: right;
+    margin-left: 5px;
+    }
+
+.active:after {
+    content: "\2796"; /* Unicode character for "minus" sign (-) */
+    }
+    #rcorners2 {
+      border-radius: 10px;
+      border: 2px solid white;
+      background: #AEAEAE;
+      padding: 0px;
+      width: 100%;
+      height: auto;}
+</style>
+
+<form action="{{ url_for('add_order') }}" method="get" target="_blank">
+    <button type="submit" class="button"> Добавить заказ </button>
+</form>
+
+{% for order in client_order %}
+<button class="accordion" id="rcorners2">
+    <p> {{ order.id }} {{ order.title_order }} </p>
+    <p>{{ order.address }} {{ order.deadline }}</p>
+</button>
+
+<div class="panel">
+  <div> <strong><p>{{ order }}</p></strong> </div>
+    <form action="{{ url_for('order_client') }}" method="get" target="_blank">
+        <button type="submit", name="q" value="{{order.id}}"> Перейти в заказ </button>
     </form>
-    {% for order in order_by_client %}
-    <div><p><h4>{{ order }}</h4></p></div>
-    {% endfor %}
+</div>
+{% endfor %}
+
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight){
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    }
+  });
+}
+</script>
 
 {% endblock %}

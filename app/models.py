@@ -124,7 +124,7 @@ class OrderClient (db.Model):
     clients_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False) # relationship to table "clients" meny to one
 
     def __repr__(self):
-        return f'Заказ клиента: {self.id} {self.title_order}, {self.address}, Конечная дата: {self.deadline}'
+        return f'Заказ №: {self.id} {self.title_order}, {self.address}, Конечная дата: {self.deadline}'
 
 
 # create table Oreder of Manufacture(product), all column besides id - have type Boollean
@@ -136,7 +136,6 @@ class OrderManufacture (db.Model):
     montag = db.Column(db.Boolean, default=False, nullable=False)
     vidacha = db.Column(db.Boolean, default=False, nullable=False)
     oreder_of_client = db.Column(db.Integer, db.ForeignKey('order_client.id'), nullable=False)
-
 
 
 # table about assigns work on the slab
@@ -173,7 +172,6 @@ class PreProduct (db.Model):
     id = db.Column(db.Integer, primary_key=True)
     number_order_client = db.Column(db.Integer, db.ForeignKey('order_client.id'), nullable=False)
     work_type = db.Column(db.Integer, db.ForeignKey('works.id'), nullable=False)
-
 
 #create table performance_work
 class PerformanceWork(db.Model):
