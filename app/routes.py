@@ -92,6 +92,10 @@ def add_order():
             db.session.add(client_order) # add data to table OrderClient
             db.session.commit() # connect to data base
             flash('Заказ покупателя добавлен')
+            if request.method=="POST":
+                print(form.checkbox_blueprint.data)
+                print(form.checkbox_control.data)
+                print(form.checkbox_measurements.data)
             return redirect(url_for('index'))
     return render_template("add_order.html", title='Создание заказа клиента', form=form, form_add_client=form_add_client)
 
