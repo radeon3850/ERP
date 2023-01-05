@@ -73,3 +73,4 @@ Traceback (most recent call last):
   File "D:\Python\Flask\ERP\venv\lib\site-packages\werkzeug\routing.py", line 2305, in build
     raise BuildError(endpoint, values, method, self)
 werkzeug.routing.BuildError: Could not build url for endpoint 'index'. Did you mean 'login' instead?
+2023-01-04 18:37:10,893 INFO: ERP [in d:\Python\Flask\ERP\app\__init__.py:46]

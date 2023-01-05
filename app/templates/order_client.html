@@ -67,23 +67,21 @@ input:checked + .slider:before {
 </style>
 
 <script>
-   function agreeForm(f) {
-    // Если поставлен флажок, снимаем блокирование кнопки
-    if (f.agree.checked) f.submit.disabled = 0
-    // В противном случае вновь блокируем кнопку
-    else f.submit.disabled = 1
-   }
-  </script>
+function myFunction(f) {
+            if (f.myCheck.checked == true) f.submit.disabled = false;
+            else f.submit.disabled = true;
+        }
+</script>
 
 <h5>{{order_client}}</h5>
     <div>
         <form action="" method="post">
              {{ form.hidden_tag() }}
             <div class="form1">
-                <p>
-                {{ form.checkbox.label}}
-                    <span class="slieder round">{{ form.checkbox}}</span>
-                </p>
+                <label class="switch">
+                    <input type="checkbox" name="myCheck" onclick="myFunction(this.form)">
+                    <span class="slider round"></span>
+                </label>
             </div>
             <div class="form2">
                 <h3>
@@ -92,25 +90,13 @@ input:checked + .slider:before {
                 </span>
                 </h3>
                 <tr>
-                    <p>{{form.user_id}}</p>
+                    <p>{{form.user_id(id='submit')}}</p>
                 </tr>
             </div>
             <p> {{form.save}}</p>
             </form>
 <form>
-<label class="switch">
-  <input type="checkbox" name="agree" onclick="agreeForm(this.form)">
-
-  <span class="slider round"></span>
-
-</label>
 
 
-<p><input type="checkbox" name="agree" onclick="agreeForm(this.form)">
-Я согласен со всеми условиями</p>
-<p><input type="submit" name="submit" value="Далее" disabled></p>
-</form>
-
-    </div>
 {% endblock %}
 
