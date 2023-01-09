@@ -117,7 +117,7 @@ class OrderClient (db.Model):
     title_stone = db.Column(db.String(300))
     object_description = db.Column(db.String(2000))
     address = db.Column(db.String(5000)) # address of project
-    deadline = db.Column(db.DateTime) # when do we need to finish the project
+    deadline = db.Column(db.DateTime, nullable=False) # when do we need to finish the project
     measurements = db.Column(db.Boolean, default=False, nullable=False) # choice - Fals/True, do we need measures
     project_drawing = db.Column(db.Boolean, default=False, nullable=False) # choice - Fals/True, do we need project drawing
     control = db.Column(db.Boolean, default=False, nullable=False)

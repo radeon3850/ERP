@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<style>
+<style xmlns="http://www.w3.org/1999/html">
     .form1{
     display:inline-block;
     }
@@ -66,12 +66,6 @@ input:checked + .slider:before {
 }
 </style>
 
-<script>
-function myFunction(f) {
-            if (f.myCheck.checked == true) f.submit.disabled = false;
-            else f.submit.disabled = true;
-        }
-</script>
 
 <h5>{{order_client}}</h5>
     <div>
@@ -90,13 +84,19 @@ function myFunction(f) {
                 </span>
                 </h3>
                 <tr>
-                    <p>{{form.user_id(id='submit')}}</p>
+                    <p>{{form.user_id(id='select_box', disabled=True)}}</p>
                 </tr>
             </div>
             <p> {{form.save}}</p>
             </form>
-<form>
+    </div>
 
+<script>
+function myFunction(f) {
+            if (f.myCheck.checked == 1) f.select_box.disabled = 0;
+            else f.select_box.disabled = 1;
+        }
+</script>
 
 {% endblock %}
 

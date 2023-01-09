@@ -88,7 +88,10 @@ def add_order():
         if form.is_submitted():
             client_order=OrderClient(clients_id=form.client_id.data, title_order=form.name_order.data, title_stone=form.stone.data, # получение данных c формы AddOrder для добавления в базу данных
                                      object_description=form.object_description.data, address=form.address.data,
-                                     deadline=form.deadline.data)
+                                     deadline=form.deadline.data, measurements=form.checkbox_measurements.data,
+                                     project_drawing=form.checkbox_blueprint.data, control=form.checkbox_control.data)
+            dt=request.get_data("POST")
+            print(dt)
             db.session.add(client_order) # add data to table OrderClient
             db.session.commit() # connect to data base
             flash('Заказ покупателя добавлен')

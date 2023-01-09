@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, DateField, TextField, \
     RadioField, validators
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Optional
-from wtforms.widgets import TextArea
+from wtforms.widgets import TextArea, html_params, Select
 from app.models import User,  Clients, Specialization
 from app import db
 
@@ -56,13 +56,13 @@ class AddOrder(FlaskForm):
     deadline = DateField('Конечная дата: ',validators=[validators.Optional()], format='%Y-%m-%d')
     checkbox_measurements= BooleanField('Замеры', default=False)
     checkbox_blueprint = BooleanField('Чертежи', default=False)
-    checkbox_control = BooleanField('Контроль', default=False)
+    checkbox_control = BooleanField('Контроль', default=True)
     submit = SubmitField('Создать')
 
 class Checkbox(FlaskForm):
     choices = [(user.id, " ".join((user.first_name, user.last_name))) for user in (User.query.all())]
 
-    checkbox = BooleanField('Выбрать', default=False)
+    # checkbox = BooleanField('Выбрать', default=False)
     # radio_batton = RadioField('Label', choices=[('value','description'),('value_two','whatever')])
     user_id = SelectField('Выбрать ответсвенного', choices=choices)
     save = SubmitField('Сохранить')
