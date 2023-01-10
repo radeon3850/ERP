@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<style>
+<style xmlns="http://www.w3.org/1999/html">
     .form1{
     display:inline-block;
     }
@@ -14,58 +14,56 @@
   display: inline-block;
   width: 60px;
   height: 34px;
-    }
+}
 
-    /* Hide default HTML checkbox */
-    .switch input {display:none;}
+.switch input {display:none;}
 
-    /* The slider */
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      -webkit-transition: .4s;
-      transition: .4s;
-    }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
 
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 26px;
-      width: 26px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      -webkit-transition: .4s;
-      transition: .4s;
-    }
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
 
-    input:checked + .slider {
-      background-color: #2196F3;
-    }
+input:checked + .slider {
+  background-color: green;
+}
 
-    input:focus + .slider {
-      box-shadow: 0 0 1px #2196F3;
-    }
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
 
-    input:checked + .slider:before {
-      -webkit-transform: translateX(26px);
-      -ms-transform: translateX(26px);
-      transform: translateX(26px);
-    }
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
 
-    /* Rounded sliders */
-    .slider.round {
-      border-radius: 34px;
-    }
+/* Rounded sliders */
+.slider.round {
+  border-radius: 24px;
+}
 
-    .slider.round:before {
-      border-radius: 50%;
-    }
+.slider.round:before {
+  border-radius: 50%;
+}
 </style>
 
 
@@ -74,10 +72,10 @@
         <form action="" method="post">
              {{ form.hidden_tag() }}
             <div class="form1">
-                <p>
-                {{ form.checkbox.label}}<br>
-                {{ form.checkbox}}
-                </p>
+                <label class="switch">
+                    <input type="checkbox" name="myCheck" onclick="myFunction(this.form)">
+                    <span class="slider round"></span>
+                </label>
             </div>
             <div class="form2">
                 <h3>
@@ -86,11 +84,19 @@
                 </span>
                 </h3>
                 <tr>
-                    <p>{{form.user_id}}</p>
+                    <p>{{form.user_id(id='select_box', disabled=True)}}</p>
                 </tr>
             </div>
             <p> {{form.save}}</p>
             </form>
     </div>
+
+<script>
+function myFunction(f) {
+            if (f.myCheck.checked == 1) f.select_box.disabled = 0;
+            else f.select_box.disabled = 1;
+        }
+</script>
+
 {% endblock %}
 
