@@ -6,7 +6,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
 from app.forms import LoginForm, RegistrationForm,AddClient ,AddOrder, Checkbox
-from app.models import User, Clients, OrderClient
+from app.models import User, Clients, OrderClient, PreProduct
 
 
 @app.route('/')
@@ -90,15 +90,11 @@ def add_order():
                                      object_description=form.object_description.data, address=form.address.data,
                                      deadline=form.deadline.data, measurements=form.checkbox_measurements.data,
                                      project_drawing=form.checkbox_blueprint.data, control=form.checkbox_control.data)
-            dt=request.get_data("POST")
-            print(dt)
+            # dt=request.get_data("POST")
+            # print(dt)
             db.session.add(client_order) # add data to table OrderClient
             db.session.commit() # connect to data base
             flash('Заказ покупателя добавлен')
-            if request.method=="POST":
-                print(form.checkbox_blueprint.data)
-                print(form.checkbox_control.data)
-                print(form.checkbox_measurements.data)
             return redirect(url_for('index'))
     return render_template("add_order.html", title='Создание заказа клиента', form=form, form_add_client=form_add_client)
 
@@ -115,9 +111,10 @@ def kanban():
 @app.route('/order_client', methods=['GET', 'POST'])
 @login_required
 def order_client():
+    name_field = ['measurements', 'project_drawing', 'control']
     form=Checkbox()
     q=request.args.get('q')
     order_client = OrderClient.query.get(q)
-    # pre_desing_work_status
-    print(order_client)
-    return render_template("order_client.html", title="Заказ клиента", order_client=order_client, form=form )
+    if form.is_submitted():
+        set_worker=PreProduct(number_order_client=order_client.id, )
+    return render_template("order_client.html", title="Заказ клиента", order_client=order_client, form=form, name_field=name_field )
