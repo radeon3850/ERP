@@ -72,7 +72,14 @@
 </button>
 
 <div class="panel">
-  <div> <strong><p>{{ order }}</p></strong> </div>
+  <div>
+    <strong>
+        <p>{{ order }}</p>
+        <p>Замеры: {{ order.measurements }}</p>
+        <p>Чертежи: {{ order.project_drawing }}</p>
+        <p>Контроль: {{ order.control }}</p>
+    </strong>
+  </div>
     <form action="{{ url_for('order_client') }}" method="get" target="_blank">
         <button type="submit", name="q" value="{{order.id}}"> Перейти в заказ </button>
     </form>

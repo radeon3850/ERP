@@ -124,7 +124,8 @@ class OrderClient (db.Model):
     clients_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False) # relationship to table "clients" meny to one
 
     def __repr__(self):
-        return f'Заказ №: {self.id} {self.title_order}, {self.address}, Конечная дата: {self.deadline}'
+        return f'Заказ №: {self.id} {self.title_order}, {self.address}, Конечная дата: {self.deadline}, ' \
+               f'Замеры: {self.measurements}, Чертежи: {self.project_drawing}, Контроль: {self.control}'
 
 
 # create table Oreder of Manufacture(product), all column besides id - have type Boollean

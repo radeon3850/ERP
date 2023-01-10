@@ -118,4 +118,6 @@ def order_client():
     form=Checkbox()
     q=request.args.get('q')
     order_client = OrderClient.query.get(q)
+    # pre_desing_work_status
+    print(order_client)
     return render_template("order_client.html", title="Заказ клиента", order_client=order_client, form=form )
