@@ -179,7 +179,7 @@ class PartWorks(db.Model):
 class PreProduct(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     number_order_client = db.Column(db.Integer, db.ForeignKey('order_client.id'), nullable=False)
-    work_id = db.Column(db.Integer, db.ForeignKey('works.id'), nullable=False)
+    work_type = db.Column(db.Integer, db.ForeignKey('works.id'), nullable=False)
 
 
 
