@@ -89,11 +89,11 @@ class Post(db.Model):
 # create table Works abous all types of jobs
 class Works(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    works_title = db.Column(db.String(150))
-    works_type = db.Column(db.String(150))
+    work_title = db.Column(db.String(150))
+    work_type = db.Column(db.String(150))
 
     def __repr__(self):
-        return f'<Works {self.works_title} {self.works_type}>'
+        return f'<Works {self.work_title} {self.work_type}>'
 
 
 # create table "Clients"
@@ -118,7 +118,7 @@ class OrderClient(db.Model):
     title_stone = db.Column(db.String(300))
     object_description = db.Column(db.String(2000))
     address = db.Column(db.String(5000))  # address of project
-    deadline = db.Column(db.DateTime, nullable=False)  # when do we need to finish the project
+    deadline = db.Column(db.DateTime)  # when do we need to finish the project
     measurements = db.Column(db.Boolean, default=False, nullable=False)  # choice - Fals/True, do we need measures
     project_drawing = db.Column(db.Boolean, default=False,
                                 nullable=False)  # choice - Fals/True, do we need project drawing
@@ -153,6 +153,7 @@ class SlabWorks(db.Model):
                                       nullable=False)  # relationship to table "OrderManufacture" one to many
     slab_works = db.Column(db.Integer, db.ForeignKey('works.id'),
                            nullable=False)  # relationship to table "Works" One to many
+    set_worker = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
         return f'<OrderClient {self.number_slab}, {self.oreder_of_manufacture}, {self.slab_works}, {self.deadline_slab}>'
@@ -170,6 +171,7 @@ class PartWorks(db.Model):
     # num_slab = db.Column(db.Integer, db.ForeignKey('SlabWorks.id'),nullable=False)  # relationship to table "SlabWorks" Many to One
     part_works = db.Column(db.Integer, db.ForeignKey('works.id'),
                            nullable=False)  # relationship to table "Works" One to many
+    set_worker = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
         return f'<OrderClient {self.num_slab}, {self.number_part},{self.oreder_of_manufacture}, {self.part_works}, {self.deadline_part}>'
@@ -180,7 +182,11 @@ class PreProduct(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     number_order_client = db.Column(db.Integer, db.ForeignKey('order_client.id'), nullable=False)
     work_type = db.Column(db.Integer, db.ForeignKey('works.id'), nullable=False)
+    set_worker = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    def __repr__(self):
+        return f' <id: {self.id},id_order: {self.number_order_client},' \
+               f'work_id: {self.work_type}, user_id: {self.set_worker}>'
 
 
 # create table performance_work

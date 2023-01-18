@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h5 style="color: red">Заказ клиента№{{order_client.id}}</h5>
+<h5 style="color: red">Карта заказа клиента№{{order_client.id}}</h5>
 <p>Название заказа:{{order_client.title_order}}</p>
 <p>Камень:{{order_client.title_stone}}</p>
 <p>Описание заказа:{{order_client.object_description}}</p>
@@ -10,16 +10,30 @@
 <p>Конечная дата:{{order_client.deadline}}</p>
 <div>
     <form action="" method="post">
-        {{ form.hidden_tag() }}
+        {{ form.hidden_tag()}}
         <div class="">
-            <p> {% for name in name_field %}
-                    {% if order_client[name] %}
-                    <span style="color: red;">
-                        {{form.user_id.label}}<br> </span>
-                    <p> {{form.user_id()}} </p>
-                    {% endif %}
-                {% endfor %}
-            </p>
+            <h4>Назначить исполнителей работ</h4>
+            <div>
+                {% if order_client.measurements %}
+               <p>
+                   <span style="color: red;">
+                   {{form.user_id_1.label}}<br> </span>
+                   {{form.user_id_1()}}
+               </p>
+                {% endif %}
+                {% if order_client.project_drawing %}
+                 <p>
+                   <span style="color: red;"> {{form.user_id_2.label}}<br> </span>
+                    {{form.user_id_2()}}
+                </p>
+                {% endif %}
+                {% if order_client.control %}
+                 <p>
+                   <span style="color: red;"> {{form.user_id_3.label}}<br> </span>
+                    {{form.user_id_3()}}
+                </p>
+                {% endif %}
+            </div>
         </div>
         <p> {{form.save}}</p>
     </form>

@@ -100,7 +100,8 @@ def add_order():
             add_data(self=client_order)  # add data to table OrderClient
             flash('Заказ покупателя добавлен')
 
-
+            # check - if fields of form (checkbox_measurements,checkbox_blueprint, checkbox_control) sends True
+            # save data to database
             if form.checkbox_measurements.data==True:
                 order_client = (db.session.query(OrderClient).order_by(OrderClient.id.desc()).first()).id
                 work = Works.query.get(48).id
@@ -116,7 +117,6 @@ def add_order():
                 work = Works.query.get(50).id
                 work_staf=PreProduct(number_order_client=order_client, work_type=work)
                 add_data(self=work_staf)
-
 
             return redirect(url_for('index'))
     return render_template("add_order.html", title='Создание заказа клиента', form=form,
@@ -136,11 +136,23 @@ def kanban():
 @app.route('/order_client', methods=['GET', 'POST'])
 @login_required
 def order_client():
-    name_field = ['measurements', 'project_drawing', 'control']
+    name_field = ['measurements', 'project_drawing', 'control'] # transfer list to HTML for Jinja
+    work_dic = {'measurements': 'Замеры', 'project_drawing': 'Чертежи', 'control': 'Контроль'}
     form = Checkbox()
-    q = request.args.get('q')
+    q = request.args.get('q') # get data about Number of order_client from HTML after сlick on the button
     order_client = OrderClient.query.get(q)
-    # if form.is_submitted():
-    # set_worker=PreProduct(number_order_client=order_client.id)
+    preproduct_work=PreProduct.query.filter_by(number_order_client=q).all()
+    list_id_preproduct = [48, 49, 50]
+    for worker in preproduct_work:
+        if form.is_submitted():
+            if worker.work_type in list_id_preproduct:
+                add_workrer = PreProduct.query.filter_by(number_order_client=q, work_type=worker.work_type).first()
+                test=PreProduct.query.get(add_workrer.id)
+                test.set_worker=form.user_id.data
+                db.session.commit()
+        # print(worker)
+        # print(form.data)
+
+
     return render_template("order_client.html", title="Заказ клиента", order_client=order_client, form=form,
-                           name_field=name_field)
+                           name_field=name_field, work_dic=work_dic)

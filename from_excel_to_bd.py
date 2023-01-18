@@ -5,7 +5,7 @@ import pandas as pd
 
 # create df from xlsx-file
 def create_df():
-    df=pd.read_excel("C:\\Users\\Roman\\Desktop\\Проэкт для Санька\\Виды работ.xlsx")
+    df=pd.read_excel("D:\\З робочого 23.12.2022\\Проэкт для Санька\\Виды работ.xlsx")
     df1=df[['Вид операции', 'Тип операции']][1:48]
     return df1
 
