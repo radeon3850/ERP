@@ -1,11 +1,24 @@
-{% extends "base.html" %}
+{% extends "base_bootstrap.html" %}
 
 {% block content %}
 
 <h1>Kanban</h1>
 
-{% for post in posts %}
-    <div><p>{{ post.worker }} making: <b>{{ post.body }}</b></p></div>
-    {% endfor %}
+{% for order in order_manufacture %}
+<div class="accordion" id="accordionPanelsStayOpenExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+          {{order.id}}.  {{order.work_type}}, {{order.set_worker}}
+      </button>
+    </h2>
+    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+      <div class="accordion-body">
+        <strong>This is the first item's accordion body.</strong>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor%}
 
 {% endblock %}

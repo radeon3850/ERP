@@ -123,14 +123,13 @@ def add_order():
                            form_add_client=form_add_client)
 
 
-@app.route('/kanban')
+@app.route('/kanban', methods=['GET', 'POST'])
 @login_required
 def kanban():
-    posts = [
-        {'worker': 'Starchenko', 'body': ' wokr with slab №1'},
-        {'worker': 'Ivanov', 'body': ' wokr with part №5'}
-    ]
-    return render_template("kanban.html", title='Заполните форму для создания заказа', posts=posts)
+    qu = PreProduct.query.filter_by(set_worker=2).all()
+    for i in qu:
+        print(i.work.work_type)
+    return render_template("kanban.html", title='Kanban')
 
 
 @app.route('/order_client', methods=['GET', 'POST'])
@@ -142,15 +141,7 @@ def order_client():
     q = request.args.get('q')  # get data about Number of order_client from HTML after сlick on the button
     order_client = OrderClient.query.get(q)
     preproduct_work = PreProduct.query.filter_by(number_order_client=q).all()
-    # print(preproduct_work)
-    # list_id_preproduct = [48, 49, 50]
-    # for worker in preproduct_work:
-    #     if form.is_submitted():
-    #         if worker.work_type in list_id_preproduct:
-    #             add_workrer = PreProduct.query.filter_by(number_order_client=q, work_type=worker.work_type).first()
-    #             test=PreProduct.query.get(add_workrer.id)
-    #             test.set_worker=form.user_id.data
-    #             db.session.commit()
+
     if form.is_submitted():
         for work in preproduct_work:
             if work.work_type == 48:

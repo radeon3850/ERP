@@ -37,6 +37,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     specialization_id = db.Column(db.Integer, db.ForeignKey('specialization.id'), nullable=False)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+
     followed = db.relationship(
         'User', secondary=followers,
         primaryjoin=(followers.c.follower_id == id),
@@ -183,6 +184,9 @@ class PreProduct(db.Model):
     number_order_client = db.Column(db.Integer, db.ForeignKey('order_client.id'), nullable=False)
     work_type = db.Column(db.Integer, db.ForeignKey('works.id'), nullable=False)
     set_worker = db.Column(db.Integer, db.ForeignKey('user.id'))
+    work = db.relationship('Works', backref='work', lazy='subquery')
+    worker = db.relationship('User', backref='worker', lazy='subquery')
+
 
     def __repr__(self):
         return f' <id: {self.id},id_order: {self.number_order_client},' \
