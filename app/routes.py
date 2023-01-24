@@ -131,11 +131,13 @@ def kanban():
     order_manufacture = PreProduct.query.filter_by(set_worker=current_user.id).all()
     return render_template("workplace.html", title='Workplace', order_manufacture=order_manufacture)
 
+
 @app.route('/workplace', methods=['GET', 'POST'])
 @login_required
 def workplace():
     order_manufacture = PreProduct.query.filter_by(set_worker=current_user.id).all()
     return render_template("workplace.html", title='Workplace', order_manufacture=order_manufacture)
+
 
 
 @app.route('/order_client', methods=['GET', 'POST'])
