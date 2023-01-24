@@ -22,15 +22,19 @@
                 <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">Home</a>
                 </li>
-                <li class="nav-item">
+                  <li class="nav-item">
                   <a class="nav-link" href="{{ url_for('login') }}">Login</a>
                 </li>
                   {% else %}
+                </li>
+                  <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('kanban') }}">Kanban</a>
+                </li>
                   <li class="nav-item">
                   <a class="nav-link" href="{{ url_for('user', username=current_user.username) }}">Profile</a>
                 </li>
                   <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('kanban') }}">Kanban</a>
+                  <a class="nav-link" href="{{ url_for('workplace') }}">Workplace</a>
                 </li>
                   <li class="nav-item">
                   <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
@@ -54,6 +58,12 @@
         </ul>
         {% endif %}
         {% endwith %}
+        <div>
+            {% if current_user.is_authenticated %}
+            <h5> Вы вошли как: {{ current_user.first_name }}!</h5>
+            <p><strong>Должность: {{current_user.employee.job_title}}</strong></p>
+            {% endif %}
+        </div>
         {% block content %}{% endblock %}
     </div>
     </body>

@@ -1,4 +1,8 @@
+{% if current_user.specialization_id is ne(2)%}
 {% extends "base_bootstrap.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
 
 {% block content %}
     <h1>User: {{ user.username }}</h1>

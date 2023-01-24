@@ -1,8 +1,10 @@
+{% if current_user.specialization_id is ne(2)%}
 {% extends "base_bootstrap.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
 
 {% block content %}
- <h5> Вы вошли как: {{ current_user.first_name }}!</h5>
-<p><strong>Должность: {{current_user.employee.job_title}}</strong></p>
 <style>
       .button {
       background-color: green;

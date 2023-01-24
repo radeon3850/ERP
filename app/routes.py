@@ -14,6 +14,8 @@ from app.models import User, Clients, OrderClient, PreProduct, Works
 @login_required
 def index():
     client_order = OrderClient.query.all()
+    cl = current_user.specialization_id
+    print(cl)
     return render_template('index.html', title='Главная', client_order=client_order)
 
 
@@ -123,13 +125,17 @@ def add_order():
                            form_add_client=form_add_client)
 
 
-@app.route('/kanban', methods=['GET', 'POST'])
+@app.route('/workplace', methods=['GET', 'POST'])
 @login_required
 def kanban():
     order_manufacture = PreProduct.query.filter_by(set_worker=current_user.id).all()
-    # for i in qu:
-    #     print(i.work.work_type)
-    return render_template("kanban.html", title='Kanban', order_manufacture=order_manufacture)
+    return render_template("workplace.html", title='Workplace', order_manufacture=order_manufacture)
+
+@app.route('/workplace', methods=['GET', 'POST'])
+@login_required
+def workplace():
+    order_manufacture = PreProduct.query.filter_by(set_worker=current_user.id).all()
+    return render_template("workplace.html", title='Workplace', order_manufacture=order_manufacture)
 
 
 @app.route('/order_client', methods=['GET', 'POST'])

@@ -13,13 +13,12 @@
     </head>
     <body>
         <div>
-            <a href="{{ url_for('index') }}">Home</a>
             {% if current_user.is_anonymous %}
             <a href="{{ url_for('login') }}">Login</a>
             {% else %}
-            <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
-            <a href="{{ url_for('kanban') }}">Kanban</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
+            <a href="{{ url_for('user', username=current_user.username) }}" style="color: red">Profile</a>
+            <a href="{{ url_for('kanban') }}" style="color: red">Kanban</a>
+            <a href="{{ url_for('logout') }}" style="color: red">Logout</a>
             {% endif %}
         </div>
         <hr>
