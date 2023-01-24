@@ -15,7 +15,6 @@ from app.models import User, Clients, OrderClient, PreProduct, Works
 def index():
     client_order = OrderClient.query.all()
     cl = current_user.specialization_id
-    print(cl)
     return render_template('index.html', title='Главная', client_order=client_order)
 
 
