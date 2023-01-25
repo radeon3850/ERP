@@ -14,7 +14,7 @@ from app.models import User, Clients, OrderClient, PreProduct, Works
 @login_required
 def index():
     client_order = OrderClient.query.all()
-    cl = current_user.specialization_id
+    # cl = current_user.specialization_id
     return render_template('index.html', title='Главная', client_order=client_order)
 
 
@@ -85,6 +85,7 @@ def add_order():
             add_data(self=client)  # connect to data base
             flash('Клиент добавлен в базу')
             return redirect(url_for('add_order'))
+
     form = AddOrder()
     form.client_id.choices = [(client.id, " ".join((client.first_name, client.last_name, client.phone_number))) for
                               client in  # update data from table Client for choices flask-form (AddOrder)

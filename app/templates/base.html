@@ -31,6 +31,12 @@
         </ul>
         {% endif %}
         {% endwith %}
+        <div>
+            {% if current_user.is_authenticated %}
+            <h5> Вы вошли как: {{ current_user.first_name }}!</h5>
+            <p><strong>Должность: {{current_user.employee.job_title}}</strong></p>
+            {% endif %}
+        </div>
         {% block content %}{% endblock %}
     </body>
 </html>
