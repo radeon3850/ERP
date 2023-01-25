@@ -124,11 +124,11 @@ def add_order():
                            form_add_client=form_add_client)
 
 
-@app.route('/workplace', methods=['GET', 'POST'])
+@app.route('/kanban', methods=['GET', 'POST'])
 @login_required
 def kanban():
-    order_manufacture = PreProduct.query.filter_by(set_worker=current_user.id).all()
-    return render_template("workplace.html", title='Workplace', order_manufacture=order_manufacture)
+    order_manufacture = PreProduct.query.all()
+    return render_template("kanban.html", title='Kanban', order_manufacture=order_manufacture)
 
 
 @app.route('/workplace', methods=['GET', 'POST'])
