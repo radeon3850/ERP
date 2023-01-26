@@ -4,6 +4,7 @@
 {% extends "base.html" %}
 {% endif %}
 
+
 {% block content %}
 
 <h5 style="color: red">Карта заказа клиента№{{order_client.id}}</h5>
@@ -45,6 +46,18 @@
         <p> {{form.save}}</p>
     </form>
 </div>
+<div class="button" >
+    <form name="form-btn" action="{{ url_for('add_slab') }}" method="get" target="_blank">
+        <button type="submit">Добавить сляб</button>
+    </form>
+</div>
+<div>
+    <p>
+        <form name="form-btn" action="{{ url_for('add_part') }}" method="get" target="_blank">
+        <button type="submit">Добавить деталь</button>
+    </form>
+    </p>
+
+</div>
 
 {% endblock %}
-

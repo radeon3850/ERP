@@ -172,3 +172,13 @@ def order_client():
 
     return render_template("order_client.html", title="Заказ клиента", order_client=order_client, form=form,
                            name_field=name_field, work_dic=work_dic)
+
+@app.route('/add_slab', methods=['GET', 'POST'])
+@login_required
+def add_slab():
+    return render_template("add_slab.html", title='Добавление слябов')
+
+@app.route('/add_part', methods=['GET', 'POST'])
+@login_required
+def add_part():
+    return render_template("add_part.html", title='Добавление деталей')
