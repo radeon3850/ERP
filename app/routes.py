@@ -14,7 +14,12 @@ from app.models import User, Clients, OrderClient, PreProduct, Works
 @login_required
 def index():
     client_order = OrderClient.query.all()
-    # cl = current_user.specialization_id
+    user_spec = current_user.specialization_id
+    if user_spec==2:
+        next_page = request.args.get('next')
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('workplace')
+        return redirect(next_page)
     return render_template('index.html', title='Главная', client_order=client_order)
 
 
@@ -176,9 +181,12 @@ def order_client():
 @app.route('/add_slab', methods=['GET', 'POST'])
 @login_required
 def add_slab():
+
     return render_template("add_slab.html", title='Добавление слябов')
+
 
 @app.route('/add_part', methods=['GET', 'POST'])
 @login_required
 def add_part():
+
     return render_template("add_part.html", title='Добавление деталей')
