@@ -14,12 +14,12 @@ from app.models import User, Clients, OrderClient, PreProduct, Works
 @login_required
 def index():
     client_order = OrderClient.query.all()
-    user_spec = current_user.specialization_id
-    if user_spec==2:
-        next_page = request.args.get('next')
-        if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('workplace')
-        return redirect(next_page)
+    # user_spec = current_user.specialization_id
+    # if user_spec == 2:
+    #     next_page = request.args.get('next')
+    #     if not next_page or url_parse(next_page).netloc != '':
+    #         next_page = url_for('workplace')
+    #     return redirect(next_page)
     return render_template('index.html', title='Главная', client_order=client_order)
 
 
@@ -144,7 +144,6 @@ def workplace():
     return render_template("workplace.html", title='Workplace', order_manufacture=order_manufacture)
 
 
-
 @app.route('/order_client', methods=['GET', 'POST'])
 @login_required
 def order_client():
@@ -178,15 +177,24 @@ def order_client():
     return render_template("order_client.html", title="Заказ клиента", order_client=order_client, form=form,
                            name_field=name_field, work_dic=work_dic)
 
+
 @app.route('/add_slab', methods=['GET', 'POST'])
 @login_required
 def add_slab():
+    user = User.query.all()
+    q = request.args.get('q')  # get data about Number of order_client from HTML after сlick on the button
+    order_client = OrderClient.query.get(q)
 
-    return render_template("add_slab.html", title='Добавление слябов')
+    if request.method == 'POST':
+        number = request.form['number']
+        thickness = request.form['thickness']
+        type = request.form['type']
+
+    # slab_data=
+    return render_template("add_slab.html", title='Добавление слябов', user=user, order_client=order_client)
 
 
 @app.route('/add_part', methods=['GET', 'POST'])
 @login_required
 def add_part():
-
     return render_template("add_part.html", title='Добавление деталей')

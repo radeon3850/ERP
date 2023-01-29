@@ -48,14 +48,14 @@
 </div>
 <div class="button" >
     <form name="form-btn" action="{{ url_for('add_slab') }}" method="get" target="_blank">
-        <button type="submit">Добавить сляб</button>
+        <button type="submit", name="q" value="{{order_client.id}}" class="btn btn-primary">Добавить сляб</button>
     </form>
 </div>
 <div>
     <p>
         <form name="form-btn" action="{{ url_for('add_part') }}" method="get" target="_blank">
-        <button type="submit">Добавить деталь</button>
-    </form>
+        <button type="submit" class="btn btn-primary">Добавить деталь</button>
+        </form>
     </p>
 </div>
 

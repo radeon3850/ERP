@@ -18,7 +18,7 @@ followers = db.Table('followers',
 # create table "Specialization" - one to many
 class Specialization(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    # job_departmet = db.Column(db.String(200), index=True)
+    job_departmet = db.Column(db.String(200), index=True)
     job_title = db.Column(db.String(150), index=True, unique=True)
     users = db.relationship('User', backref='employee',
                             lazy=True)  # this is not a table field, the code sets the relation of the specialization
@@ -133,14 +133,14 @@ class OrderClient(db.Model):
 
 
 # create table Oreder of Manufacture(product), all column besides id - have type Boollean
-class OrderManufacture(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    raskroj = db.Column(db.Boolean, default=False, nullable=False)
-    porezka = db.Column(db.Boolean, default=False, nullable=False)
-    cpu = db.Column(db.Boolean, default=False, nullable=False)
-    montag = db.Column(db.Boolean, default=False, nullable=False)
-    vidacha = db.Column(db.Boolean, default=False, nullable=False)
-    oreder_of_client = db.Column(db.Integer, db.ForeignKey('order_client.id'), nullable=False)
+# class OrderManufacture(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     raskroj = db.Column(db.Boolean, default=False, nullable=False)
+#     porezka = db.Column(db.Boolean, default=False, nullable=False)
+#     cpu = db.Column(db.Boolean, default=False, nullable=False)
+#     montag = db.Column(db.Boolean, default=False, nullable=False)
+#     vidacha = db.Column(db.Boolean, default=False, nullable=False)
+#     oreder_of_client = db.Column(db.Integer, db.ForeignKey('order_client.id'), nullable=False)
 
 
 # table about assigns work on the slab
@@ -149,9 +149,7 @@ class SlabWorks(db.Model):
     number_slab = db.Column(db.String(16), index=True)
     thickness = db.Column(db.String(150), index=True)
     value = db.Column(db.String(150), index=True)
-    deadline_slab = db.Column(db.DateTime)
-    oreder_of_manufacture = db.Column(db.Integer, db.ForeignKey('order_manufacture.id'),
-                                      nullable=False)  # relationship to table "OrderManufacture" one to many
+    oreder_of_client = db.Column(db.Integer, db.ForeignKey('order_client.id'), nullable=False)
     slab_works = db.Column(db.Integer, db.ForeignKey('works.id'),
                            nullable=False)  # relationship to table "Works" One to many
     set_worker = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -167,9 +165,7 @@ class PartWorks(db.Model):
     thickness = db.Column(db.String(150), index=True)
     value = db.Column(db.String(150), index=True)
     deadline_part = db.Column(db.DateTime)
-    oreder_of_manufacture = db.Column(db.Integer, db.ForeignKey('order_manufacture.id'),
-                                      nullable=False)  # relationship to table "OrderManufacture" one to many
-    # num_slab = db.Column(db.Integer, db.ForeignKey('SlabWorks.id'),nullable=False)  # relationship to table "SlabWorks" Many to One
+    oreder_of_client = db.Column(db.Integer, db.ForeignKey('order_client.id'), nullable=False)
     part_works = db.Column(db.Integer, db.ForeignKey('works.id'),
                            nullable=False)  # relationship to table "Works" One to many
     set_worker = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -186,7 +182,6 @@ class PreProduct(db.Model):
     set_worker = db.Column(db.Integer, db.ForeignKey('user.id'))
     work = db.relationship('Works', backref='work', lazy='subquery')
     worker = db.relationship('User', backref='worker', lazy='subquery')
-
 
     def __repr__(self):
         return f' <id: {self.id},id_order: {self.number_order_client},' \
