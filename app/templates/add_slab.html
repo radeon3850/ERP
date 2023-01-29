@@ -1,0 +1,120 @@
+{% if current_user.specialization_id is ne(2)%}
+{% extends "base_bootstrap.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
+
+{% block content %}
+<h2>Добавить сляб для заказа № {{order_client.id}} {{order_client.title_order}}</h2>
+
+<style>
+      .open-button {
+      background-color: red;
+      border: none;
+      color: white;
+      padding: 15px 24px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 20px;
+      margin: 4px 2px;
+      cursor: pointer;
+      }
+      {box-sizing: border-box;}
+
+    /* Всплывающая форма-скрыта по умолчанию */
+    .form-popup {
+      display: none;
+      position: fixed;
+      bottom: 100;
+      right: 600px;
+      border: 10px solid #f1f1f1;
+      z-index: 9;
+    }
+
+    /* Добавить стили для контейнера формы */
+    .form-container {
+      max-width: 500px;
+      padding: 10px;
+      background-color: white;
+    }
+
+    /* Поля ввода полной ширины */
+    .form-container input[type=text], .form-container input[type=password] {
+      width: 100%;
+      padding: 15px;
+      margin: 5px 0 22px 0;
+      border: none;
+      background: #f1f1f1;
+    }
+
+    /* Когда входы получают фокус, сделайте что-нибудь */
+    .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+      background-color: #ddd;
+      outline: none;
+    }
+
+    /* Установите стиль для кнопки отправить/войти */
+    .form-container .btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 16px 20px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom:10px;
+      opacity: 1;
+    }
+
+    /* Добавить красный цвет фона для кнопки "Отмена" */
+    .form-container .cancel {
+      background-color: red;
+    }
+
+    /* Добавить некоторые эффекты наведения на кнопки */
+    .form-container .btn:hover, .open-button:hover {
+      opacity: 1;
+    }
+    </style>
+
+    <script>
+        function openForm() {document.getElementById("myForm").style.display = "block";}
+
+        function closeForm() {document.getElementById("myForm").style.display = "none";}
+    </script>
+
+    <button class="open-button" onclick="openForm()">Добавить сляб</button>
+
+    <div class="form-popup" id="myForm">
+      <form action="" class="form-container" method="post">
+        <h1> Введите данные </h1>
+
+         <p>
+           <label for="formGroupExampleInput" class="form-label">Введите номер слаба</label>
+             <input type="text" class="form-control" id="formGroupExampleInput"  name="number" placeholder="№ сляба">
+        </p>
+          <p>
+           <label for="formGroupExampleInput" class="form-label">Укажите толщину</label>
+             <input type="text" class="form-control" id="formGroupExampleInput"  name="thickness" placeholder="Значение">
+        </p>
+          <p>
+           <label for="formGroupExampleInput" class="form-label">Укажите вид</label>
+             <input type="text" class="form-control" id="formGroupExampleInput" name="type" placeholder="Вид">
+        </p>
+
+        <button class="btn" { form_add_client.submit() }> Добавить сляб </button>
+        <button type="submit" class="btn cancel" onclick="closeForm()">Закрыть</button>
+      </form>
+    </div>
+
+
+<!--<form action="{{ url_for('add_slab') }}" method="POST">-->
+<!--    <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="select">-->
+<!--            <option selected>Выбрать ответственного из списка</option>-->
+<!--            {% for name in user %}-->
+<!--            <option value="{{ name.first_name }}" style="color: green">{{ name.first_name }}</option>-->
+<!--            {% endfor %}-->
+<!--    </select>-->
+<!--    <button type="submit" class="btn btn-primary">Submit</button>-->
+<!--</form>-->
+{% endblock %}
