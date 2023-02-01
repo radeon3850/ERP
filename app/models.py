@@ -155,7 +155,7 @@ class SlabWorks(db.Model):
     set_worker = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-        return f'<OrderClient {self.number_slab}, {self.oreder_of_manufacture}, {self.slab_works}, {self.deadline_slab}>'
+        return f'<Slab№ {self.number_slab}, {self.oreder_of_client}, {self.slab_works}>'
 
 
 # table about assigns work on the parts

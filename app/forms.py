@@ -69,4 +69,3 @@ class Checkbox(FlaskForm):
     user_id_3 = SelectField('Контроль',
                             choices=choices)  # choise firstname and last name, but save to database are user_idfrom table user
     save = SubmitField('Сохранить')
-    pass

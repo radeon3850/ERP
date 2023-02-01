@@ -6,7 +6,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, AddClient, AddOrder, Checkbox
-from app.models import User, Clients, OrderClient, PreProduct, Works
+from app.models import User, Clients, OrderClient, PreProduct, Works, SlabWorks
 
 
 @app.route('/')
@@ -14,12 +14,12 @@ from app.models import User, Clients, OrderClient, PreProduct, Works
 @login_required
 def index():
     client_order = OrderClient.query.all()
-    # user_spec = current_user.specialization_id
-    # if user_spec == 2:
-    #     next_page = request.args.get('next')
-    #     if not next_page or url_parse(next_page).netloc != '':
-    #         next_page = url_for('workplace')
-    #     return redirect(next_page)
+    user_spec = current_user.specialization_id
+    if user_spec == 2:
+        next_page = request.args.get('next')
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('workplace')
+        return redirect(next_page)
     return render_template('index.html', title='Главная', client_order=client_order)
 
 
@@ -184,14 +184,27 @@ def add_slab():
     user = User.query.all()
     q = request.args.get('q')  # get data about Number of order_client from HTML after сlick on the button
     order_client = OrderClient.query.get(q)
+    check_data = SlabWorks.query.filter_by(oreder_of_client=q).all()
 
     if request.method == 'POST':
         number = request.form['number']
         thickness = request.form['thickness']
         type = request.form['type']
+        if len(number)==0 or len(thickness)==0 or len(type)==0:
+            print("Поля формы пустые")
+            flash('Заполенены не все поля формы добавления сляба')
 
-    # slab_data=
-    return render_template("add_slab.html", title='Добавление слябов', user=user, order_client=order_client)
+        elif order_client.id==q and check_data.number_slab==number:
+            flash('Сляб с такими параметрами уже добавлен')
+        else:
+            slab_data = SlabWorks(number_slab=number, thickness=thickness, oreder_of_client=order_client.id, slab_works=0,
+                                  set_worker=0)
+            db.session.add(slab_data)
+            db.session.commit()
+            flash('Сляб добавлен к карте заказа')
+
+    slab=SlabWorks.query.filter_by(oreder_of_client=order_client.id).all()
+    return render_template("add_slab.html", title='Добавление слябов', user=user, order_client=order_client, slab=slab)
 
 
 @app.route('/add_part', methods=['GET', 'POST'])

@@ -88,22 +88,21 @@
     <div class="form-popup" id="myForm">
       <form action="" class="form-container" method="post">
         <h1> Введите данные </h1>
+             <p>
+               <label for="formGroupExampleInput" class="form-label">Введите номер слаба</label>
+                 <input type="text" class="form-control" id="formGroupExampleInput"  name="number" placeholder="№ сляба">
+            </p>
+              <p>
+               <label for="formGroupExampleInput" class="form-label">Укажите толщину</label>
+                 <input type="text" class="form-control" id="formGroupExampleInput"  name="thickness" placeholder="Значение">
+            </p>
+              <p>
+               <label for="formGroupExampleInput" class="form-label">Укажите вид</label>
+                 <input type="text" class="form-control" id="formGroupExampleInput" name="type" placeholder="Вид">
+            </p>
 
-         <p>
-           <label for="formGroupExampleInput" class="form-label">Введите номер слаба</label>
-             <input type="text" class="form-control" id="formGroupExampleInput"  name="number" placeholder="№ сляба">
-        </p>
-          <p>
-           <label for="formGroupExampleInput" class="form-label">Укажите толщину</label>
-             <input type="text" class="form-control" id="formGroupExampleInput"  name="thickness" placeholder="Значение">
-        </p>
-          <p>
-           <label for="formGroupExampleInput" class="form-label">Укажите вид</label>
-             <input type="text" class="form-control" id="formGroupExampleInput" name="type" placeholder="Вид">
-        </p>
-
-        <button class="btn" { form_add_client.submit() }> Добавить сляб </button>
-        <button type="submit" class="btn cancel" onclick="closeForm()">Закрыть</button>
+            <button  class="btn" type="submit"> Добавить сляб </button>
+            <button class="btn cancel" onclick="closeForm()">Закрыть</button>
       </form>
     </div>
 
@@ -117,4 +116,12 @@
 <!--    </select>-->
 <!--    <button type="submit" class="btn btn-primary">Submit</button>-->
 <!--</form>-->
+<div>
+    {% for sl in slab %}
+    <p>
+        {{sl}}
+    </p>
+    {% endfor %}
+</div>
+
 {% endblock %}
