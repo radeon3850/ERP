@@ -27,7 +27,7 @@
       display: none;
       position: fixed;
       bottom: 100;
-      right: 600px;
+      right: 850px;
       border: 10px solid #f1f1f1;
       z-index: 9;
     }
@@ -75,36 +75,69 @@
     .form-container .btn:hover, .open-button:hover {
       opacity: 1;
     }
-    </style>
 
-    <script>
+
+</style>
+
+<script>
         function openForm() {document.getElementById("myForm").style.display = "block";}
-
         function closeForm() {document.getElementById("myForm").style.display = "none";}
-    </script>
 
-    <button class="open-button" onclick="openForm()">Добавить сляб</button>
+</script>
 
-    <div class="form-popup" id="myForm">
-      <form action="" class="form-container" method="post">
+<button class="open-button" onclick="openForm()">Добавить сляб</button>
+<div class="form-popup" id="myForm">
+    <form action="" class="form-container" method="post">
         <h1> Введите данные </h1>
-             <p>
-               <label for="formGroupExampleInput" class="form-label">Введите номер слаба</label>
-                 <input type="text" class="form-control" id="formGroupExampleInput"  name="number" placeholder="№ сляба">
-            </p>
-              <p>
-               <label for="formGroupExampleInput" class="form-label">Укажите толщину</label>
-                 <input type="text" class="form-control" id="formGroupExampleInput"  name="thickness" placeholder="Значение">
-            </p>
-              <p>
-               <label for="formGroupExampleInput" class="form-label">Укажите вид</label>
-                 <input type="text" class="form-control" id="formGroupExampleInput" name="type" placeholder="Вид">
-            </p>
-
-            <button  class="btn" type="submit"> Добавить сляб </button>
+        <table>
+            <tr>
+                {{ form.number_slab.label }}<br>
+                {{ form.number_slab(class="form-control", id="formGroupExampleInput", placeholder="№ Сляба") }}<br>
+                {% for error in form.number_slab.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </tr>
+            <tr>
+                {{ form.thickness.label }}<br>
+                {{ form.thickness(class="form-control", id="formGroupExampleInput", placeholder="Значение") }}<br>
+                {% for error in form.thickness.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </tr>
+            <tr>
+                {{ form.type_slab.label }}<br>
+                {{ form.type_slab(class="form-control", id="formGroupExampleInput", placeholder="Значение") }}<br>
+                {% for error in form.type_slab.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </tr>
+            {{ form.submit(class="btn")}}
             <button class="btn cancel" onclick="closeForm()">Закрыть</button>
-      </form>
-    </div>
+        </table>
+    </form>
+</div>
+
+
+<!--    <div class="form-popup" id="myForm">-->
+<!--      <form action="" class="form-container" method="post">-->
+<!--        <h1> Введите данные </h1>-->
+<!--             <p>-->
+<!--               <label for="formGroupExampleInput" class="form-label">Введите номер слаба</label>-->
+<!--                 <input type="text" class="form-control" id="formGroupExampleInput"  name="number" placeholder="№ сляба">-->
+<!--            </p>-->
+<!--              <p>-->
+<!--               <label for="formGroupExampleInput" class="form-label">Укажите толщину</label>-->
+<!--                 <input type="text" class="form-control" id="formGroupExampleInput"  name="thickness" placeholder="Значение">-->
+<!--            </p>-->
+<!--              <p>-->
+<!--               <label for="formGroupExampleInput" class="form-label">Укажите вид</label>-->
+<!--                 <input type="text" class="form-control" id="formGroupExampleInput" name="type" placeholder="Вид">-->
+<!--            </p>-->
+
+<!--            <button  class="btn" type="submit"> Добавить сляб </button>-->
+<!--            <button class="btn cancel" onclick="closeForm()">Закрыть</button>-->
+<!--      </form>-->
+<!--    </div>-->
 
 
 <!--<form action="{{ url_for('add_slab') }}" method="POST">-->
@@ -116,11 +149,11 @@
 <!--    </select>-->
 <!--    <button type="submit" class="btn btn-primary">Submit</button>-->
 <!--</form>-->
-<div>
+<div class="d-grid gap-2 mx-auto">
     {% for sl in slab %}
-    <p>
-        {{sl}}
-    </p>
+    <form action="{{ url_for('slab') }}" method="get" target="_blank">
+        <button class="btn btn-outline-secondary" type="submit" name="q" value="{{sl.id}}" > Cляб№ {{sl.id}} (По заказу№ {{sl.oreder_of_client}})  </button>
+    </form>
     {% endfor %}
 </div>
 

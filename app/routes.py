@@ -5,7 +5,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, AddClient, AddOrder, Checkbox
+from app.forms import LoginForm, RegistrationForm, AddClient, AddOrder, Checkbox, Add_slab
 from app.models import User, Clients, OrderClient, PreProduct, Works, SlabWorks
 
 
@@ -181,33 +181,49 @@ def order_client():
 @app.route('/add_slab', methods=['GET', 'POST'])
 @login_required
 def add_slab():
+
     user = User.query.all()
     q = request.args.get('q')  # get data about Number of order_client from HTML after сlick on the button
     order_client = OrderClient.query.get(q)
-    check_data = SlabWorks.query.filter_by(oreder_of_client=q).all()
+    form = Add_slab()
+    if form.is_submitted():
+        form_data_slab = SlabWorks(number_slab=form.number_slab.data, thickness=form.thickness.data,
+                                   value=form.type_slab.data, oreder_of_client=q, slab_works=2, set_worker=2 )
+        db.session.add(form_data_slab)
+        db.session.commit()
+    # if request.method == 'POST':
+    #     number = request.form['number']
+    #     thickness = request.form['thickness']
+    #     type = request.form['type']
+    #     if len(number) == 0 or len(thickness) == 0 or len(type) == 0:
+    #         print("Поля формы пустые")
+    #         flash('Заполенены не все поля формы добавления сляба')
+    #
+    #     elif order_client.id == q and check_data.number_slab == number:
+    #         flash('Сляб с такими параметрами уже добавлен')
+    #     else:
+    #         slab_data = SlabWorks(number_slab=number, thickness=thickness, oreder_of_client=order_client.id,
+    #                               slab_works=0,
+    #                               set_worker=0)
+    #         db.session.add(slab_data)
+    #         db.session.commit()
+    #         flash('Сляб добавлен к карте заказа')
+    #         return render_template("add_slab.html", title='Добавление слябов', user=user, order_client=order_client)
 
-    if request.method == 'POST':
-        number = request.form['number']
-        thickness = request.form['thickness']
-        type = request.form['type']
-        if len(number)==0 or len(thickness)==0 or len(type)==0:
-            print("Поля формы пустые")
-            flash('Заполенены не все поля формы добавления сляба')
-
-        elif order_client.id==q and check_data.number_slab==number:
-            flash('Сляб с такими параметрами уже добавлен')
-        else:
-            slab_data = SlabWorks(number_slab=number, thickness=thickness, oreder_of_client=order_client.id, slab_works=0,
-                                  set_worker=0)
-            db.session.add(slab_data)
-            db.session.commit()
-            flash('Сляб добавлен к карте заказа')
-
-    slab=SlabWorks.query.filter_by(oreder_of_client=order_client.id).all()
-    return render_template("add_slab.html", title='Добавление слябов', user=user, order_client=order_client, slab=slab)
+    slab = SlabWorks.query.filter_by(oreder_of_client=order_client.id).all()
+    return render_template("add_slab.html", title='Добавление слябов', user=user, order_client=order_client, slab=slab, form=form)
 
 
 @app.route('/add_part', methods=['GET', 'POST'])
 @login_required
 def add_part():
     return render_template("add_part.html", title='Добавление деталей')
+
+
+@app.route('/slab', methods=['GET', 'POST'])
+@login_required
+def slab():
+    q = request.args.get('q')
+    slab=SlabWorks.query.filter_by(id=q).first()
+
+    return render_template("slab.html", slab=slab)
