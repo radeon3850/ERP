@@ -83,7 +83,17 @@
         function openForm() {document.getElementById("myForm").style.display = "block";}
         function closeForm() {document.getElementById("myForm").style.display = "none";}
 
+<!--$(document).ready(function(){-->
+<!--  $("#btn1").click(function(){-->
+<!--    $("p").append(" <b>Appended text</b>.");-->
+<!--  });-->
+
+<!--  $("#btn2").click(function(){-->
+<!--    $("ol").append("<li>{% for sl in slab %} {{sl.id}} {% endfor %}</li>");-->
+<!--  });-->
+<!--});-->
 </script>
+
 
 <button class="open-button" onclick="openForm()">Добавить сляб</button>
 <div class="form-popup" id="myForm">
@@ -111,11 +121,12 @@
                 <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
             </tr>
-            {{ form.submit(class="btn")}}
-            <button class="btn cancel" onclick="closeForm()">Закрыть</button>
+            {{ form.submit(class="btn", id="btn2", onclick="openForm()")}}
+            <button type="button" class="btn cancel" onclick="closeForm()">Закрыть</button>
         </table>
     </form>
 </div>
+
 
 
 <!--    <div class="form-popup" id="myForm">-->
@@ -151,10 +162,15 @@
 <!--</form>-->
 <div class="d-grid gap-2 mx-auto">
     {% for sl in slab %}
-    <form action="{{ url_for('slab') }}" method="get" target="_blank">
-        <button class="btn btn-outline-secondary" type="submit" name="q" value="{{sl.id}}" > Cляб№ {{sl.id}} (По заказу№ {{sl.oreder_of_client}})  </button>
-    </form>
+        <form action="{{ url_for('slab') }}" method="get" target="_blank">
+            <button class="btn btn-outline-secondary" type="submit" name="q" value="{{sl.id}}" > Cляб№ {{sl.id}} (По заказу№ {{sl.oreder_of_client}})  </button>
+        </form>
     {% endfor %}
 </div>
 
+<!--<ol>-->
+<!--  <li>List item 1</li>-->
+<!--  <li>List item 2</li>-->
+<!--  <li>List item 3</li>-->
+<!--</ol>-->
 {% endblock %}

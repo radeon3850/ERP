@@ -84,7 +84,7 @@ def add_order():
 
     form_add_client = AddClient()
     if 'first_name' in request.form:  # Chesk that flask-form (AddClient) from add_order send data
-        if form_add_client.is_submitted():
+        if request.method=="POST" and form_add_client.is_submitted():
             client = Clients(first_name=form_add_client.first_name.data, last_name=form_add_client.last_name.data,
                              phone_number=form_add_client.phone.data)  # geta form AddClient
             add_data(self=client)  # connect to data base
@@ -186,9 +186,11 @@ def add_slab():
     q = request.args.get('q')  # get data about Number of order_client from HTML after сlick on the button
     order_client = OrderClient.query.get(q)
     form = Add_slab()
-    if form.is_submitted():
+    if request.method == 'POST' and form.is_submitted():
         form_data_slab = SlabWorks(number_slab=form.number_slab.data, thickness=form.thickness.data,
                                    value=form.type_slab.data, oreder_of_client=q, slab_works=2, set_worker=2 )
+
+    # print(request.form['number_slab'])
         db.session.add(form_data_slab)
         db.session.commit()
     # if request.method == 'POST':
