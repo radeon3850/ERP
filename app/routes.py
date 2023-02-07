@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import flask
 import flask_sqlalchemy
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, json
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
@@ -183,16 +183,16 @@ def order_client():
 def add_slab():
 
     user = User.query.all()
-    q = request.args.get('q')  # get data about Number of order_client from HTML after сlick on the button
+    q = request.args.get('q')     # get data about Number of order_client from HTML after сlick on the button
     order_client = OrderClient.query.get(q)
     form = Add_slab()
     if request.method == 'POST' and form.is_submitted():
         form_data_slab = SlabWorks(number_slab=form.number_slab.data, thickness=form.thickness.data,
                                    value=form.type_slab.data, oreder_of_client=q, slab_works=2, set_worker=2 )
 
-    # print(request.form['number_slab'])
         db.session.add(form_data_slab)
         db.session.commit()
+        flash('Сляб добавлен к карте заказа')
     # if request.method == 'POST':
     #     number = request.form['number']
     #     thickness = request.form['thickness']
