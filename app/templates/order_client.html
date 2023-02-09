@@ -7,56 +7,123 @@
 
 {% block content %}
 
-<h5 style="color: red">Карта заказа клиента№{{order_client.id}}</h5>
-<p>Название заказа:{{order_client.title_order}}</p>
-<p>Камень:{{order_client.title_stone}}</p>
-<p>Описание заказа:{{order_client.object_description}}</p>
-<p>Адрес Заказа:{{order_client.address}}</p>
-<p>Конечная дата:{{order_client.deadline}}</p>
-<div>
-    <form action="" method="post">
-        {{ form.hidden_tag()}}
-        <div class="">
-            <h4>Назначить исполнителей работ</h4>
-            <div>
-                {% if order_client.measurements %}
-               <p>
-                   <span style="color: red;">
-                   {{form.user_id_1.label}}<br> </span>
-                   {{form.user_id_1()}}
-                   {% endif %}
-               </p>
-                {% if order_client.project_drawing %}
-                 <p>
-                   <span style="color: red;">
-                    {{form.user_id_2.label}}<br> </span>
-                     {{form.user_id_2()}}
-                     {% endif %}
-                </p>
+<style>
 
-                {% if order_client.control %}
-                 <p>
-                   <span style="color: red;">
-                       {{form.user_id_3.label}}<br> </span>
-                        {{form.user_id_3()}}
-                        {% endif %}
-                </p>
+
+    .block_content{
+      background-color: #E3F2FD;
+      width: auto;
+      padding: 50px;
+      margin: 0;
+      border: 5px solid #dcf3f3
+      -webkit-text-size-adjust: 100%;
+
+        font-size: 15px;
+        line-height: 1.5;
+        box-sizing: inherit;
+        padding: 0 8px;
+        text-align: left;
+        margin: 0 -16px;
+    }
+
+#customers {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #F5D1D1;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #616060;
+  color: white;
+}
+</style>
+<div class="block_content">
+    <table id="customers">
+        <h5 style="color: red">Карта заказа клиента№{{order_client.id}}</h5>
+          <tr>
+            <th>Название заказа</th>
+            <th>Камень</th>
+            <th>Описание заказа</th>
+            <th>Адрес Заказа</th>
+            <th>Конечная дата</th>
+          </tr>
+          <tr>
+            <td>{{order_client.title_order}}</td>
+            <td>{{order_client.title_stone}}</td>
+            <td>{{order_client.object_description}}</td>
+            <td>{{order_client.address}}</td>
+            <td>{{order_client.deadline}}</td>
+          </tr>
+    </table>
+    <div class="select_form">
+        <form action="" method="post">
+            {{ form.hidden_tag()}}
+            <div class="">
+                <h4>Назначить исполнителей работ</h4>
+                <div>
+                    {% if order_client.measurements %}
+                   <p>
+                       <span style="color: red;">
+                       {{form.user_id_1.label}}<br> </span>
+                       {{form.user_id_1()}}
+                       {% endif %}
+                   </p>
+                    {% if order_client.project_drawing %}
+                     <p>
+                       <span style="color: red;">
+                        {{form.user_id_2.label}}<br> </span>
+                         {{form.user_id_2()}}
+                         {% endif %}
+                    </p>
+
+                    {% if order_client.control %}
+                     <p>
+                       <span style="color: red;">
+                           {{form.user_id_3.label}}<br> </span>
+                            {{form.user_id_3()}}
+                            {% endif %}
+                    </p>
+                </div>
             </div>
-        </div>
-        <p> {{form.save}}</p>
-    </form>
-</div>
-<div class="button" >
-    <form name="form-btn" action="{{ url_for('add_slab') }}" method="get" target="_blank">
-        <button type="submit", name="q" value="{{order_client.id}}" class="btn btn-primary">Добавить сляб</button>
-    </form>
-</div>
-<div>
-    <p>
-        <form name="form-btn" action="{{ url_for('add_part') }}" method="get" target="_blank">
-        <button type="submit" class="btn btn-primary">Добавить деталь</button>
+            <p> {{form.save}}</p>
         </form>
-    </p>
+    </div>
+    <div class="row">
+        <div class="button"  id="add_slab">
+        <form name="form-btn" action="{{ url_for('add_slab') }}" method="get" target="_blank">
+            <button type="submit", name="q" value="{{order_client.id}}" class="btn btn-primary">Добавить сляб</button>
+        </form>
+    </div>
+    <div>
+        <p id="add_part">
+            <form name="form-btn" action="{{ url_for('add_part') }}" method="get" target="_blank">
+            <button type="submit" class="btn btn-primary">Добавить деталь</button>
+            </form>
+        </p>
+    </div>
+    </div>
+    {% if order_client.measurements %}
+    <form action="{{ url_for('order_client') }}" method="POST">
+        <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="select">
+                <option selected>Замеры (выбрать исполнителя) </option>
+                {% for name in user_add_preproduct %}
+                <option value="{{ name.id }}" style="color: red">{{ name.first_name }}</option>
+                {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    {% endif %}
 </div>
-
 {% endblock %}

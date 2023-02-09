@@ -77,20 +77,22 @@
     }
 
 
+
 </style>
 
 <script>
         function openForm() {document.getElementById("myForm").style.display = "block";}
         function closeForm() {document.getElementById("myForm").style.display = "none";}
 
+
 </script>
 
 <script id="html-1" type="text/template">
-        <div class="d-grid gap-2 mx-auto">
+    <div class="d-grid gap-2 mx-auto">
         <form action="" method="get" target="_blank">
-            <button class="btn btn-outline-secondary" type="submit" name="q" value="1" > Cляб№ По заказу№  </button>
+            <button class="btn btn-outline-secondary" type="submit" name="q" value="1"> Cляб№ По заказу№</button>
         </form>
-        </div>
+    </div>
 </script>
 
 <script>
@@ -99,15 +101,15 @@ $(document).ready(function(){
     $("#add_block").append(""+ $("#html-1").html());
   });
 });
-</script>
 
+</script>
 
 
 <!--<button id="btn2">Append text</button>-->
 
 <button class="open-button" onclick="openForm()">Добавить сляб</button>
 <div class="form-popup" id="myForm">
-    <form action="" class="form-container" id="form1" method="post",>
+    <form action="" class="form-container" id="form1" method="post" ,>
         <h1> Введите данные </h1>
         <table>
             <tr>
@@ -171,11 +173,13 @@ $(document).ready(function(){
 <!--</form>-->
 <div id="1" class="d-grid gap-2 mx-auto">
     {% for sl in slab %}
-        <form action="{{ url_for('slab') }}" method="get" target="_blank">
-            <button class="btn btn-outline-secondary" type="submit" name="q" value="{{sl.id}}" > Cляб№ {{sl.id}} (По заказу№ {{sl.oreder_of_client}})  </button>
-        </form>
+    <form action="{{ url_for('slab') }}" method="get" target="_blank">
+        <button class="btn btn-outline-secondary" type="submit" name="q" value="{{sl.number_slab}}"> Cляб№
+            {{sl.number_slab}} (По заказу№ {{sl.oreder_of_client}}) Выполнение работ: {{sl.slab_works}}
+        </button>
+    </form>
     {% endfor %}
-    <div id="add_block"> </div>
+    <div id="add_block"></div>
 </div>
 
 {% endblock %}

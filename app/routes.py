@@ -84,7 +84,7 @@ def add_order():
 
     form_add_client = AddClient()
     if 'first_name' in request.form:  # Chesk that flask-form (AddClient) from add_order send data
-        if request.method=="POST" and form_add_client.is_submitted():
+        if request.method == "POST" and form_add_client.is_submitted():
             client = Clients(first_name=form_add_client.first_name.data, last_name=form_add_client.last_name.data,
                              phone_number=form_add_client.phone.data)  # geta form AddClient
             add_data(self=client)  # connect to data base
@@ -153,6 +153,7 @@ def order_client():
     q = request.args.get('q')  # get data about Number of order_client from HTML after сlick on the button
     order_client = OrderClient.query.get(q)
     preproduct_work = PreProduct.query.filter_by(number_order_client=q).all()
+    user_add_preproduct = User.query.all()
 
     if form.is_submitted():
         for work in preproduct_work:
@@ -175,20 +176,19 @@ def order_client():
                 db.session.commit()
 
     return render_template("order_client.html", title="Заказ клиента", order_client=order_client, form=form,
-                           name_field=name_field, work_dic=work_dic)
+                           name_field=name_field, work_dic=work_dic, user_add_preproduct=user_add_preproduct)
 
 
 @app.route('/add_slab', methods=['GET', 'POST'])
 @login_required
 def add_slab():
-
     user = User.query.all()
-    q = request.args.get('q')     # get data about Number of order_client from HTML after сlick on the button
+    q = request.args.get('q')  # get data about Number of order_client from HTML after сlick on the button
     order_client = OrderClient.query.get(q)
     form = Add_slab()
     if request.method == 'POST' and form.is_submitted():
         form_data_slab = SlabWorks(number_slab=form.number_slab.data, thickness=form.thickness.data,
-                                   value=form.type_slab.data, oreder_of_client=q, slab_works=2, set_worker=2 )
+                                   value=form.type_slab.data, oreder_of_client=q, slab_works=2, set_worker=2)
 
         db.session.add(form_data_slab)
         db.session.commit()
@@ -213,7 +213,8 @@ def add_slab():
     #         return render_template("add_slab.html", title='Добавление слябов', user=user, order_client=order_client)
 
     slab = SlabWorks.query.filter_by(oreder_of_client=order_client.id).all()
-    return render_template("add_slab.html", title='Добавление слябов', user=user, order_client=order_client, slab=slab, form=form)
+    return render_template("add_slab.html", title='Добавление слябов', user=user, order_client=order_client, slab=slab,
+                           form=form)
 
 
 @app.route('/add_part', methods=['GET', 'POST'])
@@ -226,6 +227,6 @@ def add_part():
 @login_required
 def slab():
     q = request.args.get('q')
-    slab=SlabWorks.query.filter_by(id=q).first()
+    slab = SlabWorks.query.filter_by(id=q).first()
 
     return render_template("slab.html", slab=slab)
