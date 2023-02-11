@@ -155,25 +155,27 @@ def order_client():
     preproduct_work = PreProduct.query.filter_by(number_order_client=q).all()
     user_add_preproduct = User.query.all()
 
-    if form.is_submitted():
-        for work in preproduct_work:
-            if work.work_type == 48:
-                add_workrer = PreProduct.query.get(
-                    (PreProduct.query.filter_by(number_order_client=q, work_type=48).first()).id)
-                add_workrer.set_worker = form.user_id_1.data
-                db.session.commit()
-
-            if work.work_type == 49:
-                add_workrer = PreProduct.query.get(
-                    (PreProduct.query.filter_by(number_order_client=q, work_type=49).first()).id)
-                add_workrer.set_worker = form.user_id_2.data
-                db.session.commit()
-
-            if work.work_type == 50:
-                add_workrer = PreProduct.query.get(
-                    (PreProduct.query.filter_by(number_order_client=q, work_type=50).first()).id)
-                add_workrer.set_worker = form.user_id_3.data
-                db.session.commit()
+    if request.method=="POST":
+        print(request.form)
+    # if request.method=="POST":
+    #     for work in preproduct_work:
+    #         if work.work_type == 48:
+    #             add_workrer = PreProduct.query.get(
+    #                 (PreProduct.query.filter_by(number_order_client=q, work_type=48).first()).id)
+    #             add_workrer.set_worker = form.user_id_1.data
+    #             db.session.commit()
+    #
+    #         if work.work_type == 49:
+    #             add_workrer = PreProduct.query.get(
+    #                 (PreProduct.query.filter_by(number_order_client=q, work_type=49).first()).id)
+    #             add_workrer.set_worker = form.user_id_2.data
+    #             db.session.commit()
+    #
+    #         if work.work_type == 50:
+    #             add_workrer = PreProduct.query.get(
+    #                 (PreProduct.query.filter_by(number_order_client=q, work_type=50).first()).id)
+    #             add_workrer.set_worker = form.user_id_3.data
+    #             db.session.commit()
 
     return render_template("order_client.html", title="Заказ клиента", order_client=order_client, form=form,
                            name_field=name_field, work_dic=work_dic, user_add_preproduct=user_add_preproduct)

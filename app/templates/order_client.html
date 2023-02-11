@@ -87,7 +87,6 @@
                          {{form.user_id_2()}}
                          {% endif %}
                     </p>
-
                     {% if order_client.control %}
                      <p>
                        <span style="color: red;">
@@ -114,16 +113,18 @@
         </p>
     </div>
     </div>
-    {% if order_client.measurements %}
-    <form action="{{ url_for('order_client') }}" method="POST">
-        <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="select">
-                <option selected>Замеры (выбрать исполнителя) </option>
-                {% for name in user_add_preproduct %}
-                <option value="{{ name.id }}" style="color: red">{{ name.first_name }}</option>
-                {% endfor %}
-        </select>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-    {% endif %}
+<!--    <div>-->
+<!--        {% if order_client.measurements %}-->
+<!--        <form action="{{ url_for('order_client') }}" method="POST">-->
+<!--            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="select">-->
+<!--                    <option selected>Замеры (выбрать исполнителя) </option>-->
+<!--                    {% for name in user_add_preproduct %}-->
+<!--                    <option value="{{ name.id }}" style="color: red">{{ name.first_name }}</option>-->
+<!--                    {% endfor %}-->
+<!--            </select>-->
+<!--        <button type="submit" class="btn btn-primary">Submit</button>-->
+<!--        </form>-->
+<!--        {% endif %}-->
+<!--    </div>-->
 </div>
 {% endblock %}
