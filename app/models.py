@@ -94,7 +94,7 @@ class Works(db.Model):
     work_type = db.Column(db.String(150))
 
     def __repr__(self):
-        return f'<Works {self.work_title} {self.work_type}>'
+        return f'{self.work_title} {self.work_type}'
 
 
 # create table "Clients"
@@ -153,6 +153,7 @@ class SlabWorks(db.Model):
     slab_works = db.Column(db.Integer, db.ForeignKey('works.id'),
                            nullable=False)  # relationship to table "Works" One to many
     set_worker = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    work_set=db.relationship("Works", backref='work_set', lazy='subquery')
 
     def __repr__(self):
         return f'<Slab№ {self.number_slab}, {self.oreder_of_client}, {self.slab_works}>'

@@ -87,22 +87,22 @@
 
 </script>
 
-<script id="html-1" type="text/template">
-    <div class="d-grid gap-2 mx-auto">
-        <form action="" method="get" target="_blank">
-            <button class="btn btn-outline-secondary" type="submit" name="q" value="1"> Cляб№ По заказу№</button>
-        </form>
-    </div>
-</script>
+<!--<script id="html-1" type="text/template">-->
+<!--    <div class="d-grid gap-2 mx-auto">-->
+<!--        <form action="" method="get" target="_blank">-->
+<!--            <button class="btn btn-outline-secondary" type="submit" name="q" value="1"> Cляб№ По заказу№</button>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</script>-->
 
-<script>
-$(document).ready(function(){
-  $("#btn2").click(function(){
-    $("#add_block").append(""+ $("#html-1").html());
-  });
-});
+<!--<script>-->
+<!--$(document).ready(function(){-->
+<!--  $("#btn2").click(function(){-->
+<!--    $("#add_block").append(""+ $("#html-1").html());-->
+<!--  });-->
+<!--});-->
 
-</script>
+<!--</script>-->
 
 
 <!--<button id="btn2">Append text</button>-->
@@ -177,6 +177,7 @@ $(document).ready(function(){
         <button class="btn btn-outline-secondary" type="submit" name="q" value="{{sl.number_slab}}"> Cляб№
             {{sl.number_slab}} (По заказу№ {{sl.oreder_of_client}}) Выполнение работ: {{sl.slab_works}}
         </button>
+
     </form>
     {% endfor %}
     <div id="add_block"></div>
