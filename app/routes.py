@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import flask
 import flask_sqlalchemy
-from flask import render_template, flash, redirect, url_for, request, json
+from flask import render_template, flash, redirect, url_for, request, json, g
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
@@ -155,30 +155,52 @@ def order_client():
     preproduct_work = PreProduct.query.filter_by(number_order_client=q).all()
     user_add_preproduct = User.query.all()
 
+    status = 3
     if form.is_submitted():
         for work in preproduct_work:
             if work.work_type == 48:
                 add_workrer = PreProduct.query.get(
                     (PreProduct.query.filter_by(number_order_client=q, work_type=48).first()).id)
-                add_workrer.set_worker = form.user_id_1.data
-                db.session.commit()
+                if form.user_id_1.data == "0":
+                    status = 0
+                    flash('Не выбран ответственный сотрудник для "Замеры"')
+                else:
+                    worker = User.query.filter_by(id=form.user_id_1.data).first()
+                    add_workrer.set_worker = form.user_id_1.data
+                    db.session.commit()
+                    status = 1
+                    flash(f'Сотрудник {worker.first_name}  {worker.last_name} назначен для "Контроль"')
 
             if work.work_type == 49:
                 add_workrer = PreProduct.query.get(
                     (PreProduct.query.filter_by(number_order_client=q, work_type=49).first()).id)
-                add_workrer.set_worker = form.user_id_2.data
-                db.session.commit()
+                if form.user_id_2.data == "0":
+                    status = 0
+                    flash('Не выбран ответственный сотрудник для "Чертежи"')
+                else:
+                    worker = User.query.filter_by(id=form.user_id_2.data).first()
+                    add_workrer.set_worker = form.user_id_2.data
+                    db.session.commit()
+                    status = 1
+                    flash(f'Сотрудник {worker.first_name}  {worker.last_name} назначен для "Контроль"')
 
             if work.work_type == 50:
                 add_workrer = PreProduct.query.get(
                     (PreProduct.query.filter_by(number_order_client=q, work_type=50).first()).id)
-                add_workrer.set_worker = form.user_id_3.data
-                db.session.commit()
+                if form.user_id_3.data == "0":
+                    status = 0
+                    flash('Не выбран ответственный сотрудник для "Контроль"')
+                else:
+                    worker = User.query.filter_by(id=form.user_id_3.data).first()
+                    add_workrer.set_worker = form.user_id_3.data
+                    db.session.commit()
+                    status = 1
+                    flash(f'Сотрудник {worker.first_name}  {worker.last_name} назначен для "Контроль"')
 
     slab = SlabWorks.query.filter_by(oreder_of_client=order_client.id).all()
 
     return render_template("order_client.html", title="Заказ клиента", order_client=order_client, form=form,
-                           name_field=name_field, work_dic=work_dic, user_add_preproduct=user_add_preproduct, slab=slab)
+                           name_field=name_field, work_dic=work_dic, user_add_preproduct=user_add_preproduct, slab=slab, status=status)
 
 
 @app.route('/add_slab', methods=['GET', 'POST'])
@@ -190,7 +212,8 @@ def add_slab():
     form = Add_slab()
     if request.method == 'POST' and form.is_submitted():
         form_data_slab = SlabWorks(number_slab=form.number_slab.data, thickness=form.thickness.data,
-                                   value=form.type_slab.data, oreder_of_client=q, slab_works=2, set_worker=2)
+                                   value=form.type_slab.data, oreder_of_client=q, slab_works=form.type_slab.data,
+                                   set_worker=0)
 
         db.session.add(form_data_slab)
         db.session.commit()

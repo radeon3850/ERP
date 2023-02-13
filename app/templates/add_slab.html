@@ -5,7 +5,7 @@
 {% endif %}
 
 {% block content %}
-<h2>Добавить сляб для заказа № {{order_client.id}} {{order_client.title_order}}</h2>
+<h2>Добавить работы № {{order_client.id}} {{order_client.title_order}}</h2>
 
 <style>
       .open-button {
@@ -26,10 +26,10 @@
     .form-popup {
       display: none;
       position: fixed;
-      bottom: 100;
-      right: 850px;
-      border: 10px solid #f1f1f1;
-      z-index: 9;
+      bottom: 20;
+      right: 700px;
+      border: 5px solid #f1f1f1;
+      z-index: 8;
     }
 
     /* Добавить стили для контейнера формы */
@@ -77,110 +77,103 @@
     }
 
 
-
 </style>
 
-<script>
-        function openForm() {document.getElementById("myForm").style.display = "block";}
-        function closeForm() {document.getElementById("myForm").style.display = "none";}
+<div class="container mt-3">
 
-
-</script>
-
-<!--<script id="html-1" type="text/template">-->
-<!--    <div class="d-grid gap-2 mx-auto">-->
-<!--        <form action="" method="get" target="_blank">-->
-<!--            <button class="btn btn-outline-secondary" type="submit" name="q" value="1"> Cляб№ По заказу№</button>-->
-<!--        </form>-->
-<!--    </div>-->
-<!--</script>-->
-
-<!--<script>-->
-<!--$(document).ready(function(){-->
-<!--  $("#btn2").click(function(){-->
-<!--    $("#add_block").append(""+ $("#html-1").html());-->
-<!--  });-->
-<!--});-->
-
-<!--</script>-->
-
-
-<!--<button id="btn2">Append text</button>-->
-
-<button class="open-button" onclick="openForm()">Добавить сляб</button>
-<div class="form-popup" id="myForm">
-    <form action="" class="form-container" id="form1" method="post" ,>
-        <h1> Введите данные </h1>
-        <table>
-            <tr>
-                {{ form.number_slab.label }}<br>
-                {{ form.number_slab(class="form-control", id="formGroupExampleInput", placeholder="№ Сляба") }}<br>
-                {% for error in form.number_slab.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </tr>
-            <tr>
-                {{ form.thickness.label }}<br>
-                {{ form.thickness(class="form-control", id="formGroupExampleInput", placeholder="Значение") }}<br>
-                {% for error in form.thickness.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </tr>
-            <tr>
-                {{ form.type_slab.label }}<br>
-                {{ form.type_slab(class="form-control", id="formGroupExampleInput", placeholder="Значение") }}<br>
-                {% for error in form.type_slab.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </tr>
-            {{ form.submit(class="btn", id="btn2")}}
-            <button type="button" class="btn cancel" onclick="closeForm()">Закрыть</button>
-        </table>
-    </form>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+        Добавить работы
+    </button>
 </div>
 
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-<!--    <div class="form-popup" id="myForm">-->
-<!--      <form action="" class="form-container" method="post">-->
-<!--        <h1> Введите данные </h1>-->
-<!--             <p>-->
-<!--               <label for="formGroupExampleInput" class="form-label">Введите номер слаба</label>-->
-<!--                 <input type="text" class="form-control" id="formGroupExampleInput"  name="number" placeholder="№ сляба">-->
-<!--            </p>-->
-<!--              <p>-->
-<!--               <label for="formGroupExampleInput" class="form-label">Укажите толщину</label>-->
-<!--                 <input type="text" class="form-control" id="formGroupExampleInput"  name="thickness" placeholder="Значение">-->
-<!--            </p>-->
-<!--              <p>-->
-<!--               <label for="formGroupExampleInput" class="form-label">Укажите вид</label>-->
-<!--                 <input type="text" class="form-control" id="formGroupExampleInput" name="type" placeholder="Вид">-->
-<!--            </p>-->
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Modal Heading</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
 
-<!--            <button  class="btn" type="submit"> Добавить сляб </button>-->
-<!--            <button class="btn cancel" onclick="closeForm()">Закрыть</button>-->
-<!--      </form>-->
-<!--    </div>-->
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form action="" class="form-container" id="form1" method="post" ,>
+                    <h1> Введите данные </h1>
+                    <table>
+                        <tr>
+                            {{ form.number_slab.label }}<br>
+                            {{ form.number_slab(class="form-control", id="formGroupExampleInput", placeholder="№ Сляба")
+                            }}<br>
+                            {% for error in form.number_slab.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {{ form.thickness.label }}<br>
+                            {{ form.thickness(class="form-control", id="formGroupExampleInput", placeholder="Значение")
+                            }}<br>
+                            {% for error in form.thickness.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {{ form.type_slab.label }}<br>
+                            {{ form.type_slab(class="form-control", id="formGroupExampleInput", placeholder="Значение")
+                            }}<br>
+                            {% for error in form.type_slab.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {{ form.value_work.label }}<br>
+                            {{ form.value_work(class="form-control", id="formGroupExampleInput", placeholder="Значение")
+                            }}<br>
+                            {% for error in form.value_work.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </tr>
+                        {{ form.submit(class="btn", id="btn2")}}
+                        <button type="button" class="btn cancel" data-bs-dismiss="modal">Закрыть</button>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!--<div id="1" class="d-grid gap-2 mx-auto">-->
+<!--    {% for sl in slab %}-->
+<!--    <form action="{{ url_for('slab') }}" method="get" target="_blank">-->
+<!--        <button class="btn btn-outline-secondary" type="submit" name="q" value="{{sl.number_slab}}"> Cляб№-->
+<!--            {{sl.number_slab}} (По заказу№ {{sl.oreder_of_client}}) Выполнение работ: {{sl.slab_works}}-->
+<!--        </button>-->
 
-<!--<form action="{{ url_for('add_slab') }}" method="POST">-->
-<!--    <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="select">-->
-<!--            <option selected>Выбрать ответственного из списка</option>-->
-<!--            {% for name in user %}-->
-<!--            <option value="{{ name.first_name }}" style="color: green">{{ name.first_name }}</option>-->
-<!--            {% endfor %}-->
-<!--    </select>-->
-<!--    <button type="submit" class="btn btn-primary">Submit</button>-->
-<!--</form>-->
-<div id="1" class="d-grid gap-2 mx-auto">
+<!--    </form>-->
+<!--    {% endfor %}-->
+<!--    <div id="add_block"></div>-->
+<!--</div>-->
+<p></p>
+<h3>Слябы</h3>
+<p></p>
+<table class="table table-hover table-responsive-sm">
+    <thead class="table-success">
+    <tr>
+        <th>Сляб №</th>
+        <th>Заказ клиента №</th>
+        <th>Выполнение работ</th>
+    </tr>
+    </thead>
+    <tbody>
     {% for sl in slab %}
-    <form action="{{ url_for('slab') }}" method="get" target="_blank">
-        <button class="btn btn-outline-secondary" type="submit" name="q" value="{{sl.number_slab}}"> Cляб№
-            {{sl.number_slab}} (По заказу№ {{sl.oreder_of_client}}) Выполнение работ: {{sl.slab_works}}
-        </button>
-
-    </form>
+    <tr>
+        <td>{{sl.number_slab}}</td>
+        <td>По заказу№ {{sl.oreder_of_client}}</td>
+        <td>{{sl.work_set.work_type}}</td>
+    </tr>
     {% endfor %}
-    <div id="add_block"></div>
-</div>
+    </tbody>
+</table>
 
 {% endblock %}

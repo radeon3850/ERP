@@ -70,9 +70,13 @@
 
 {% for order in client_order %}
 <button class="accordion" id="rcorners2">
+    <div class="container-sm pt-3 border " style="background-color: #e3f2fd">
     <p> {{ order.id }} {{ order.title_order }} </p>
+    <hr>
     <p>{{ order.address }} {{ order.deadline }}</p>
+    </div>
 </button>
+
 
 <div class="panel">
   <div>

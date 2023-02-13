@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, Selec
     RadioField, validators
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Optional
 from wtforms.widgets import TextArea, html_params, Select
-from app.models import User, Clients, Specialization
+from app.models import User, Clients, Specialization, Works
 from app import db
 
 
@@ -62,6 +62,7 @@ class AddOrder(FlaskForm):
 
 class Checkbox(FlaskForm):
     choices = [(user.id, " ".join((user.first_name, user.last_name))) for user in (User.query.all())]
+    option_select = choices.insert(0, (0, 'Выбрать сотрудника'))
     user_id_1 = SelectField('Замеры',
                             choices=choices)  # choise firstname and last name, but save to database are user_idfrom table user
     user_id_2 = SelectField('Чертежи',
@@ -69,8 +70,13 @@ class Checkbox(FlaskForm):
     user_id_3 = SelectField('Контроль',
                             choices=choices)  # choise firstname and last name, but save to database are user_idfrom table user
     save = SubmitField('Сохранить')
+
+
 class Add_slab(FlaskForm):
-    number_slab = StringField("Введите номер сляба", validators=[DataRequired()])
-    thickness=StringField("Укажите толщину", validators=[DataRequired()])
-    type_slab = StringField("Укажите вид", validators=[DataRequired()])
-    submit=SubmitField('Добавить')
+    choices = [(work.id, work.work_type) for work in (Works.query.all())]
+    option_select=choices.insert(0,(0, 'Выбрать тип работы'))
+    number_slab = StringField("Номер сляба", validators=[DataRequired()])
+    thickness = StringField("Толщина", validators=[DataRequired()])
+    type_slab = SelectField('Вид работ', choices=choices)
+    value_work = StringField("Значение ", validators=[DataRequired()])
+    submit = SubmitField('Сохранить')
