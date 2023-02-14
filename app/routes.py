@@ -31,7 +31,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
+            flash('Invalid username or password', 'error')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
@@ -59,7 +59,7 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Congratulations, you are now a registered user!')
+        flash('Congratulations, you are now a registered user!', 'info')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -88,7 +88,7 @@ def add_order():
             client = Clients(first_name=form_add_client.first_name.data, last_name=form_add_client.last_name.data,
                              phone_number=form_add_client.phone.data)  # geta form AddClient
             add_data(self=client)  # connect to data base
-            flash('Клиент добавлен в базу')
+            flash('Клиент добавлен в базу', 'info')
             return redirect(url_for('add_order'))
 
     form = AddOrder()
@@ -105,7 +105,7 @@ def add_order():
                                        project_drawing=form.checkbox_blueprint.data, control=form.checkbox_control.data)
 
             add_data(self=client_order)  # add data to table OrderClient
-            flash('Заказ покупателя добавлен')
+            flash('Заказ покупателя добавлен', 'info')
 
             # check - if fields of form (checkbox_measurements,checkbox_blueprint, checkbox_control) sends True
             # save data to database
@@ -155,52 +155,45 @@ def order_client():
     preproduct_work = PreProduct.query.filter_by(number_order_client=q).all()
     user_add_preproduct = User.query.all()
 
-    status = 3
     if form.is_submitted():
         for work in preproduct_work:
             if work.work_type == 48:
                 add_workrer = PreProduct.query.get(
                     (PreProduct.query.filter_by(number_order_client=q, work_type=48).first()).id)
                 if form.user_id_1.data == "0":
-                    status = 0
-                    flash('Не выбран ответственный сотрудник для "Замеры"')
+                    flash('Не выбран ответственный сотрудник для "Замеры"', 'error')
                 else:
                     worker = User.query.filter_by(id=form.user_id_1.data).first()
                     add_workrer.set_worker = form.user_id_1.data
                     db.session.commit()
-                    status = 1
-                    flash(f'Сотрудник {worker.first_name}  {worker.last_name} назначен для "Контроль"')
+                    flash(f'Сотрудник {worker.first_name}  {worker.last_name} назначен для "Замеры"', 'info')
 
             if work.work_type == 49:
                 add_workrer = PreProduct.query.get(
                     (PreProduct.query.filter_by(number_order_client=q, work_type=49).first()).id)
                 if form.user_id_2.data == "0":
-                    status = 0
-                    flash('Не выбран ответственный сотрудник для "Чертежи"')
+                    flash('Не выбран ответственный сотрудник для "Чертежи"', 'error')
                 else:
                     worker = User.query.filter_by(id=form.user_id_2.data).first()
                     add_workrer.set_worker = form.user_id_2.data
                     db.session.commit()
-                    status = 1
-                    flash(f'Сотрудник {worker.first_name}  {worker.last_name} назначен для "Контроль"')
+                    flash(f'Сотрудник {worker.first_name}  {worker.last_name} назначен для "Чертежи"', 'info')
 
             if work.work_type == 50:
                 add_workrer = PreProduct.query.get(
                     (PreProduct.query.filter_by(number_order_client=q, work_type=50).first()).id)
                 if form.user_id_3.data == "0":
-                    status = 0
-                    flash('Не выбран ответственный сотрудник для "Контроль"')
+                    flash('Не выбран ответственный сотрудник для "Контроль"', 'error')
                 else:
                     worker = User.query.filter_by(id=form.user_id_3.data).first()
                     add_workrer.set_worker = form.user_id_3.data
                     db.session.commit()
-                    status = 1
-                    flash(f'Сотрудник {worker.first_name}  {worker.last_name} назначен для "Контроль"')
+                    flash(f'Сотрудник {worker.first_name}  {worker.last_name} назначен для "Контроль"', 'info')
 
     slab = SlabWorks.query.filter_by(oreder_of_client=order_client.id).all()
 
     return render_template("order_client.html", title="Заказ клиента", order_client=order_client, form=form,
-                           name_field=name_field, work_dic=work_dic, user_add_preproduct=user_add_preproduct, slab=slab, status=status)
+                           name_field=name_field, work_dic=work_dic, user_add_preproduct=user_add_preproduct, slab=slab)
 
 
 @app.route('/add_slab', methods=['GET', 'POST'])
@@ -217,7 +210,7 @@ def add_slab():
 
         db.session.add(form_data_slab)
         db.session.commit()
-        flash('Сляб добавлен к карте заказа')
+        flash('Сляб добавлен к карте заказа', 'info')
     # if request.method == 'POST':
     #     number = request.form['number']
     #     thickness = request.form['thickness']

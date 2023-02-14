@@ -52,31 +52,44 @@
     </nav>
     <hr>
 
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
+    <!--    <div class="container mt-3">-->
+    <!--        <div class="alert alert-danger alert-dismissible">-->
+    <!--            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>-->
+    <!--            <strong class="{{category}}">{{ message }}!</strong>-->
+    <!--        </div>-->
+    <!--        <div class="alert alert-success alert-dismissible">-->
+    <!--            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>-->
+    <!--            <strong>{{ message }}!</strong>-->
+    <!--        </div>-->
     <div class="container mt-3">
-        {% for message in messages %}
-        {% if status is eq(1) %}
+        {% with errors = get_flashed_messages(category_filter=["info"]) %}
+        {% if errors %}
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            <strong>Ошибка сохранения!</strong>  {{ message }}
+            {%- for msg in errors %}
+            <ul>
+            <strong>{{ msg }}!</strong>
+            </ul>
+            {% endfor -%}
         </div>
-        {% elif status is eq(0) %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="container mt-3">
+        {% with errors = get_flashed_messages(category_filter=["error"]) %}
+        {% if errors %}
         <div class="alert alert-danger alert-dismissible">
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            <strong>{{ message }}!</strong>
+            {%- for msg in errors %}
+            <ul>
+            <strong>{{ msg }}!</strong>
+            </ul>
+            {% endfor -%}
         </div>
-        {% else %}
-        <div class="alert alert-danger alert-dismissible">
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            <strong>Ошибка сохранения!</strong> {{ message }}
-        </div>
-        {% endif %}
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
     </div>
-    </div>
+    {% endif %}
+    {% endwith %}
 </head>
 <body>
 <div class="container-sm pt-3 border " style="background-color: #e3f2fd">
