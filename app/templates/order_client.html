@@ -64,6 +64,17 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 </style>
 <h5 style="color: red">Карта заказа клиента№{{order_client.id}}</h5>
 <p></p>
@@ -89,21 +100,22 @@
     </tbody>
 </table>
 
-<ul class="nav nav-tabs" role="tablist">
-    <li class="nav-item">
-        <a class="nav-link active" data-bs-toggle="tab" href="#home">Предпроизводственные работы</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" href="#menu1">Слябы</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" href="#menu2">Детали</a>
-    </li>
-</ul>
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button"
+                role="tab" aria-controls="nav-home" aria-selected="true">Предпроектная работа
+        </button>
+        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button"
+                role="tab" aria-controls="nav-profile" aria-selected="false">Слябы
+        </button>
+        <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button"
+                role="tab" aria-controls="nav-contact" aria-selected="false">Детали
+        </button>
+    </div>
+</nav>
 
-<!-- Tab panes -->
-<div class="tab-content">
-    <div id="home" class="container tab-pane active"><br>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
         <div class="container-fluid mt-3">
             <form action="" method="post">
                 {{ form.hidden_tag()}}
@@ -143,87 +155,80 @@
             </form>
         </div>
     </div>
-
-    <div id="menu1" class="container tab-pane fade"><br>
-        <div class="container-sm pt-2 ">
-            <div class="row">
-                <div class="col-sm-2">
-                    <h3>Слябы</h3>
-                </div>
-                <div class="col-sm-2">
-                </div>
-                <div class="col-sm-2">
-                </div>
-                <div class="col-sm-1">
-                </div>
-                <div class="col-sm-2">
-                </div>
-                <div class="col-sm-3">
-                    <div class="button btn-success btn-xs" id="add_slab">
-                        <form name="form-btn" action="{{ url_for('add_slab') }}" method="get" target="_blank">
-                            <button type="submit" name="q" value="{{order_client.id}}" class="btn btn-primary">
-                                Добавить сляб
-                            </button>
-                        </form>
-                    </div>
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+        <div class="row">
+            <div class="col-sm-2">
+                <h3>Слябы</h3>
+            </div>
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-1">
+            </div>
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-3">
+                <div class="button btn-success btn-xs" id="add_slab">
+                    <form name="form-btn" action="{{ url_for('add_slab') }}" method="get" target="_blank">
+                        <button type="submit" name="q" value="{{order_client.id}}" class="btn btn-primary">
+                            Добавить сляб
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
+        <table class="table table-hover table-responsive-sm">
+            <thead class="table-success">
+            <tr>
+                <th>Сляб №</th>
+                <th>Заказ клиента №</th>
+                <th>Выполнение работ</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for sl in slab %}
+            <tr>
+                <td>{{sl.number_slab}}</td>
+                <td>По заказу№ {{sl.oreder_of_client}}</td>
+                <td>{{sl.work_set.work_type}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
-    <hr>
-    <table class="table table-hover table-responsive-sm">
-        <thead class="table-success">
-        <tr>
-            <th>Сляб №</th>
-            <th>Заказ клиента №</th>
-            <th>Выполнение работ</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for sl in slab %}
-        <tr>
-            <td>{{sl.number_slab}}</td>
-            <td>По заказу№ {{sl.oreder_of_client}}</td>
-            <td>{{sl.work_set.work_type}}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
 
-<div id="menu2" class="container tab-pane fade"><br>
-    <h3>Слябы</h3>
-    <p></p>
-    <table class="table table-hover table-responsive-sm">
-        <thead class="table-success">
-        <tr>
-            <th>Название заказа</th>
-            <th>Камень</th>
-            <th>Описание заказа</th>
-            <th>Адрес Заказа</th>
-            <th>Конечная дата</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>{{order_client.title_order}}</td>
-            <td>{{order_client.title_stone}}</td>
-            <td>{{order_client.object_description}}</td>
-            <td>{{order_client.address}}</td>
-            <td>{{order_client.deadline}}</td>
-        </tr>
-        </tbody>
-    </table>
-    <div class="row">
-        <div>
-            <p id="add_part">
-            <form name="form-btn" action="{{ url_for('add_part') }}" method="get" target="_blank">
-                <button type="submit" class="btn btn-primary">Добавить деталь</button>
-            </form>
+    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
+        <h3>Детали</h3>
+        <p></p>
+        <table class="table table-hover table-responsive-sm">
+            <thead class="table-success">
+            <tr>
+                <th>Название заказа</th>
+                <th>Камень</th>
+                <th>Описание заказа</th>
+                <th>Адрес Заказа</th>
+                <th>Конечная дата</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{order_client.title_order}}</td>
+                <td>{{order_client.title_stone}}</td>
+                <td>{{order_client.object_description}}</td>
+                <td>{{order_client.address}}</td>
+                <td>{{order_client.deadline}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div>
+                <p id="add_part">
+                <form name="form-btn" action="{{ url_for('add_part') }}" method="get" target="_blank">
+                    <button type="submit" class="btn btn-primary">Добавить деталь</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-
-
 </div>
 {% endblock %}

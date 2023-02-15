@@ -191,9 +191,12 @@ def order_client():
                     flash(f'Сотрудник {worker.first_name}  {worker.last_name} назначен для "Контроль"', 'info')
 
     slab = SlabWorks.query.filter_by(oreder_of_client=order_client.id).all()
+    preproduct_work = PreProduct.query.filter_by(number_order_client=q).all()
+    print(preproduct_work)
 
     return render_template("order_client.html", title="Заказ клиента", order_client=order_client, form=form,
-                           name_field=name_field, work_dic=work_dic, user_add_preproduct=user_add_preproduct, slab=slab)
+                           name_field=name_field, work_dic=work_dic, user_add_preproduct=user_add_preproduct, slab=slab,
+                           preproduct_work=preproduct_work)
 
 
 @app.route('/add_slab', methods=['GET', 'POST'])
