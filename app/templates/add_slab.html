@@ -97,7 +97,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <!-- Modal body -->
+             Modal body
             <div class="modal-body">
                 <form action="" class="form-container" id="form1" method="post" ,>
                     <h1> Введите данные </h1>
@@ -142,18 +142,6 @@
         </div>
     </div>
 </div>
-
-<!--<div id="1" class="d-grid gap-2 mx-auto">-->
-<!--    {% for sl in slab %}-->
-<!--    <form action="{{ url_for('slab') }}" method="get" target="_blank">-->
-<!--        <button class="btn btn-outline-secondary" type="submit" name="q" value="{{sl.number_slab}}"> Cляб№-->
-<!--            {{sl.number_slab}} (По заказу№ {{sl.oreder_of_client}}) Выполнение работ: {{sl.slab_works}}-->
-<!--        </button>-->
-
-<!--    </form>-->
-<!--    {% endfor %}-->
-<!--    <div id="add_block"></div>-->
-<!--</div>-->
 <p></p>
 <h3>Слябы</h3>
 <p></p>
@@ -163,6 +151,7 @@
         <th>Сляб №</th>
         <th>Заказ клиента №</th>
         <th>Выполнение работ</th>
+        <th>Значение</th>
     </tr>
     </thead>
     <tbody>
@@ -171,9 +160,11 @@
         <td>{{sl.number_slab}}</td>
         <td>По заказу№ {{sl.oreder_of_client}}</td>
         <td>{{sl.work_set.work_type}}</td>
+        <td>{{sl.value}}</td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
+</div>
 
 {% endblock %}

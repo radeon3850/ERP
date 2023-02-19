@@ -75,9 +75,15 @@
 
 
 
+
+
+
+
+
 </style>
 <h5 style="color: red">Карта заказа клиента№{{order_client.id}}</h5>
 <p></p>
+<hr>
 
 <table class="table table-hover table-responsive-sm">
     <thead class="table-success">
@@ -116,6 +122,25 @@
 
 <div class="tab-content" id="nav-tabContent">
     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+        <hr>
+        <table class="table table-hover table-responsive-sm">
+            <thead class="table-success">
+            <tr>
+                <th>№</th>
+                <th>Работа</th>
+                <th>Исполнитель</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for work in preproduct_work %}
+            <tr>
+                <td>{{work.id}}</td>
+                <td>{{work.work.work_type}}</td>
+                <td>{{work.worker.last_name}} {{work.worker.first_name}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         <div class="container-fluid mt-3">
             <form action="" method="post">
                 {{ form.hidden_tag()}}
@@ -184,6 +209,7 @@
                 <th>Сляб №</th>
                 <th>Заказ клиента №</th>
                 <th>Выполнение работ</th>
+                <th>Значение</th>
             </tr>
             </thead>
             <tbody>
@@ -192,6 +218,7 @@
                 <td>{{sl.number_slab}}</td>
                 <td>По заказу№ {{sl.oreder_of_client}}</td>
                 <td>{{sl.work_set.work_type}}</td>
+                <td>{{sl.value}}</td>
             </tr>
             {% endfor %}
             </tbody>
@@ -199,36 +226,48 @@
     </div>
 
     <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
-        <h3>Детали</h3>
-        <p></p>
+        <div class="row">
+            <div class="col-sm-2">
+                <h3>Детали</h3>
+            </div>
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-1">
+            </div>
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-3">
+                <div class="button btn-success btn-xs" id="add_part">
+                    <form name="form-btn" action="{{ url_for('add_part') }}" method="get" target="_blank">
+                        <button type="submit" name="q" value="{{order_client.id}}" class="btn btn-primary">
+                            Добавить деталь
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
         <table class="table table-hover table-responsive-sm">
             <thead class="table-success">
             <tr>
-                <th>Название заказа</th>
-                <th>Камень</th>
-                <th>Описание заказа</th>
-                <th>Адрес Заказа</th>
-                <th>Конечная дата</th>
+                <th>Деталь №</th>
+                <th>Заказ клиента №</th>
+                <th>Выполнение работ</th>
+                <th>Значение</th>
             </tr>
             </thead>
             <tbody>
+            {% for part in parts %}
             <tr>
-                <td>{{order_client.title_order}}</td>
-                <td>{{order_client.title_stone}}</td>
-                <td>{{order_client.object_description}}</td>
-                <td>{{order_client.address}}</td>
-                <td>{{order_client.deadline}}</td>
+                <td>{{part.number_part}}</td>
+                <td>По заказу№ {{part.oreder_of_client}}</td>
+                <td>{{part.work_set_part.work_type}}</td>
+                <td>{{part.value}}</td>
             </tr>
+            {% endfor %}
             </tbody>
         </table>
-        <div class="row">
-            <div>
-                <p id="add_part">
-                <form name="form-btn" action="{{ url_for('add_part') }}" method="get" target="_blank">
-                    <button type="submit" class="btn btn-primary">Добавить деталь</button>
-                </form>
-            </div>
-        </div>
     </div>
 </div>
 {% endblock %}

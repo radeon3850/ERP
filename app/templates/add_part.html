@@ -5,7 +5,174 @@
 {% endif %}
 
 {% block content %}
+<h2>Добавить работы по заказу № {{order_client.id}} {{order_client.title_order}}</h2>
 
-<h1>добавить сляб</h1>
+<style>
+      .open-button {
+      background-color: red;
+      border: none;
+      color: white;
+      padding: 15px 24px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 20px;
+      margin: 4px 2px;
+      cursor: pointer;
+      }
+      {box-sizing: border-box;}
+
+    /* Всплывающая форма-скрыта по умолчанию */
+    .form-popup {
+      display: none;
+      position: fixed;
+      bottom: 20;
+      right: 700px;
+      border: 5px solid #f1f1f1;
+      z-index: 8;
+    }
+
+    /* Добавить стили для контейнера формы */
+    .form-container {
+      max-width: 500px;
+      padding: 10px;
+      background-color: white;
+    }
+
+    /* Поля ввода полной ширины */
+    .form-container input[type=text], .form-container input[type=password] {
+      width: 100%;
+      padding: 15px;
+      margin: 5px 0 22px 0;
+      border: none;
+      background: #f1f1f1;
+    }
+
+    /* Когда входы получают фокус, сделайте что-нибудь */
+    .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+      background-color: #ddd;
+      outline: none;
+    }
+
+    /* Установите стиль для кнопки отправить/войти */
+    .form-container .btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 16px 20px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom:10px;
+      opacity: 1;
+    }
+
+    /* Добавить красный цвет фона для кнопки "Отмена" */
+    .form-container .cancel {
+      background-color: red;
+    }
+
+    /* Добавить некоторые эффекты наведения на кнопки */
+    .form-container .btn:hover, .open-button:hover {
+      opacity: 1;
+    }
+
+
+
+</style>
+
+<div class="container mt-3">
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+        Добавить работы
+    </button>
+</div>
+
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Введите данные</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form action="" class="form-container" id="form1" method="post">
+                    <table>
+                        <tr>
+                            {{ form.number_part.label }}<br>
+                            {{ form.number_part(class="form-control", id="formGroupExampleInput", placeholder="№ детали")
+                            }}<br>
+                            {% for error in form.number_part.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {{ form.thickness.label }}<br>
+                            {{ form.thickness(class="form-control", id="formGroupExampleInput", placeholder="Значение")
+                            }}<br>
+                            {% for error in form.thickness.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {{ form.part_work.label }}<br>
+                            {{ form.part_work(class="form-control", id="formGroupExampleInput", placeholder="Значение")
+                            }}<br>
+                            {% for error in form.part_work.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {{ form.value_work.label }}<br>
+                            {{ form.value_work(class="form-control", id="formGroupExampleInput",
+                            placeholder="Значение")
+                            }}<br>
+                            {% for error in form.value_work.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {{ form.deadline.label }}<br>
+                            {{ form.deadline(class="form-control", id="formGroupExampleInput", type='date')
+                            }}<br>
+                            {% for error in form.deadline.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </tr>
+                        {{ form.submit(class="btn", id="btn2")}}
+                        <button type="button" class="btn cancel" data-bs-dismiss="modal">Закрыть</button>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<p></p>
+<h3>Слябы</h3>
+<p></p>
+<table class="table table-hover table-responsive-sm">
+    <thead class="table-success">
+    <tr>
+        <th>Деталь №</th>
+        <th>Заказ клиента №</th>
+        <th>Выполнение работ</th>
+        <th>Значение</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for part in parts %}
+    <tr>
+        <td>{{part.number_part}}</td>
+        <td>По заказу№ {{part.oreder_of_client}}</td>
+        <td>{{part.work_set_part.work_type}}</td>
+        <td>{{part.value}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
 
 {% endblock %}

@@ -5,8 +5,8 @@ from flask import render_template, flash, redirect, url_for, request, json, g
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, AddClient, AddOrder, Checkbox, Add_slab
-from app.models import User, Clients, OrderClient, PreProduct, Works, SlabWorks
+from app.forms import LoginForm, RegistrationForm, AddClient, AddOrder, Checkbox, Add_slab, Add_part
+from app.models import User, Clients, OrderClient, PreProduct, Works, SlabWorks, PartWorks
 
 
 @app.route('/')
@@ -192,11 +192,11 @@ def order_client():
 
     slab = SlabWorks.query.filter_by(oreder_of_client=order_client.id).all()
     preproduct_work = PreProduct.query.filter_by(number_order_client=q).all()
-    print(preproduct_work)
+    parts = PartWorks.query.filter_by(oreder_of_client=order_client.id).all()
 
     return render_template("order_client.html", title="Заказ клиента", order_client=order_client, form=form,
                            name_field=name_field, work_dic=work_dic, user_add_preproduct=user_add_preproduct, slab=slab,
-                           preproduct_work=preproduct_work)
+                           preproduct_work=preproduct_work, parts=parts)
 
 
 @app.route('/add_slab', methods=['GET', 'POST'])
@@ -241,7 +241,21 @@ def add_slab():
 @app.route('/add_part', methods=['GET', 'POST'])
 @login_required
 def add_part():
-    return render_template("add_part.html", title='Добавление деталей')
+    user = User.query.all()
+    q = request.args.get('q')  # get data about Number of order_client from HTML after сlick on the button
+    order_client = OrderClient.query.get(q)
+    form = Add_part()
+    if request.method == 'POST' and form.is_submitted():
+        form_data_part = PartWorks(number_part=form.number_part.data, thickness=form.thickness.data,
+                                   value=form.value_work.data, deadline_part=form.deadline.data, oreder_of_client=q, part_works=form.part_work.data,
+                                   set_worker=0)
+
+        db.session.add(form_data_part)
+        db.session.commit()
+        flash(f'Детель № {form.number_part.data} добавлена к карте заказа', 'info')
+
+    parts = PartWorks.query.filter_by(oreder_of_client=order_client.id).all()
+    return render_template("add_part.html", title='Добавление деталей', user=user, order_client=order_client, parts=parts, form=form)
 
 
 @app.route('/slab', methods=['GET', 'POST'])
