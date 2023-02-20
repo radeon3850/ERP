@@ -154,6 +154,7 @@ class SlabWorks(db.Model):
                            nullable=False)  # relationship to table "Works" One to many
     set_worker = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     work_set=db.relationship("Works", backref='work_set', lazy='subquery')
+    worker=db.relationship("User", backref='worker_set', lazy='subquery')
 
     def __repr__(self):
         return f'<Slab№ {self.number_slab}, {self.oreder_of_client}, {self.slab_works}>'

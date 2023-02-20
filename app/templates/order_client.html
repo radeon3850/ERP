@@ -210,6 +210,9 @@
                 <th>Заказ клиента №</th>
                 <th>Выполнение работ</th>
                 <th>Значение</th>
+                {% if current_user.specialization_id is eq(3) %}
+                <th>Исполнитель работ</th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -219,6 +222,13 @@
                 <td>По заказу№ {{sl.oreder_of_client}}</td>
                 <td>{{sl.work_set.work_type}}</td>
                 <td>{{sl.value}}</td>
+                {% if current_user.specialization_id is eq(3) %}
+                    {% if sl.set_worker is eq(0) %}
+                    <td>Не назначен</td>
+                    {% else %}
+                    <td>{{sl.set_worker}}</td>
+                    {% endif %}
+                {% endif %}
             </tr>
             {% endfor %}
             </tbody>

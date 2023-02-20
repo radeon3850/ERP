@@ -103,6 +103,9 @@
                 <form action="" class="form-container" id="form1" method="post">
                     <table>
                         <tr>
+                            <input type="button" class="btn cancel" onclick="myFunction()" value="Очистить данные формы">
+                        </tr>
+                        <tr>
                             {{ form.number_part.label }}<br>
                             {{ form.number_part(class="form-control", id="formGroupExampleInput", placeholder="№ детали")
                             }}<br>
@@ -174,5 +177,12 @@
     {% endfor %}
     </tbody>
 </table>
+
+<script>
+<!--clear form fields-->
+function myFunction() {
+  document.getElementById("form1").reset();
+}
+</script>
 
 {% endblock %}

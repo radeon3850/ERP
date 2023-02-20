@@ -53,7 +53,7 @@ class AddOrder(FlaskForm):
     stone = StringField('Камень: ', validators=[DataRequired()])
     object_description = TextField('Описание Обэкта: ', validators=[validators.Optional()], widget=TextArea())
     address = StringField('Адрес объекта: ', validators=[DataRequired()])
-    deadline = DateField('Конечная дата: ', validators=[validators.Optional()], format='%Y-%m-%d')
+    deadline = DateField('Конечная дата: ', validators=[validators.Optional(True)], format='%Y-%m-%d')
     checkbox_measurements = BooleanField('Замеры', default=False)
     checkbox_blueprint = BooleanField('Чертежи', default=False)
     checkbox_control = BooleanField('Контроль', default=True)
@@ -87,6 +87,14 @@ class Add_part(FlaskForm):
     number_part = StringField("Номер детали", validators=[DataRequired()])
     thickness = StringField("Толщина", validators=[DataRequired()])
     value_work = StringField("Значение ", validators=[DataRequired()])
-    deadline = DateField('Конечная дата: ', validators=[validators.Optional()], format='%Y-%m-%d')
+    deadline = DateField('Конечная дата: ', validators=[validators.Optional()], format='%Y-%m-%d',)
     part_work = SelectField('Вид работ', choices=choices)
+    submit = SubmitField('Сохранить')
+
+class AddWorker(FlaskForm):
+    choices = [(work.id, work.work_type) for work in (Works.query.all())]
+    option_select=choices.insert(0,(0, 'Выбрать тип работы'))
+    number_slab = StringField("Номер сляба", validators=[DataRequired()])
+    thickness = StringField("Толщина", validators=[DataRequired()])
+    type_slab = SelectField('Вид работ', choices=choices)
     submit = SubmitField('Сохранить')

@@ -189,6 +189,7 @@ def order_client():
                     add_workrer.set_worker = form.user_id_3.data
                     db.session.commit()
                     flash(f'Сотрудник {worker.first_name}  {worker.last_name} назначен для "Контроль"', 'info')
+            # return redirect(url_for('order_client'))
 
     slab = SlabWorks.query.filter_by(oreder_of_client=order_client.id).all()
     preproduct_work = PreProduct.query.filter_by(number_order_client=q).all()
@@ -214,24 +215,7 @@ def add_slab():
         db.session.add(form_data_slab)
         db.session.commit()
         flash('Сляб добавлен к карте заказа', 'info')
-    # if request.method == 'POST':
-    #     number = request.form['number']
-    #     thickness = request.form['thickness']
-    #     type = request.form['type']
-    #     if len(number) == 0 or len(thickness) == 0 or len(type) == 0:
-    #         print("Поля формы пустые")
-    #         flash('Заполенены не все поля формы добавления сляба')
-    #
-    #     elif order_client.id == q and check_data.number_slab == number:
-    #         flash('Сляб с такими параметрами уже добавлен')
-    #     else:
-    #         slab_data = SlabWorks(number_slab=number, thickness=thickness, oreder_of_client=order_client.id,
-    #                               slab_works=0,
-    #                               set_worker=0)
-    #         db.session.add(slab_data)
-    #         db.session.commit()
-    #         flash('Сляб добавлен к карте заказа')
-    #         return render_template("add_slab.html", title='Добавление слябов', user=user, order_client=order_client)
+        return redirect(url_for('slab'))
 
     slab = SlabWorks.query.filter_by(oreder_of_client=order_client.id).all()
     return render_template("add_slab.html", title='Добавление слябов', user=user, order_client=order_client, slab=slab,
@@ -247,15 +231,18 @@ def add_part():
     form = Add_part()
     if request.method == 'POST' and form.is_submitted():
         form_data_part = PartWorks(number_part=form.number_part.data, thickness=form.thickness.data,
-                                   value=form.value_work.data, deadline_part=form.deadline.data, oreder_of_client=q, part_works=form.part_work.data,
+                                   value=form.value_work.data, deadline_part=form.deadline.data, oreder_of_client=q,
+                                   part_works=form.part_work.data,
                                    set_worker=0)
 
         db.session.add(form_data_part)
         db.session.commit()
         flash(f'Детель № {form.number_part.data} добавлена к карте заказа', 'info')
+        redirect(url_for('add_part'))
 
     parts = PartWorks.query.filter_by(oreder_of_client=order_client.id).all()
-    return render_template("add_part.html", title='Добавление деталей', user=user, order_client=order_client, parts=parts, form=form)
+    return render_template("add_part.html", title='Добавление деталей', user=user, order_client=order_client,
+                           parts=parts, form=form)
 
 
 @app.route('/slab', methods=['GET', 'POST'])
@@ -263,5 +250,4 @@ def add_part():
 def slab():
     q = request.args.get('q')
     slab = SlabWorks.query.filter_by(id=q).first()
-
     return render_template("slab.html", slab=slab)
