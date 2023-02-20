@@ -84,6 +84,9 @@
 
 
 
+
+
+
 </style>
 
 <div class="container mt-3">
@@ -181,9 +184,14 @@
         {% endif %}
         <td>
             <div class="container mt-3">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalAddWorker">
-                    Назначить сотрудника
-                </button>
+                <form method="get" action="{{ url_for('add_worker') }}">
+                    <button type="submit" class="btn btn-primary"
+                            data-bs-toggle="modal" data-bs-target="ModalAddWorker" name="getid"
+                            value="{{sl.id}}">
+                        Назначить сотрудника
+                    </button>
+                </form>
+
             </div>
         </td>
         {% endif %}
@@ -246,7 +254,6 @@
 function myFunction() {
   document.getElementById("form1").reset();
 }
-
 
 
 

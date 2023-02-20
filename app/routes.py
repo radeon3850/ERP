@@ -206,6 +206,7 @@ def add_slab():
     user = User.query.all()
     q = request.args.get('q')  # get data about Number of order_client from HTML after сlick on the button
     order_client = OrderClient.query.get(q)
+    # print(get_slab_id)
     form = Add_slab()
     if request.method == 'POST' and form.is_submitted():
         form_data_slab = SlabWorks(number_slab=form.number_slab.data, thickness=form.thickness.data,
@@ -251,3 +252,11 @@ def slab():
     q = request.args.get('q')
     slab = SlabWorks.query.filter_by(id=q).first()
     return render_template("slab.html", slab=slab)
+
+@app.route('/add_worker', methods=['GET', 'POST'])
+@login_required
+def add_worker():
+    get_id=request.args.get('getid')
+    print(get_id)
+    return redirect(url_for('add_slab'))
+    # return render_template('add_worker.html', title="Назначение сотрудника")
