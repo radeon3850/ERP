@@ -87,6 +87,8 @@
 
 
 
+
+
 </style>
 
 <div class="container mt-3">
@@ -183,15 +185,10 @@
         <td>{{sl.set_worker}}</td>
         {% endif %}
         <td>
-            <div class="container mt-3">
-                <form method="get" action="{{ url_for('add_worker') }}">
-                    <button type="submit" class="btn btn-primary"
-                            data-bs-toggle="modal" data-bs-target="ModalAddWorker" name="getid"
-                            value="{{sl.id}}">
-                        Назначить сотрудника
-                    </button>
-                </form>
-
+            <button type="submit" class="btn btn-primary"
+                    data-bs-toggle="modal" data-bs-target="#ModalAddWorker" name="getid" value="{{sl.id}}">
+                Назначить сотрудника
+            </button>
             </div>
         </td>
         {% endif %}
@@ -254,6 +251,8 @@
 function myFunction() {
   document.getElementById("form1").reset();
 }
+
+
 
 
 
