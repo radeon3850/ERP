@@ -4,6 +4,8 @@
 {% extends "base.html" %}
 {% endif %}
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
 {% block content %}
 <h2>Добавить работы № {{order_client.id}} {{order_client.title_order}}</h2>
 
@@ -75,6 +77,9 @@
     .form-container .btn:hover, .open-button:hover {
       opacity: 1;
     }
+
+
+
 
 
 
@@ -185,8 +190,8 @@
         <td>{{sl.set_worker}}</td>
         {% endif %}
         <td>
-            <button type="submit" class="btn btn-primary"
-                    data-bs-toggle="modal" data-bs-target="#ModalAddWorker" name="getid" value="{{sl.id}}">
+            <button type="submit" class="btn btn-primary" id="{{sl.id}}"
+                    data-bs-toggle="modal" data-bs-target="#ModalAddWorker">
                 Назначить сотрудника
             </button>
             </div>
@@ -252,10 +257,20 @@ function myFunction() {
   document.getElementById("form1").reset();
 }
 
+</script>
 
+<script>
+<!--$(document).ready(function(){-->
+<!--  $(".btn").click(function(){-->
+<!--    alert("HTML: " + $(this.id));-->
+<!--  });-->
+<!--});-->
 
-
-
+$(document).ready(function(){
+    $(".btn").click(function() {
+        alert($(this).attr('id'));
+    });
+});
 
 </script>
 
