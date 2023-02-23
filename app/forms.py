@@ -87,14 +87,15 @@ class Add_part(FlaskForm):
     number_part = StringField("Номер детали", validators=[DataRequired()])
     thickness = StringField("Толщина", validators=[DataRequired()])
     value_work = StringField("Значение ", validators=[DataRequired()])
-    deadline = DateField('Конечная дата: ', validators=[validators.Optional()], format='%Y-%m-%d',)
+    deadline = DateField('Конечная дата: ', validators=[validators.Optional()], format='%Y-%m-%d')
     part_work = SelectField('Вид работ', choices=choices)
     submit = SubmitField('Сохранить')
 
 class AddWorker(FlaskForm):
-    choices = [(work.id, work.work_type) for work in (Works.query.all())]
-    option_select=choices.insert(0,(0, 'Выбрать тип работы'))
-    number_slab = StringField("Номер сляба", validators=[DataRequired()])
-    thickness = StringField("Толщина", validators=[DataRequired()])
-    type_slab = SelectField('Вид работ', choices=choices)
+    choices = [(worker.id, (worker.first_name, worker.last_name)) for worker in (User.query.all())]
+    option_select=choices.insert(0,(0, 'Выбрать из списка'))
+    set_worker = SelectField('Выбрать ответственного', choices=choices)
+    start_date = DateField("Дата начала работ", validators=[validators.Optional()], format='%Y-%m-%d')
+    end_date = DateField("Дата окончания", validators=[validators.Optional()], format='%Y-%m-%d')
+
     submit = SubmitField('Сохранить')

@@ -219,30 +219,30 @@
                                    value="Очистить данные формы">
                         </tr>
                         <tr>
-                            {{ form.type_slab.label }}<br>
-                            {{ form.type_slab(class="form-control", id="formGroupExampleInput", placeholder="Значение")
+                            {{ set_worker_form.set_worker.label }}<br>
+                            {{ set_worker_form.set_worker(class="form-control", id="formGroupExampleInput", placeholder="Значение")
                             }}<br>
-                            {% for error in form.type_slab.errors %}
+                            {% for error in set_worker_form.set_worker.errors %}
                             <span style="color: red;">[{{ error }}]</span>
                             {% endfor %}
                         </tr>
                         <tr>
-                            {{ form.number_slab.label }}<br>
-                            {{ form.number_slab(class="form-control", id="formGroupExampleInput", placeholder="№ Сляба")
+                            {{ set_worker_form.start_date.label }}<br>
+                            {{ set_worker_form.start_date(class="form-control", id="formGroupExampleInput", placeholder="Значение", type="date")
                             }}<br>
-                            {% for error in form.number_slab.errors %}
+                            {% for error in set_worker_form.start_date.errors %}
                             <span style="color: red;">[{{ error }}]</span>
                             {% endfor %}
                         </tr>
                         <tr>
-                            {{ form.thickness.label }}<br>
-                            {{ form.thickness(class="form-control", id="formGroupExampleInput", placeholder="Значение")
+                            {{ set_worker_form.end_date.label }}<br>
+                            {{ set_worker_form.end_date(class="form-control", id="formGroupExampleInput", placeholder="Значение", type='date')
                             }}<br>
-                            {% for error in form.thickness.errors %}
+                            {% for error in set_worker_form.end_date.errors %}
                             <span style="color: red;">[{{ error }}]</span>
                             {% endfor %}
                         </tr>
-                        {{ form.submit(type="submit", class="btn", id="btn2", onclick="myFunction()")}}
+                        {{ set_worker_form.submit(type="submit", class="btn", id="btn2", onclick="myFunction()")}}
                         <button type="button" class="btn cancel" data-bs-dismiss="modal">Закрыть</button>
                     </table>
                 </form>
@@ -277,7 +277,7 @@ $(document).ready(function(){
                 contentType: 'aplication/json',
                 data:{
                     slab: $(this).attr('id')
-                   }
+                }
         })
     });
 });

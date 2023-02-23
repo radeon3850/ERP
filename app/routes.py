@@ -5,7 +5,7 @@ from flask import render_template, flash, redirect, url_for, request, json, g
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, AddClient, AddOrder, Checkbox, Add_slab, Add_part
+from app.forms import LoginForm, RegistrationForm, AddClient, AddOrder, Checkbox, Add_slab, Add_part, AddWorker
 from app.models import User, Clients, OrderClient, PreProduct, Works, SlabWorks, PartWorks
 
 
@@ -207,6 +207,7 @@ def add_slab():
     q = request.args.get('q')  # get data about Number of order_client from HTML after сlick on the button
     order_client = OrderClient.query.get(q)
     form = Add_slab()
+    set_worker_form=AddWorker()
     id_slab = request.args.get('slab')
     print(id_slab)
     if request.method == 'POST' and form.is_submitted():
@@ -221,7 +222,7 @@ def add_slab():
 
     slab = SlabWorks.query.filter_by(oreder_of_client=order_client.id).all()
     return render_template("add_slab.html", title='Добавление слябов', user=user, order_client=order_client, slab=slab,
-                           form=form)
+                           form=form, set_worker_form=set_worker_form)
 
 
 @app.route('/add_part', methods=['GET', 'POST'])
