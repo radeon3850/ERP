@@ -260,18 +260,27 @@ function myFunction() {
 </script>
 
 <script>
+
+<!--//получение id по клику на кнопку-->
 <!--$(document).ready(function(){-->
-<!--  $(".btn").click(function(){-->
-<!--    alert("HTML: " + $(this.id));-->
-<!--  });-->
+<!--    $(".btn").click(function() {-->
+<!--        alert($(this).attr('id'));-->
+<!--    });-->
 <!--});-->
 
+//получение id по клику на кнопку
 $(document).ready(function(){
     $(".btn").click(function() {
-        alert($(this).attr('id'));
+            $.ajax({
+                url: '',
+                type: 'get',
+                contentType: 'aplication/json',
+                data:{
+                    slab: $(this).attr('id')
+                   }
+        })
     });
 });
-
 </script>
 
 {% endblock %}

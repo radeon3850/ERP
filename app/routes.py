@@ -207,6 +207,8 @@ def add_slab():
     q = request.args.get('q')  # get data about Number of order_client from HTML after сlick on the button
     order_client = OrderClient.query.get(q)
     form = Add_slab()
+    id_slab = request.args.get('slab')
+    print(id_slab)
     if request.method == 'POST' and form.is_submitted():
         form_data_slab = SlabWorks(number_slab=form.number_slab.data, thickness=form.thickness.data,
                                    value=form.type_slab.data, oreder_of_client=q, slab_works=form.type_slab.data,
