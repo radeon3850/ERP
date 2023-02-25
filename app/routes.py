@@ -159,7 +159,7 @@ def order_client():
         for work in preproduct_work:
             if work.work_type == 48:
                 add_workrer = PreProduct.query.get(
-                    (PreProduct.query.filter_by(number_order_client=q, work_type=48).first()).id)
+                    (PreProduct.query.filter_by(number_order_client=q, work_type=48).first()).id)  # get data from BD
                 if form.user_id_1.data == "0":
                     flash('Не выбран ответственный сотрудник для "Замеры"', 'error')
                 else:
@@ -170,7 +170,7 @@ def order_client():
 
             if work.work_type == 49:
                 add_workrer = PreProduct.query.get(
-                    (PreProduct.query.filter_by(number_order_client=q, work_type=49).first()).id)
+                    (PreProduct.query.filter_by(number_order_client=q, work_type=49).first()).id)  # get data from BD
                 if form.user_id_2.data == "0":
                     flash('Не выбран ответственный сотрудник для "Чертежи"', 'error')
                 else:
@@ -181,7 +181,7 @@ def order_client():
 
             if work.work_type == 50:
                 add_workrer = PreProduct.query.get(
-                    (PreProduct.query.filter_by(number_order_client=q, work_type=50).first()).id)
+                    (PreProduct.query.filter_by(number_order_client=q, work_type=50).first()).id)  # get data from BD
                 if form.user_id_3.data == "0":
                     flash('Не выбран ответственный сотрудник для "Контроль"', 'error')
                 else:
@@ -199,7 +199,7 @@ def order_client():
                            name_field=name_field, work_dic=work_dic, user_add_preproduct=user_add_preproduct, slab=slab,
                            preproduct_work=preproduct_work, parts=parts)
 
-
+id_list = []
 @app.route('/add_slab', methods=['GET', 'POST'])
 @login_required
 def add_slab():
@@ -207,18 +207,27 @@ def add_slab():
     q = request.args.get('q')  # get data about Number of order_client from HTML after сlick on the button
     order_client = OrderClient.query.get(q)
     form = Add_slab()
-    set_worker_form=AddWorker()
-    id_slab = request.args.get('slab')
-    print(id_slab)
-    if request.method == 'POST' and form.is_submitted():
-        form_data_slab = SlabWorks(number_slab=form.number_slab.data, thickness=form.thickness.data,
-                                   value=form.type_slab.data, oreder_of_client=q, slab_works=form.type_slab.data,
-                                   set_worker=0)
+    slab_id = request.args.get('slab')
+    if slab_id is not None:
+        id_list.append(slab_id)
+    if 'number_slab' in request.form:
+        if form.is_submitted():
+            form_data_slab = SlabWorks(number_slab=form.number_slab.data, thickness=form.thickness.data,
+                                       value=form.type_slab.data, oreder_of_client=q, slab_works=form.type_slab.data,
+                                       set_worker=0)
 
-        db.session.add(form_data_slab)
-        db.session.commit()
-        flash('Сляб добавлен к карте заказа', 'info')
-        return redirect(url_for('slab'))
+            db.session.add(form_data_slab)
+            db.session.commit()
+            flash('Сляб добавлен к карте заказа', 'info')
+            return redirect(url_for('slab'))
+
+    set_worker_form = AddWorker()
+    if 'set_worker' in request.form:
+        if set_worker_form.is_submitted():
+            get_id_slab = SlabWorks.query.filter_by(id=id_list[0]).first()
+            get_id_slab.set_worker=id_list[0]
+            db.session.commit()
+            id_list.clear()
 
     slab = SlabWorks.query.filter_by(oreder_of_client=order_client.id).all()
     return render_template("add_slab.html", title='Добавление слябов', user=user, order_client=order_client, slab=slab,
@@ -255,10 +264,11 @@ def slab():
     slab = SlabWorks.query.filter_by(id=q).first()
     return render_template("slab.html", slab=slab)
 
+
 @app.route('/add_worker', methods=['GET', 'POST'])
 @login_required
 def add_worker():
-    get_id=request.args.get('getid')
+    get_id = request.args.get('getid')
     print(get_id)
     return redirect(url_for('add_slab'))
     # return render_template('add_worker.html', title="Назначение сотрудника")

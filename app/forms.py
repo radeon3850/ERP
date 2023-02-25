@@ -97,5 +97,4 @@ class AddWorker(FlaskForm):
     set_worker = SelectField('Выбрать ответственного', choices=choices)
     start_date = DateField("Дата начала работ", validators=[validators.Optional()], format='%Y-%m-%d')
     end_date = DateField("Дата окончания", validators=[validators.Optional()], format='%Y-%m-%d')
-
     submit = SubmitField('Сохранить')

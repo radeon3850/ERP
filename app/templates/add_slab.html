@@ -78,22 +78,6 @@
       opacity: 1;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </style>
 
 <div class="container mt-3">
@@ -114,9 +98,10 @@
             </div>
             <div class="modal-body">
                 <form action="" class="form-container" id="form1" method="post" target="_blank">
+                     {{ form.hidden_tag() }}
                     <table>
                         <tr>
-                            <input type="button" class="btn cancel" onclick="myFunction()"
+                            <input type="button" class="btn cancel" onclick="clearFunction()"
                                    value="Очистить данные формы">
                         </tr>
                         <tr>
@@ -151,7 +136,7 @@
                             <span style="color: red;">[{{ error }}]</span>
                             {% endfor %}
                         </tr>
-                        {{ form.submit(type="submit", class="btn", id="btn2", onclick="myFunction()")}}
+                        {{ form.submit(type="submit", class="btn", id="btn1")}}
                         <button type="button" class="btn cancel" data-bs-dismiss="modal">Закрыть</button>
                     </table>
                 </form>
@@ -212,10 +197,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form action="" class="form-container" id="form2" method="post" target="_blank">
+                <form action="" class="form-container" id="form2" method="post">
+                     {{ set_worker_form.hidden_tag() }}
                     <table>
                         <tr>
-                            <input type="button" class="btn cancel" onclick="myFunction()"
+                            <input type="button" class="btn cancel" onclick="clearFunction1()"
                                    value="Очистить данные формы">
                         </tr>
                         <tr>
@@ -242,7 +228,7 @@
                             <span style="color: red;">[{{ error }}]</span>
                             {% endfor %}
                         </tr>
-                        {{ set_worker_form.submit(type="submit", class="btn", id="btn2", onclick="myFunction()")}}
+                        {{ set_worker_form.submit(type="submit", class="btn")}}
                         <button type="button" class="btn cancel" data-bs-dismiss="modal">Закрыть</button>
                     </table>
                 </form>
@@ -252,23 +238,14 @@
 </div>
 
 <script>
-<!--clear form fields-->
-function myFunction() {
+function clearFunction() {
   document.getElementById("form1").reset();
 }
 
-</script>
-
-<script>
-
-<!--//получение id по клику на кнопку-->
-<!--$(document).ready(function(){-->
-<!--    $(".btn").click(function() {-->
-<!--        alert($(this).attr('id'));-->
-<!--    });-->
-<!--});-->
-
-//получение id по клику на кнопку
+function clearFunction1() {
+  document.getElementById("form2").reset();
+}
+//получение id по клику на кнопку и отправка на сервер
 $(document).ready(function(){
     $(".btn").click(function() {
             $.ajax({

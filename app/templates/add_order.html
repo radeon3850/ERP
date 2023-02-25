@@ -130,11 +130,11 @@
 
         <tr>
             <td>
-                    {{ form.name_order.label }}<br>
-                    {{ form.name_order(size=64) }}<br>
-                    {% for error in form.name_order.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
+                {{ form.name_order.label }}<br>
+                {{ form.name_order(size=64) }}<br>
+                {% for error in form.name_order.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </td>
         </tr>
             <tr>
