@@ -172,8 +172,9 @@ class PartWorks(db.Model):
                            nullable=False)  # relationship to table "Works" One to many
     set_worker = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     work_set_part = db.relationship("Works", backref='work_set_part', lazy='subquery')
+    worker = db.relationship("User", backref='worker_part', lazy='subquery')
     def __repr__(self):
-        return f'<OrderClient {self.num_slab}, {self.number_part},{self.oreder_of_manufacture}, {self.part_works}, {self.deadline_part}>'
+        return f'<OrderClient {self.number_part},{self.oreder_of_client}, {self.part_works}, {self.deadline_part}>'
 
 
 # create table preroduct

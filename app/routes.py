@@ -207,7 +207,7 @@ def add_slab():
     q = request.args.get('q')  # get data about Number of order_client from HTML after сlick on the button
     order_client = OrderClient.query.get(q)
     form = Add_slab()
-    slab_id = request.args.get('slab')
+    slab_id = request.args.get('slab_id')
     if slab_id is not None:
         id_list.append(slab_id)
     if 'number_slab' in request.form:
@@ -225,7 +225,7 @@ def add_slab():
     if 'set_worker' in request.form:
         if set_worker_form.is_submitted():
             get_id_slab = SlabWorks.query.filter_by(id=id_list[0]).first()
-            get_id_slab.set_worker=id_list[0]
+            get_id_slab.set_worker=set_worker_form.set_worker.data
             db.session.commit()
             id_list.clear()
 
@@ -240,21 +240,36 @@ def add_part():
     user = User.query.all()
     q = request.args.get('q')  # get data about Number of order_client from HTML after сlick on the button
     order_client = OrderClient.query.get(q)
+    part_id = request.args.get('part_id')
+    if part_id is not None:
+        id_list.append(part_id)
+        # print(id_list)
     form = Add_part()
-    if request.method == 'POST' and form.is_submitted():
-        form_data_part = PartWorks(number_part=form.number_part.data, thickness=form.thickness.data,
-                                   value=form.value_work.data, deadline_part=form.deadline.data, oreder_of_client=q,
-                                   part_works=form.part_work.data,
-                                   set_worker=0)
+    if 'number_part' in request.form:
+        if form.is_submitted():
+            form_data_part = PartWorks(number_part=form.number_part.data, thickness=form.thickness.data,
+                                       value=form.value_work.data, deadline_part=form.deadline.data, oreder_of_client=q,
+                                       part_works=form.part_work.data,
+                                       set_worker=0)
 
-        db.session.add(form_data_part)
-        db.session.commit()
-        flash(f'Детель № {form.number_part.data} добавлена к карте заказа', 'info')
-        redirect(url_for('add_part'))
+            db.session.add(form_data_part)
+            db.session.commit()
+            flash(f'Детель № {form.number_part.data} добавлена к карте заказа', 'info')
+            redirect(url_for('add_part'))
+
+    set_worker_form=AddWorker()
+    if 'set_worker' in request.form:
+        if set_worker_form.is_submitted():
+            get_id_data_part=PartWorks.query.filter_by(id=id_list[0]).first()
+            get_id_data_part.set_worker=set_worker_form.set_worker.data
+
+            db.session.commit()
+            flash(f' Работник {get_id_data_part.set_worker} назначен', 'info')
+            id_list.clear()
 
     parts = PartWorks.query.filter_by(oreder_of_client=order_client.id).all()
     return render_template("add_part.html", title='Добавление деталей', user=user, order_client=order_client,
-                           parts=parts, form=form)
+                           parts=parts, form=form, set_worker_form=set_worker_form)
 
 
 @app.route('/slab', methods=['GET', 'POST'])

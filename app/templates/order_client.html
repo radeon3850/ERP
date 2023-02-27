@@ -80,6 +80,7 @@
 
 
 
+
 </style>
 <h5 style="color: red">Карта заказа клиента№{{order_client.id}}</h5>
 <p></p>
@@ -223,11 +224,11 @@
                 <td>{{sl.work_set.work_type}}</td>
                 <td>{{sl.value}}</td>
                 {% if current_user.specialization_id is eq(3) %}
-                    {% if sl.set_worker is eq(0) %}
-                    <td>Не назначен</td>
-                    {% else %}
-                    <td>{{sl.set_worker}}</td>
-                    {% endif %}
+                {% if sl.set_worker is eq(0) %}
+                <td style="color: red">Не назначен</td>
+                {% else %}
+                <td>{{sl.worker.first_name}} {{sl.worker.last_name}}</td>
+                {% endif %}
                 {% endif %}
             </tr>
             {% endfor %}
@@ -265,6 +266,7 @@
                 <th>Заказ клиента №</th>
                 <th>Выполнение работ</th>
                 <th>Значение</th>
+                <th>Назначить исполнителя</th>
             </tr>
             </thead>
             <tbody>
@@ -274,6 +276,13 @@
                 <td>По заказу№ {{part.oreder_of_client}}</td>
                 <td>{{part.work_set_part.work_type}}</td>
                 <td>{{part.value}}</td>
+                {% if current_user.specialization_id is eq(3) %}
+                {% if part.set_worker is eq(0) %}
+                <td style="color: red">Не назначен</td>
+                {% else %}
+                <td>{{part.worker.first_name}} {{part.worker.last_name}}</td>
+                {% endif %}
+                {% endif %}
             </tr>
             {% endfor %}
             </tbody>

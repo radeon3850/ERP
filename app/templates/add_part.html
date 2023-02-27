@@ -78,6 +78,11 @@
 
 
 
+
+
+
+
+
 </style>
 
 <div class="container mt-3">
@@ -103,7 +108,8 @@
                 <form action="" class="form-container" id="form1" method="post">
                     <table>
                         <tr>
-                            <input type="button" class="btn cancel" onclick="myFunction()" value="Очистить данные формы">
+                            <input type="button" class="btn cancel" onclick="myFunction()"
+                                   value="Очистить данные формы">
                         </tr>
                         <tr>
                             {{ form.number_part.label }}<br>
@@ -154,35 +160,129 @@
         </div>
     </div>
 </div>
-<p></p>
-<h3>Слябы</h3>
-<p></p>
-<table class="table table-hover table-responsive-sm">
-    <thead class="table-success">
-    <tr>
-        <th>Деталь №</th>
-        <th>Заказ клиента №</th>
-        <th>Выполнение работ</th>
-        <th>Значение</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for part in parts %}
-    <tr>
-        <td>{{part.number_part}}</td>
-        <td>По заказу№ {{part.oreder_of_client}}</td>
-        <td>{{part.work_set_part.work_type}}</td>
-        <td>{{part.value}}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+<div>
+    <p></p>
+    <h3>Детали</h3>
+    <p></p>
+    <table class="table table-hover table-responsive-sm">
+        <thead class="table-success">
+        <tr>
+            <th>Деталь №</th>
+            <th>Заказ клиента №</th>
+            <th>Выполнение работ</th>
+            <th>Значение</th>
+            {% if current_user.specialization_id is eq(3) %}
+            <th>Исполнитель работ</th>
+            <th>Назначить исполнителя</th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for part in parts %}
+        <tr>
+            <td>{{part.number_part}}</td>
+            <td>По заказу№ {{part.oreder_of_client}}</td>
+            <td>{{part.work_set_part.work_type}}</td>
+            <td>{{part.value}}</td>
+            {% if current_user.specialization_id is eq(3) %}
+            {% if part.set_worker is eq(0) %}
+            <td style="color: red">Не назначен</td>
+            {% else %}
+            <td>{{part.worker.last_name}} {{part.worker.first_name}}</td>
+            {% endif %}
+            <td>
+                <button type="submit" class="btn btn-primary" id="{{part.id}}"
+                        data-bs-toggle="modal" data-bs-target="#ModalAddWorker">
+                    Назначить сотрудника
+                </button>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="ModalAddWorker">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Введите данные</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" class="form-container" id="form2" method="post">
+                    {{ set_worker_form.hidden_tag() }}
+                    <table>
+                        <tr>
+                            <input type="button" class="btn cancel" onclick="clearFunction1()"
+                                   value="Очистить данные формы">
+                        </tr>
+                        <tr>
+                            {{ set_worker_form.set_worker.label }}<br>
+                            {{ set_worker_form.set_worker(class="form-control", id="formGroupExampleInput",
+                            placeholder="Значение")
+                            }}<br>
+                            {% for error in set_worker_form.set_worker.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {{ set_worker_form.start_date.label }}<br>
+                            {{ set_worker_form.start_date(class="form-control", id="formGroupExampleInput",
+                            placeholder="Значение", type="date")
+                            }}<br>
+                            {% for error in set_worker_form.start_date.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {{ set_worker_form.end_date.label }}<br>
+                            {{ set_worker_form.end_date(class="form-control", id="formGroupExampleInput",
+                            placeholder="Значение", type='date')
+                            }}<br>
+                            {% for error in set_worker_form.end_date.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </tr>
+                        {{ set_worker_form.submit(type="submit", class="btn")}}
+                        <button type="button" class="btn cancel" data-bs-dismiss="modal">Закрыть</button>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
 <!--clear form fields-->
 function myFunction() {
   document.getElementById("form1").reset();
 }
+function clearFunction1() {
+  document.getElementById("form2").reset();
+}
+//получение id по клику на кнопку и отправка на сервер
+$(document).ready(function(){
+    $(".btn").click(function() {
+            $.ajax({
+                url: '',
+                type: 'get',
+                contentType: 'aplication/json',
+                data:{
+                    part_id: $(this).attr('id')
+                }
+        })
+    });
+});
+
+
+
+
+
+
 </script>
 
 {% endblock %}

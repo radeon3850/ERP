@@ -172,14 +172,13 @@
         {% if sl.set_worker is eq(0) %}
         <td>Не назначен</td>
         {% else %}
-        <td>{{sl.set_worker}}</td>
+        <td>{{sl.worker.first_name}} {{sl.worker.last_name}}</td>
         {% endif %}
         <td>
             <button type="submit" class="btn btn-primary" id="{{sl.id}}"
                     data-bs-toggle="modal" data-bs-target="#ModalAddWorker">
                 Назначить сотрудника
             </button>
-            </div>
         </td>
         {% endif %}
     </tr>
@@ -253,7 +252,7 @@ $(document).ready(function(){
                 type: 'get',
                 contentType: 'aplication/json',
                 data:{
-                    slab: $(this).attr('id')
+                    slab_id: $(this).attr('id')
                 }
         })
     });
