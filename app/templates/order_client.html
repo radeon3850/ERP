@@ -266,7 +266,9 @@
                 <th>Заказ клиента №</th>
                 <th>Выполнение работ</th>
                 <th>Значение</th>
+                {% if current_user.specialization_id is eq(3) %}
                 <th>Назначить исполнителя</th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
