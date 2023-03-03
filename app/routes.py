@@ -5,8 +5,10 @@ from flask import render_template, flash, redirect, url_for, request, json, g
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, AddClient, AddOrder, Checkbox, Add_slab, Add_part, AddWorker
-from app.models import User, Clients, OrderClient, PreProduct, Works, SlabWorks, PartWorks
+from app.forms import LoginForm, RegistrationForm, AddClient, AddOrder, Checkbox, Add_slab, Add_part, AddWorker, \
+    UploadForm
+from app.models import User, Clients, OrderClient, PreProduct, Works, SlabWorks, PartWorks, UploadFile
+import os
 
 
 @app.route('/')
@@ -199,7 +201,10 @@ def order_client():
                            name_field=name_field, work_dic=work_dic, user_add_preproduct=user_add_preproduct, slab=slab,
                            preproduct_work=preproduct_work, parts=parts)
 
+
 id_list = []
+
+
 @app.route('/add_slab', methods=['GET', 'POST'])
 @login_required
 def add_slab():
@@ -225,7 +230,7 @@ def add_slab():
     if 'set_worker' in request.form:
         if set_worker_form.is_submitted():
             get_id_slab = SlabWorks.query.filter_by(id=id_list[0]).first()
-            get_id_slab.set_worker=set_worker_form.set_worker.data
+            get_id_slab.set_worker = set_worker_form.set_worker.data
             db.session.commit()
             id_list.clear()
 
@@ -257,11 +262,11 @@ def add_part():
             flash(f'Детель № {form.number_part.data} добавлена к карте заказа', 'info')
             redirect(url_for('add_part'))
 
-    set_worker_form=AddWorker()
+    set_worker_form = AddWorker()
     if 'set_worker' in request.form:
         if set_worker_form.is_submitted():
-            get_id_data_part=PartWorks.query.filter_by(id=id_list[0]).first()
-            get_id_data_part.set_worker=set_worker_form.set_worker.data
+            get_id_data_part = PartWorks.query.filter_by(id=id_list[0]).first()
+            get_id_data_part.set_worker = set_worker_form.set_worker.data
 
             db.session.commit()
             flash(f' Работник {get_id_data_part.set_worker} назначен', 'info')
@@ -287,3 +292,25 @@ def add_worker():
     print(get_id)
     return redirect(url_for('add_slab'))
     # return render_template('add_worker.html', title="Назначение сотрудника")
+
+
+@app.route('/upload_file', methods=['GET', 'POST'])
+@login_required
+def upload_file():
+    form = UploadForm()
+    if form.validate_on_submit():
+        files = request.files.getlist('files')
+        filenames = []
+        file_paths = []
+        for file in files:
+            filename = file.filename
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            filenames.append(filename)
+            file_paths.append(file_path)
+        for i in range(len(filenames)):
+            f = UploadFile(filename=filenames[i], file_path=file_paths[i], user_id=current_user.id)
+            db.session.add(f)
+            db.session.commit()
+        return f'Завантажено {len(filenames)} файлів'
+    return render_template('upload_file.html', form=form)

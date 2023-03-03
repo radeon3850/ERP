@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileRequired
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, DateField, TextField, \
-    RadioField, validators
+    RadioField, validators, TextAreaField, MultipleFileField, FileField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Optional
 from wtforms.widgets import TextArea, html_params, Select
 from app.models import User, Clients, Specialization, Works
@@ -98,3 +99,9 @@ class AddWorker(FlaskForm):
     start_date = DateField("Дата начала работ", validators=[validators.Optional()], format='%Y-%m-%d')
     end_date = DateField("Дата окончания", validators=[validators.Optional()], format='%Y-%m-%d')
     submit = SubmitField('Сохранить')
+
+#form for download file to server
+class UploadForm(FlaskForm):
+    files = FileField('', validators=[FileRequired(message='Не вибрано жодного файлу')],
+                      render_kw={'multiple': True})
+    submit=SubmitField('Загрузить')

@@ -1,0 +1,27 @@
+{% if current_user.specialization_id is ne(2)%}
+{% extends "base_bootstrap.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
+
+{% block content %}
+<div class="container mt-3">
+    Загрузка чертежей
+    <p>
+    </p>
+    <form target="" class="form-container" method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        {{form.csrf_token}}
+        <p>
+        {{form.files.label}} {{form.files}}
+        {% for error in form.files.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+        </p>
+        <p>
+            {{form.submit}}
+        </p>
+    </form>
+</div>
+
+{% endblock %}

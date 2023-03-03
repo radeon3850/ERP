@@ -1,5 +1,5 @@
 from app import app, db
-from app.models import User, PerformanceWork, SlabWorks, PreProduct, PartWorks, OrderClient, Clients, Works, Specialization
+from app.models import User, PerformanceWork, SlabWorks, PreProduct, PartWorks, OrderClient, Clients, Works, Specialization, UploadFile
 
 
 @app.shell_context_processor

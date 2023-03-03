@@ -153,8 +153,8 @@ class SlabWorks(db.Model):
     slab_works = db.Column(db.Integer, db.ForeignKey('works.id'),
                            nullable=False)  # relationship to table "Works" One to many
     set_worker = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    work_set=db.relationship("Works", backref='work_set', lazy='subquery')
-    worker=db.relationship("User", backref='worker_set', lazy='subquery')
+    work_set = db.relationship("Works", backref='work_set', lazy='subquery')
+    worker = db.relationship("User", backref='worker_set', lazy='subquery')
 
     def __repr__(self):
         return f'<Slab№ {self.number_slab}, {self.oreder_of_client}, {self.slab_works}>'
@@ -173,6 +173,7 @@ class PartWorks(db.Model):
     set_worker = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     work_set_part = db.relationship("Works", backref='work_set_part', lazy='subquery')
     worker = db.relationship("User", backref='worker_part', lazy='subquery')
+
     def __repr__(self):
         return f'<OrderClient {self.number_part},{self.oreder_of_client}, {self.part_works}, {self.deadline_part}>'
 
@@ -189,6 +190,15 @@ class PreProduct(db.Model):
     def __repr__(self):
         return f' <id: {self.id},id_order: {self.number_order_client},' \
                f'work_id: {self.work_type}, user_id: {self.set_worker}>'
+
+
+class UploadFile(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    filename = db.Column(db.String(255))
+    file_path = db.Column(db.String(255))
+
+
 
 
 # create table performance_work
