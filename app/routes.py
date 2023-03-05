@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import flask
 import flask_sqlalchemy
-from flask import render_template, flash, redirect, url_for, request, json, g
+from flask import render_template, flash, redirect, url_for, request, json, g, send_file, send_from_directory
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
@@ -313,4 +313,13 @@ def upload_file():
             db.session.add(f)
             db.session.commit()
         return f'Завантажено {len(filenames)} файлів'
-    return render_template('upload_file.html', form=form)
+
+    files = UploadFile.query.all()
+    return render_template('upload_file.html', form=form, files=files)
+
+# функция которая позволяет загрузить файл с сервера на устройство, не возвращает "html"
+@app.route('/download/<filename>', methods=['GET', 'POST'])
+@login_required
+def download_file(filename):
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    return send_file(file_path, as_attachment=True)

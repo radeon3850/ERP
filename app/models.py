@@ -198,6 +198,9 @@ class UploadFile(db.Model):
     filename = db.Column(db.String(255))
     file_path = db.Column(db.String(255))
 
+    # def __repr__(self):
+    #     return f'{ self.id },\n {self.filename}, \n {self.file_path}'
+
 
 
 

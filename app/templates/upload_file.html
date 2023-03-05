@@ -13,7 +13,7 @@
         {{ form.hidden_tag() }}
         {{form.csrf_token}}
         <p>
-        {{form.files.label}} {{form.files}}
+        {{form.files}}
         {% for error in form.files.errors %}
         <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
@@ -22,6 +22,18 @@
             {{form.submit}}
         </p>
     </form>
+    <div>
+         <h1>Файли</h1>
+    {% if files %}
+        <ul>
+        {% for file in files %}
+            <li><a href="{{ url_for('download_file', filename=file.filename) }}">{{ file.filename }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Ще немає жодного завантаженого файлу</p>
+    {% endif %}
+    </div>
 </div>
 
 {% endblock %}
