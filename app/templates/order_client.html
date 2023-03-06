@@ -81,6 +81,8 @@
 
 
 
+
+
 </style>
 <h5 style="color: red">Карта заказа клиента№{{order_client.id}}</h5>
 <p></p>
@@ -106,6 +108,33 @@
     </tr>
     </tbody>
 </table>
+
+<hr>
+<div class="container mt-3">
+    <div>
+        <h3 style="color: blue">Чертежи и фото проекта</h3>
+        {% if files %}
+        <ul>
+            {% for file in files %}
+            <li><a href="{{ url_for('download_file', filename=file.filename) }}">{{ file.filename }}</a></li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>
+        </p>
+        <p style="color: red">Ще немає жодного завантаженого файлу</p>
+        {% endif %}
+        <p>
+        </p>
+    </div>
+</div>
+<form name="form-btn" action="{{ url_for('upload_file') }}" method="get" target="_blank">
+    <button type="submit" name="q" value="{{order_client.id}}" class="btn btn-primary">
+        Добавить файлы
+    </button>
+</form>
+
+<hr>
 
 
 <nav>

@@ -197,11 +197,10 @@ class UploadFile(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     filename = db.Column(db.String(255))
     file_path = db.Column(db.String(255))
+    order_client_id = db.Column(db.Integer, db.ForeignKey('order_client.id'))
 
-    # def __repr__(self):
-    #     return f'{ self.id },\n {self.filename}, \n {self.file_path}'
-
-
+    def __repr__(self):
+        return f'{self.id},\n {self.filename}, \n {self.file_path}'
 
 
 # create table performance_work

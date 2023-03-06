@@ -196,10 +196,11 @@ def order_client():
     slab = SlabWorks.query.filter_by(oreder_of_client=order_client.id).all()
     preproduct_work = PreProduct.query.filter_by(number_order_client=q).all()
     parts = PartWorks.query.filter_by(oreder_of_client=order_client.id).all()
+    files = UploadFile.query.filter_by(order_client_id=q).all()
 
     return render_template("order_client.html", title="Заказ клиента", order_client=order_client, form=form,
                            name_field=name_field, work_dic=work_dic, user_add_preproduct=user_add_preproduct, slab=slab,
-                           preproduct_work=preproduct_work, parts=parts)
+                           preproduct_work=preproduct_work, parts=parts, files=files)
 
 
 id_list = []
@@ -297,6 +298,7 @@ def add_worker():
 @app.route('/upload_file', methods=['GET', 'POST'])
 @login_required
 def upload_file():
+    q=request.args.get('q')
     form = UploadForm()
     if form.validate_on_submit():
         files = request.files.getlist('files')
@@ -309,7 +311,7 @@ def upload_file():
             filenames.append(filename)
             file_paths.append(file_path)
         for i in range(len(filenames)):
-            f = UploadFile(filename=filenames[i], file_path=file_paths[i], user_id=current_user.id)
+            f = UploadFile(filename=filenames[i], file_path=file_paths[i], user_id=current_user.id, order_client_id=q)
             db.session.add(f)
             db.session.commit()
         return f'Завантажено {len(filenames)} файлів'
