@@ -206,11 +206,13 @@ class UploadFile(db.Model):
 # create table performance_work
 class PerformanceWork(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    connection_work_slabs = db.Column(db.Integer, db.ForeignKey('slab_works.id'), nullable=False)
-    connection_work_part = db.Column(db.Integer, db.ForeignKey('part_works.id'), nullable=False)
-    connection_user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    id_work_slabs = db.Column(db.Integer, db.ForeignKey('slab_works.id'))
+    id_work_part = db.Column(db.Integer, db.ForeignKey('part_works.id'))
+    id_user = db.Column(db.Integer, db.ForeignKey('user.id'))
+    status_start = db.Column(db.Boolean, default=False)
     start_date = db.Column(db.DateTime)
+    status_pause = db.Column(db.Boolean, default=False)
+    pause_date = db.Column(db.DateTime)
+    status_end = db.Column(db.Boolean, default=False)
     end_date = db.Column(db.DateTime)
-    status_start = db.Column(db.Boolean, default=False, nullable=False)
-    status_end = db.Column(db.Boolean, default=False, nullable=False)
     lead_time = db.Column(db.Integer, nullable=False)
