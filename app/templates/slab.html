@@ -1,0 +1,15 @@
+{% if current_user.specialization_id is ne(2)%}
+{% extends "base_bootstrap.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
+
+{% block content %}
+<p>
+   <h3 style="color:red"> <tr>Cлаб№{{slab.id}}</tr></h3>
+</p>
+<p>
+   <h5> По заказу клиента№ {{slab.oreder_of_client}}</h5><br>
+</p>
+
+{% endblock %}
