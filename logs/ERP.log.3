@@ -1,0 +1,116 @@
+2022-11-15 22:00:37,695 INFO: Microblog startup [in D:\Python\Flask\ERP\app\__init__.py:45]
+2022-11-15 22:02:15,046 INFO: ERP [in D:\Python\Flask\ERP\app\__init__.py:45]
+2022-11-15 22:02:52,197 INFO: ERP [in D:\Python\Flask\ERP\app\__init__.py:45]
+2022-11-15 22:02:55,114 ERROR: Exception on / [GET] [in D:\Python\Flask\ERP\venv\lib\site-packages\flask\app.py:1454]
+Traceback (most recent call last):
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask_login\utils.py", line 271, in decorated_view
+    return current_app.login_manager.unauthorized()
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask_login\login_manager.py", line 174, in unauthorized
+    redirect_url = make_login_url(login_view, next_url=request.url)
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask_login\utils.py", line 120, in login_url
+    base = expand_login_view(login_view)
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask_login\utils.py", line 97, in expand_login_view
+    return url_for(login_view)
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\helpers.py", line 338, in url_for
+    return appctx.app.handle_url_build_error(error, endpoint, values)
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\helpers.py", line 325, in url_for
+    rv = url_adapter.build(
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\werkzeug\routing.py", line 2305, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.BuildError: Could not build url for endpoint 'login'. Did you mean 'logout' instead?
+2022-11-15 22:20:45,279 INFO: ERP [in D:\Python\Flask\ERP\app\__init__.py:45]
+2022-11-15 22:20:53,420 ERROR: Exception on / [GET] [in D:\Python\Flask\ERP\venv\lib\site-packages\flask\app.py:1454]
+Traceback (most recent call last):
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\app.py", line 1489, in dispatch_request
+    self.raise_routing_exception(req)
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\app.py", line 1471, in raise_routing_exception
+    raise request.routing_exception  # type: ignore
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\ctx.py", line 367, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\werkzeug\routing.py", line 2032, in match
+    raise NotFound()
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\app.py", line 1383, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\app.py", line 1323, in handle_http_exception
+    return self.ensure_sync(handler)(e)
+  File "D:\Python\Flask\ERP\app\errors.py", line 8, in not_found_error
+    return render_template('404.html'), 404
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\templating.py", line 147, in render_template
+    return _render(
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\templating.py", line 128, in _render
+    rv = template.render(context)
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\jinja2\environment.py", line 925, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\Python\Flask\ERP\app\templates\404.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "D:\Python\Flask\ERP\app\templates\base.html", line 13, in top-level template code
+    <a href="{{ url_for('index') }}">Home</a>
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\helpers.py", line 338, in url_for
+    return appctx.app.handle_url_build_error(error, endpoint, values)
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\flask\helpers.py", line 325, in url_for
+    rv = url_adapter.build(
+  File "D:\Python\Flask\ERP\venv\lib\site-packages\werkzeug\routing.py", line 2305, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.BuildError: Could not build url for endpoint 'index'. Did you mean 'login' instead?
+2023-01-04 18:37:10,893 INFO: ERP [in d:\Python\Flask\ERP\app\__init__.py:46]
+2023-08-03 07:56:50,510 INFO: ERP [in D:\Python\Flask\ERP Ч копи€ (2)\app\__init__.py:71]
+2023-10-12 16:17:01,347 INFO: ERP [in D:\Python\Flask\ERP Ч копи€ (2)\app\__init__.py:71]
+2023-10-12 16:17:12,176 ERROR: Exception on /check_job [GET] [in C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask\app.py:1454]
+Traceback (most recent call last):
+  File "C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask_login\utils.py", line 271, in decorated_view
+    return current_app.login_manager.unauthorized()
+  File "C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask_login\login_manager.py", line 165, in unauthorized
+    flash(self.login_message, category=self.login_message_category)
+  File "C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask\helpers.py", line 391, in flash
+    session["_flashes"] = flashes
+  File "C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask\sessions.py", line 97, in _fail
+    raise RuntimeError(
+RuntimeError: The session is unavailable because no secret key was set.  Set the secret_key on the application to something unique and secret.
+2023-10-12 16:17:42,193 ERROR: Exception on /check_job [GET] [in C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask\app.py:1454]
+Traceback (most recent call last):
+  File "C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask\app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask\app.py", line 1515, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask\app.py", line 1513, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask\app.py", line 1499, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask_login\utils.py", line 271, in decorated_view
+    return current_app.login_manager.unauthorized()
+  File "C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask_login\login_manager.py", line 165, in unauthorized
+    flash(self.login_message, category=self.login_message_category)
+  File "C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask\helpers.py", line 391, in flash
+    session["_flashes"] = flashes
+  File "C:\Users\Roman\PycharmProjects\Learning\venv\lib\site-packages\flask\sessions.py", line 97, in _fail
+    raise RuntimeError(
+RuntimeError: The session is unavailable because no secret key was set.  Set the secret_key on the application to something unique and secret.

@@ -1,0 +1,1156 @@
+{% if current_user.specialization_id is ne(2)%}
+{% extends "new_base_bootstrap.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<div>
+    <button type="button" class="btn bg-gradient-primary btn-block mb-3" data-bs-toggle="modal"
+            data-bs-target="#addEventModal">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+        Добавить работы
+    </button>
+</div>
+<!-- Modal added work-->
+<div class="modal fade" id="addEventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon icon-lg icon-shape bg-gradient-dark shadow text-center border-radius-xl mt-n4 me-3 float-start">
+                    <i class="material-icons opacity-10">event</i>
+                </div>
+                <h6 class="mb-0">Добавить работы для слябов или деталей</h6>
+                <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="font-size: 24px;">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card-body pt-0">
+                    <form id="form1" action="" method="POST">
+                        {{ kanban_form.hidden_tag() }}
+                        {{ kanban_form.csrf_token }}
+                        <div class="row mt-1">
+                            <div class="col-3">
+                                <div class="form-group">
+                                    {% for subfield in kanban_form.radio_field %}
+                                    <div class="form-check mb-3">
+                                        {{ subfield(class_='form-check-input', id='customRadio' + loop.index|string) }}
+                                        <label class="custom-control-label" for="customRadio{{ loop.index }}">{{
+                                            subfield.label.text }}</label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="border col-9">
+                                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                    <table class="table align-items-center" style="width: 822px;">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                S/P
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                #
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Заказ
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Камень
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Название
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Вид работ
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Тип работ
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Подтип
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Толщина
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Значение
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <!--  body Table DONT DELL!!! this block is for paste data from server when dinamic added data to page in table from Modal Window-->
+
+                                        <!--   In this tbody we past work that we added in modal window -->
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <h6>Указать номер заказа</h6>
+                                <div class="d-flex align-items-center"> <!-- Змінено тут -->
+                                    <div class="form-check form-switch ms-1 is-filled">
+                                        <label class="form-check-label" for="flexSwitchCheckOrder">Без номера</label>
+                                        {{kanban_form.order_checkbox(class="form-check-input",
+                                        id="flexSwitchCheckOrder", value='1')}}
+                                    </div>
+                                    <div class="col-4 mx-4">
+                                        <div class="input-group input-group-static mb-4">
+                                            {{kanban_form.order_client(class='form-control',
+                                            id="formControlSelectOrder")}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h6>Работа</h6>
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="input-group input-group-dynamic mb-4">
+                                    <label class="form-label">Номер сляба/детали</label>
+                                    {{kanban_form.number(class="form-control")}}
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="input-group input-group-static mb-4">
+                                    <!-- <label class="form-label">Выбрать камень</label>-->
+                                    {{kanban_form.stone(class="form-control")}}
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="input-group input-group-dynamic mb-4">
+                                    <label class="form-label">Название камня</label>
+                                    {{kanban_form.name_stone(class="form-control", id="stoneName", disabled='true')}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="input-group input-group-static mb-4">
+                                    <label>Вид работ</label>
+                                    {{kanban_form.work_title(class="form-control")}}
+                                    {% for error in kanban_form.work_title.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group input-group-static mb-4">
+                                    <label>Тип работ</label>
+                                    {{kanban_form.work_type(class="form-control")}}
+                                    {% for error in kanban_form.work_type.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group input-group-static mb-4">
+                                    <label>Подтип работ</label>
+                                    {{kanban_form.work_subtype(class="form-control")}}
+                                    {% for error in kanban_form.work_subtype.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group input-group-static mb-4">
+                                    <label>Толщина камня</label>
+                                    {{kanban_form.thickness(class="form-control")}}
+                                    {% for error in kanban_form.thickness.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="input-group input-group-static mb-4">
+                                    <label>Значение</label>
+                                    {{kanban_form.value_work(class="form-control")}}
+                                    {% for error in kanban_form.thickness.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+<!--                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Отменить</button>-->
+                    {{kanban_form.button_submit(class="btn bg-gradient-primary", id="submitBtn")}}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal change work -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon icon-lg icon-shape bg-gradient-dark shadow text-center border-radius-xl mt-n4 me-3 float-start">
+                    <i class="material-icons opacity-10">event</i>
+                </div>
+                <h6 class="mb-0">Внести изменения для задания</h6>
+                <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="font-size: 24px;">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card-body pt-0">
+                    <form id="form2" action="" method="POST">
+                        {{ kanban_form_change.hidden_tag() }}
+                        {{ kanban_form_change.csrf_token }}
+<!--                        <h6>Работы для</h6>-->
+                        <div class="row">
+                            <div class="col-2">
+                                <div class="input-group input-group-dynamic mb-4">
+                                    <label class="form-label">Номер заказа</label>
+                                    {{kanban_form_change.order_client_change(class='form-control')}}
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="input-group input-group-static mb-4">
+                                    {{kanban_form_change.set_worker_change(class="form-control")}}
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="input-group input-group-static mb-4">
+                                    {{kanban_form_change.start_date_change(type="date", class="form-control")}}
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="input-group input-group-static mb-4">
+                                    {{kanban_form_change.end_date_change(type="date", class="form-control")}}
+                                </div>
+                            </div>
+                        </div>
+                        <h6>Работа</h6>
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="input-group input-group-dynamic mb-4">
+                                    <label class="form-label">Номер сляба/детали</label>
+                                    {{kanban_form_change.number_change(class="form-control")}}
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="input-group input-group-static mb-4">
+                                    <!--  <label class="form-label">Выбрать камень</label>-->
+                                    {{kanban_form_change.stone_change(class="form-control")}}
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="input-group input-group-dynamic mb-4">
+                                    <label class="form-label">Название камня</label>
+                                    {{kanban_form_change.name_stone_change(class="form-control")}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="input-group input-group-static mb-4">
+                                    <label>Вид работ</label>
+                                    {{kanban_form_change.work_title_change(class="form-control")}}
+                                    {% for error in kanban_form_change.work_title_change.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group input-group-static mb-4">
+                                    <label>Тип работ</label>
+                                    {{kanban_form_change.work_type_change(class="form-control")}}
+                                    {% for error in kanban_form_change.work_type_change.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group input-group-static mb-4">
+                                    <label>Подтип работ</label>
+                                    {{kanban_form_change.work_subtype_change(class="form-control")}}
+                                    {% for error in kanban_form_change.work_subtype_change.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group input-group-static mb-4">
+                                    <label>Толщина камня</label>
+                                    {{kanban_form_change.thickness_change(class="form-control")}}
+                                    {% for error in kanban_form_change.thickness_change.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="input-group input-group-static mb-4">
+                                    <label>Значение</label>
+                                    {{kanban_form_change.value_work_change(class="form-control")}}
+                                    {% for error in kanban_form_change.value_work_change.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" id="pastWork">
+                    <input type="hidden" id="workTypeInputModal" name="work_type" value="">
+                    <input type="hidden" id="workIdInputModal" name="work_id" value="">
+                    <button type="button" class="btn btn-primary" id="saveButton">Изменить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container-fluid py-4 min-vh-100">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                        <h6 class="text-white text-capitalize ps-3">Работы по заказам</h6>
+                    </div>
+                </div>
+                <div class="card-header">
+                    <h5 class="mb-0">Список всех работ</h5>
+                    <p class="text-sm mb-0">
+                        Список всех работ по всем активным заказам
+                    </p>
+                </div>
+                <div class="table-responsive">
+                    <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+                        <div class="dataTable-top">
+                            <div class="d-sm-flex justify-content-between">
+                                <div>
+                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link active" id="pills-home-tab" data-bs-toggle="pill"
+                                               data-bs-target="#nav-activorder" type="button" role="tab"
+                                               aria-selected="true">Активные работы</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill"
+                                                    data-bs-target="#nav-complitedorder"
+                                                    type="button" role="tab" aria-controls="pills-profile"
+                                                    aria-selected="false">Выполненые работы
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--Блок поиска в таблице -->
+                                <div class="dropdown d-inline py-1 px-3">
+                                    <div class="container">
+                                        <div class="input-group input-group-outline">
+                                            <label class="form-label">Поиск...</label>
+                                            <input type="text" class="form-control" id="searchInput">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Table kanban -->
+                        <div class="dataTable-container min-vh-80">
+                            <div class="tab-content" id="nav-tabContent">
+                                <!--  Вкладка новых и активных работ-->
+                                <div class="tab-pane fade show active" id="nav-activorder" role="tabpanel"
+                                     aria-labelledby="nav-home-tab" tabindex="0">
+                                    <table class="table table-flush dataTable-table mx-2" id="datatable-search">
+                                        <thead class="thead-light">
+                                            <tr>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 text-center">S/P
+                                                <div class="input-group input-group-outline filter-input-group mt-2"
+                                                     style="width: 100px;">
+                                                    <label class="form-label text-uppercase text-secondary text-xxs">Фильтр</label>
+                                                    <input type="text" id="spFilter" class="form-control">
+                                                </div>
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 text-center">#
+                                                <div class="input-group input-group-outline filter-input-group mt-2" style="width: 100px; margin: 0 auto;">
+                                                    <label class="form-label text-uppercase text-secondary text-xxs">Фильтр</label>
+                                                    <input type="text" id="numberFilter" class="form-control">
+                                                </div>
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 text-center">Номер заказа
+                                                <div class="input-group input-group-outline filter-input-group mt-2" style="width: 100px; margin: 0 auto;">
+                                                    <label class="form-label text-uppercase text-secondary text-xxs">Фильтр</label>
+                                                    <input type="text" id="orderNumberFilter" class="form-control">
+                                                </div>
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 text-center">Статус
+                                                <div class="input-group input-group-outline filter-input-group mt-2" style="width: 100px; margin: 0 auto;">
+                                                    <label class="form-label text-uppercase text-secondary text-xxs">Фильтр</label>
+                                                    <input type="text" id="statusFilter" class="form-control">
+                                                </div>
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 text-center">Вид работ
+                                                <div class="input-group input-group-outline filter-input-group mt-2" style="width: 100px; margin: 0 auto;">
+                                                    <label class="form-label text-uppercase text-secondary text-xxs">Фильтр</label>
+                                                    <input type="text" id="workTitleFilter"  class="form-control">
+                                                </div>
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 text-center">Тип работ
+                                                <div class="input-group input-group-outline filter-input-group mt-2" style="width: 100px; margin: 0 auto;">
+                                                    <label class="form-label text-uppercase text-secondary text-xxs">Фильтр</label>
+                                                    <input type="text" id="workTypeFilter" class="form-control">
+                                                </div>
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 text-center">Значение
+                                                <div class="input-group input-group-outline filter-input-group mt-2" style="width: 100px; margin: 0 auto;">
+                                                    <label class="form-label text-uppercase text-secondary text-xxs">Фильтр</label>
+                                                    <input type="text" id="valueFilter" class="form-control">
+                                                </div>
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 text-center">Ответсвенный
+                                                <div class="input-group input-group-outline filter-input-group mt-2" style="width: 100px; margin: 0 auto;">
+                                                    <label class="form-label text-uppercase text-secondary text-xxs">Фильтр</label>
+                                                    <input type="text" id="workerFilter" class="form-control">
+                                                </div>
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 text-center">Дата начала
+                                                <div class="input-group input-group-outline filter-input-group mt-2" style="width: 100px; margin: 0 auto;">
+                                                    <label class="form-label text-uppercase text-secondary text-xxs">Фильтр</label>
+                                                    <input type="text" id="startDateFilter" class="form-control">
+                                                </div>
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 text-center">Дата окончания
+                                                <div class="input-group input-group-outline filter-input-group mt-2" style="width: 100px; margin: 0 auto;">
+                                                    <label class="form-label text-uppercase text-secondary text-xxs text">Фильтр</label>
+                                                    <input type="text" id="endDateFilter" class="form-control">
+                                                </div>
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2 text-center">
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for work in lis_active_work %}
+                                            <tr class="task-row"
+                                                {% if work.query_preproduct %}
+                                                {% for value in work.query_preproduct %}
+                                                data-task-id="{{value.id}}"
+                                                {% if value.status_problem %}
+                                                style="background-color: rgba(235, 62, 120, 0.5); color:black"
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% elif work.query_slabworks %}
+                                                {% for value in work.query_slabworks %}
+                                                data-task-id="{{value.id}}"
+                                                {% if value.status_problem %}
+                                                style="background-color: rgba(235, 62, 120, 0.5); color:black"
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% elif work.query_partworks %}
+                                                {% for value in work.query_partworks %}
+                                                data-task-id="{{value.id}}"
+                                                {% if value.status_problem %}
+                                                style="background-color: rgba(235, 62, 120, 0.5); color:black"
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% endif %} >
+                                                <td class="font-weight-normal text-center">
+                                                    <span class="my-2 text-xs order-number">
+                                                        {% if work.number_slab is defined %}
+                                                            S
+                                                            {% elif work.number_part is defined %}
+                                                            P
+                                                            {% else %}
+                                                            -
+                                                            {% endif %}
+                                                    </span>
+                                                </td>
+                                                <td class="font-weight-normal text-center">
+                                                    <span class="my-2 text-xs order-number">
+                                                        {% if work.number_slab is defined %}
+                                                               {{work.number_slab}}
+                                                            {% elif work.number_part is defined %}
+                                                               {{work.number_part}}
+                                                            {% else %}
+                                                            -
+                                                            {% endif %}
+                                                    </span>
+                                                </td>
+                                                <td class="font-weight-normal text-center">
+                                                    <span class="my-2 text-xs order-number">{{work.order_of_client}}</span>
+                                                </td>
+                                                <td class="text-xs font-weight-normal text-center">
+                                                    <div>
+                                                        <!-- check status work : None, work, completed for show in table-->
+                                                        {% if work.query_preproduct %}
+                                                        {% for status in work.query_preproduct %}
+                                                        {% if status.status_start == None %}
+                                                        <span class="badge badge-sm bg-gradient-secondary">Ожидает</span>
+                                                        {% endif %}
+                                                        {% if status.status_start != None and status.status_end == None and status.status_pause == None %}
+                                                        <span class="badge badge-sm bg-gradient-success">В работе</span>
+                                                        {% endif %}
+                                                        {% if status.status_start != None and status.status_pause != None %}
+                                                        <span class="badge badge-sm bg-gradient-warning">Приостановлен</span>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                        {% endif %}
+                                                        <!--This block is  answer aboot work of slabs-->
+                                                        {% if work.query_slabworks %}
+                                                        {% for status in work.query_slabworks %}
+                                                        {% if status.status_start == None %}
+                                                        <span class="badge badge-sm bg-gradient-secondary">Ожидает</span>
+                                                        {% endif %}
+                                                        {% if status.status_start != None and status.status_end == None and status.status_pause == None %}
+                                                        <span class="badge badge-sm bg-gradient-success">В работе</span>
+                                                        {% endif %}
+                                                        {% if status.status_start != None and status.status_pause != None %}
+                                                        <span class="badge badge-sm bg-gradient-warning">Приостановлен</span>
+                                                        {% endif %}
+                                                        {% if status.status_start != None and status.status_end != None %}
+                                                        <span class="badge badge-sm bg-gradient-info">Завершён</span>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                        {% endif %}
+
+                                                        <!--This block for work of parts-->
+                                                        {% if work.query_partworks %}
+                                                        {% for status in work.query_partworks %}
+                                                        {% if status.status_start == None %}
+                                                        <span class="badge badge-sm bg-gradient-secondary">Ожидает</span>
+                                                        {% endif %}
+                                                        {% if status.status_start != None and status.status_end == None and status.status_pause == None %}
+                                                        <span class="badge badge-sm bg-gradient-success">В работе</span>
+                                                        {% endif %}
+                                                        {% if status.status_start != None and status.status_pause != None %}
+                                                        <span class="badge badge-sm bg-gradient-warning">Приостановлен</span>
+                                                        {% endif %}
+                                                        {% if status.status_start != None and status.status_end != None %}
+                                                        <span class="badge badge-sm bg-gradient-info">Завершён</span>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                        {% endif %}
+                                                    </div>
+                                                </td>
+                                                {% if work.work is defined %}
+                                                <td class="font-weight-normal text-center">
+                                                    <span class="my-2 text-xs order-number">
+                                                        {{work.work.work_title}}
+                                                    </span>
+                                                </td>
+                                                <td class="font-weight-normal text-center">
+                                                    <span class="my-2 text-xs font-weight-bold mb-0 order-number">
+                                                        {{work.work.work_type}}
+                                                    </span>
+                                                    <p class="text-xs mb-0">{{work.work.work_kind}}</p>
+                                                </td>
+                                                {% elif work.work_set is defined %}
+                                                <td class="font-weight-normal text-center">
+                                                    <span class="my-2 text-xs order-number">
+                                                       {{work.work_set.work_title}}
+                                                    </span>
+                                                </td>
+                                                <td class="font-weight-normal text-center">
+                                                    <span class="my-2 text-xs font-weight-bold mb-0 order-number">
+                                                        {{work.work_set.work_type}}
+                                                    </span>
+                                                    <p class="text-xs mb-0">{{work.work_set.work_kind}}</p>
+                                                </td>
+                                                {% elif work.work_set_part is defined %}
+                                                <td class="font-weight-normal text-center">
+                                                    <span class="my-2 text-xs order-number">
+                                                       {{work.work_set_part.work_title}}
+                                                    </span>
+                                                </td>
+                                                <td class="font-weight-normal text-center">
+                                                    <span class="my-2 text-xs font-weight-bold mb-0 order-number">
+                                                        {{work.work_set_part.work_type}}
+                                                    </span>
+                                                    <p class="text-xs mb-0">{{work.work_set_part.work_kind}}</p>
+                                                </td>
+                                                {% else %}
+                                                <td class="font-weight-normal text-center">
+                                                    <span class="my-2 text-xs order-number">
+                                                       No work type
+                                                    </span>
+                                                </td>
+                                                <td class="font-weight-normal text-center">
+                                                    <span class="my-2 text-xs order-number">
+                                                       No work type
+                                                    </span>
+                                                </td>
+                                                {% endif %}
+                                                {% if work.value is defined %}
+                                                <td class="text-xs font-weight-normal text-center">
+                                                    <span class="my-2 text-xs">{{work.value}}</span>
+                                                </td>
+                                                {% else %}
+                                                <td class="text-xs font-weight-normal text-center">
+                                                    <span class="my-2 text-xs">-</span>
+                                                </td>
+                                                {% endif %}
+                                                <!-- Стовпець "Ответсвенный" -->
+                                                <td class="text-xs font-weight-normal text-center">
+                                                <span class="text-xs font-weight-bold mb-0">
+                                                  {% if work.worker.first_name %}
+                                                  {{work.worker.first_name}} {{work.worker.last_name}}
+                                                    <p class="text-xs mb-0">({{work.worker.employee.job_title}})</p>
+                                                  {% else %}
+                                                  <button type="submit" class="btn btn-primary" id="submit"
+                                                      data-bs-toggle="modal"
+                                                      data-bs-target="#ModalAddWorker"
+                                                      onclick="getInsert(this)"
+                                                      style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;"
+                                                      data-q1="{{work}}"
+                                                      data-q2="{{work.id}}">
+                                                      <i class="material-icons">face</i>
+                                                      Назначить
+                                                    </button>
+                                                  {% endif %}
+                                                </span>
+                                                </td>
+                                                {% if work.start_work_date is defined %}
+                                                <td class="text-xs font-weight-normal text-center">
+                                                    <span class="my-2 text-xs">{% if work.start_work_date  %}{{work.start_work_date.strftime("%Y-%m-%d")}}{% endif %}</span>
+                                                </td>
+                                                {% else %}
+                                                <td class="text-xs font-weight-normal text-center">
+                                                    <span class="my-2 text-xs">-</span>
+                                                </td>
+                                                {% endif %}
+                                                {% if work.end_work_date is defined %}
+                                                <td class="text-xs font-weight-normal text-center">
+                                                    <span class="my-2 text-xs">{% if work.end_work_date  %}{{work.end_work_date.strftime("%Y-%m-%d")}}{% endif %}</span>
+                                                </td>
+                                                {% else %}
+                                                <td class="text-xs font-weight-normal text-center">
+                                                    <span class="my-2 text-xs">-</span>
+                                                </td>
+                                                {% endif %}
+                                                <td class="text-xs font-weight-normal text-center">
+                                                    <a href="javascript:;" class="mx-3 edit-button" data-bs-toggle="tooltip" data-bs-original-title="Изменить" >
+                                                        <i class="material-icons text-secondary position-relative text-lg">drive_file_rename_outline</i>
+                                                        {% if work.query_preproduct %}
+                                                        <input type="hidden" id="workTypeInput" name="work_type" value="preproduct">
+                                                        <input type="hidden" id="workIdInput" name="work_id" value="{{work.id}}">
+                                                        {% endif %}
+                                                        {% if work.query_slabworks %}
+                                                        <input type="hidden" id="workTypeInput" name="work_type" value="slabworks">
+                                                        <input type="hidden" id="workIdInput" name="work_id" value="{{work.id}}">
+                                                        {% endif %}
+                                                        {% if work.query_partworks %}
+                                                        <input type="hidden" id="workTypeInput" name="work_type" value="partworks">
+                                                        <input type="hidden" id="workIdInput" name="work_id" value="{{work.id}}">
+                                                        {% endif %}
+                                                    </a>
+                                                    <a href="javascript:;" class="delete-button" data-bs-toggle="tooltip" data-bs-original-title="Удалить">
+                                                        <i class="material-icons text-secondary position-relative text-lg">delete</i>
+                                                        {% if work.query_preproduct %}
+                                                        <input type="hidden" name="work_type" value="preproduct">
+                                                        <input type="hidden" name="work_id" value="{{work.id}}">
+                                                        {% endif %}
+                                                        {% if work.query_slabworks %}
+                                                        <input type="hidden" name="work_type" value="slabworks">
+                                                        <input type="hidden" name="work_id" value="{{work.id}}">
+                                                        {% endif %}
+                                                        {% if work.query_partworks %}
+                                                        <input type="hidden" name="work_type" value="partworks">
+                                                        <input type="hidden" name="work_id" value="{{work.id}}">
+                                                        {% endif %}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!--Вкладка выполненые работы -->
+                                <div class="tab-pane fade" id="nav-complitedorder" role="tabpanel"
+                                     aria-labelledby="nav-profile-tab"
+                                     tabindex="0">
+                                    <table class="table table-flush dataTable-table" id="datatable-search">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th data-sortable="" style="width: 15.5172%;"><a href="#" class="dataTable-sorter">S/P</a>
+                                            </th>
+                                            <th data-sortable="" style="width: 15.5172%;"><a href="#" class="dataTable-sorter">#</a>
+
+                                            </th>
+                                            </th>
+                                            <th data-sortable="" style="width: 15.9483%;" class=""><a href="#" class="dataTable-sorter">Номер заказа</a>
+                                                <div class="input-group input-group-outline filter-input-group mt-2">
+<!--                                                    <label class="form-label">Фильтр</label>-->
+<!--                                                    <input type="text" id="orderNumberFilter" class="form-control">-->
+                                                </div>
+                                            </th>
+                                            <th data-sortable="" style="width: 15.5172%;"><a href="#" class="dataTable-sorter">Статус</a>
+                                                <div class="input-group input-group-outline filter-input-group mt-2">
+<!--                                                    <label class="form-label">Фильтр</label>-->
+<!--                                                    <input type="text" id="statusFilter" class="form-control">-->
+                                                </div>
+                                            </th>
+                                            <th data-sortable="" style="width: 19.2888%;" class="desc"><a href="#" class="dataTable-sorter">Вид
+                                                работ</a>
+                                                <div class="input-group input-group-outline filter-input-group mt-2">
+<!--                                                    <label class="form-label">Фильтр</label>-->
+<!--                                                    <input type="text" id="workTypeFilter" class="form-control">-->
+                                                </div>
+                                            </th>
+                                            <th data-sortable="" style="width: 19.2888%;" class="desc"><a href="#" class="dataTable-sorter">Тип
+                                                работ</a>
+                                                <div class="input-group input-group-outline filter-input-group mt-2">
+<!--                                                    <label class="form-label">Фильтр</label>-->
+<!--                                                    <input type="text" id="workTypeFilter" class="form-control">-->
+                                                </div>
+                                            </th>
+                                            <th data-sortable="" style="width: 21.2284%;"><a href="#" class="dataTable-sorter">Значение</a>
+                                                <div class="input-group input-group-outline filter-input-group mt-2">
+<!--                                                    <label class="form-label">Фильтр</label>-->
+<!--                                                    <input type="text" id="valueFilter" class="form-control">-->
+                                                </div>
+                                            </th>
+                                            <th data-sortable="" style="width: 10.9914%;" class=""><a href="#" class="dataTable-sorter">Ответсвенный</a>
+                                                <div class="input-group input-group-outline filter-input-group mt-2">
+<!--                                                    <label class="form-label">Фильтр</label>-->
+<!--                                                    <input type="text" id="workerFilter" class="form-control">-->
+                                                </div>
+                                            </th>
+                                            <th data-sortable="" style="width: 10.9914%;" class=""><a href="#" class="dataTable-sorter">Дата начала</a>
+                                                <div class="input-group input-group-outline filter-input-group mt-2">
+<!--                                                    <label class="form-label">Фильтр</label>-->
+<!--                                                    <input type="text" id="startDateFilter" class="form-control">-->
+                                                </div>
+                                            </th>
+                                            <th data-sortable="" style="width: 10.9914%;" class=""><a href="#" class="dataTable-sorter">Дата окончания</a>
+                                                <div class="input-group input-group-outline filter-input-group mt-2">
+<!--                                                    <label class="form-label">Фильтр</label>-->
+<!--                                                    <input type="text" id="endDateFilter" class="form-control">-->
+                                                </div>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for work in lis_work_end_true %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <p class="text-xs font-weight-normal ms-2 mb-0">
+                                                        {% if work.number_slab is defined %}
+                                                        S
+                                                        {% elif work.number_part is defined %}
+                                                        P
+                                                        {% else %}
+                                                        -
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <p class="text-xs font-weight-normal ms-2 mb-0">
+                                                        {% if work.number_slab %}
+                                                        {{work.number_slab}}
+                                                        {% elif work.number_part%}
+                                                        {{work.number_part}}
+                                                        {% else %} - {% endif %}
+                                                    </p>
+                                                </div>
+                                            </td>
+                                            <td class="font-weight-normal">
+                                                <span class="my-2 text-xs order-number">{{work.order_of_client}}</span>
+                                            </td>
+                                            <td class="text-xs font-weight-normal">
+                                                <div>
+                                                    <!-- check status work : None, work, completed for show in table-->
+                                                    {% if work.query_preproduct %}
+                                                    {% for status in work.query_preproduct %}
+                                                    {% if status.status_start == None %}
+                                                    <span class="badge badge-sm bg-gradient-secondary">Ожидает</span>
+                                                    {% endif %}
+                                                    {% if status.status_start != None and status.status_end == None
+                                                    %}
+                                                    <span class="badge badge-sm bg-gradient-success">В работе</span>
+                                                    {% endif %}
+                                                    {% if status.status_start != None and status.status_end != None
+                                                    %}
+                                                    <span class="badge badge-sm bg-gradient-info">Завершён</span>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    {% endif %}
+
+                                                    {% if work.query_slabworks %}
+                                                    {% for status in work.query_slabworks %}
+                                                    {% if status.status_start == None %}
+                                                    <span class="badge badge-sm bg-gradient-secondary">Ожидает</span>
+                                                    {% endif %}
+                                                    {% if status.status_start != None and status.status_end == None
+                                                    %}
+                                                    <span class="badge badge-sm bg-gradient-success">В работе</span>
+                                                    {% endif %}
+                                                    {% if status.status_start != None and status.status_end != None
+                                                    %}
+                                                    <span class="badge badge-sm bg-gradient-info">Завершён</span>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    {% endif %}
+
+                                                    {% if work.query_partworks %}
+                                                    {% for status in work.query_partworks %}
+                                                    {% if status.status_start == None %}
+                                                    <span class="badge badge-sm bg-gradient-secondary">Ожидает</span>
+                                                    {% endif %}
+                                                    {% if status.status_start != None and status.status_end == None
+                                                    %}
+                                                    <span class="badge badge-sm bg-gradient-success">В работе</span>
+                                                    {% endif %}
+                                                    {% if status.status_start != None and status.status_end != None
+                                                    %}
+                                                    <span class="badge badge-sm bg-gradient-info">Завершён</span>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                            {% if work.work is defined %}
+                                            <td class="text-xs font-weight-normal">
+                                                <div class="d-flex align-items-center">
+                                                    <span>{{work.work.work_title}}</span>
+                                                </div>
+                                            </td>
+                                            <td class="text-xs font-weight-normal">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-xs font-weight-bold mb-0">{{work.work.work_type}}</span>
+                                                </div>
+                                                <p class="text-xs mb-0">{{work.work.work_kind}}</p>
+                                            </td>
+                                            {% elif work.work_set is defined %}
+                                            <td class="text-xs font-weight-normal">
+                                                <div class="d-flex align-items-center">
+                                                    <span>{{work.work_set.work_title}}</span>
+                                                </div>
+                                            </td>
+                                            <td class="text-xs font-weight-normal">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-xs font-weight-bold mb-0">{{work.work_set.work_type}}</span>
+                                                </div>
+                                                <p class="text-xs mb-0">{{work.work_set.work_kind}}</p>
+                                            </td>
+                                            {% elif work.work_set_part is defined %}
+                                            <td class="text-xs font-weight-normal">
+                                                <div class="d-flex align-items-center">
+                                                    <span>{{work.work_set_part.work_title}}</span>
+                                                </div>
+                                            </td>
+                                            <td class="text-xs font-weight-normal">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-xs font-weight-bold mb-0">{{work.work_set_part.work_type}}</span>
+                                                </div>
+                                                <p class="text-xs mb-0">{{work.work_set_part.work_kind}}</p>
+                                            </td>
+                                            {% else %}
+                                            <td class="text-xs font-weight-normal">
+                                                <div class="d-flex align-items-center">
+                                                    <span>No work type</span>
+                                                </div>
+                                            </td>
+                                            {% endif %}
+                                            {% if work.value is defined %}
+                                            <td class="text-xs font-weight-normal">
+                                                <span class="my-2 text-xs">{{work.value}}</span>
+                                            </td>
+                                            {% else %}
+                                            <td class="text-xs font-weight-normal">
+                                                <span class="my-2 text-xs">-</span>
+                                            </td>
+                                            {% endif %}
+                                            <!-- Стовпець "Ответсвенный" -->
+                                            <td class="text-xs font-weight-normal">
+                                            <span class="text-xs font-weight-bold mb-0">
+                                              {% if work.worker.first_name %}
+                                              {{work.worker.first_name}} {{work.worker.last_name}}
+                                                <p class="text-xs mb-0">({{work.worker.employee.job_title}})</p>
+                                              {% endif %}
+                                            </span>
+                                            </td>
+                                            {% if work.start_work_date is defined %}
+                                            <td class="text-xs font-weight-normal">
+                                                <span class="my-2 text-xs">{% if work.start_work_date  %}{{work.start_work_date}}{% endif %}</span>
+                                            </td>
+                                            {% else %}
+                                            <td class="text-xs font-weight-normal">
+                                                <span class="my-2 text-xs">-</span>
+                                            </td>
+                                            {% endif %}
+                                            {% if work.end_work_date is defined %}
+                                            <td class="text-xs font-weight-normal">
+                                                <span class="my-2 text-xs">{% if work.end_work_date  %}{{work.end_work_date}}{% endif %}</span>
+                                            </td>
+                                            {% else %}
+                                            <td class="text-xs font-weight-normal">
+                                                <span class="my-2 text-xs">-</span>
+                                            </td>
+                                            {% endif %}
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalAddWorker">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="">
+                <div class="text-center my-3 mx-3">
+                    <button type="button" class="btn btn-warning btn-lg w-100" data-bs-dismiss="modal"> Очистить
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <form action="" class="form-container" id="set_worker" method="post">
+                    <input type="hidden" name="value1" value="">
+                    <input type="hidden" name="value2" value="">
+                    <table>
+                        <tr>
+                            <div class="input-group input-group-static my-3">
+                                <label>Дата</label>
+                                {{add_worker_form.start_date(type="date", class="form-control")}}
+                            </div>
+                        </tr>
+                        <tr>
+                            <div class="input-group input-group-static my-3">
+                                <label>Дата</label>
+                                {{add_worker_form.end_date(type="date", class="form-control")}}
+                            </div>
+                        </tr>
+                        <tr>
+                            <div class="input-group input-group-static mb-4">
+                                {{add_worker_form.set_worker.label(for="exampleFormControlSelect1", class="ms-0")}}
+                                {{add_worker_form.set_worker(class="form-control")}}
+                            </div>
+                        </tr>
+                        <tr>
+                            <div class="text-center">
+                                {{add_worker_form.submit(class="btn btn-primary btn-lg w-100")}}
+                            </div>
+                        </tr>
+                        <tr>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-secondary btn-lg w-100" data-bs-dismiss="modal">
+                                    Закрыть
+                                </button>
+                            </div>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{url_for('static', filename='js/kanban/get_past_value_button_naznachit.js')}}"></script>
+<script src="{{ url_for('static', filename='js/kanban/sort_table.js') }}"></script>
+<script src="{{ url_for('static', filename='js/kanban/searc_table.js') }}"></script>
+<script src="{{url_for('static', filename='js/kanban/filter_table.js')}}"></script>
+<script src="{{ url_for('static', filename='js/select_work.js')}}"></script>
+<script src="{{url_for('static', filename='js/kanban/add_events.js')}}"></script>
+<script src="{{url_for('static', filename='js/kanban/dell_events.js')}}"></script>
+<script src="{{url_for('static', filename='js/kanban/get_status_problem.js')}}"></script>
+<script src="{{url_for('static', filename='js/kanban/select_work_change.js')}}"></script>
+<script>
+// Function to query the server and update `work_subtype`
+function updateWorkSubtypes(workTitle, workType, callback) {
+  $.ajax({
+    url: '/get_work_subtypes',
+    method: 'POST',
+    data: {
+      work_title: workTitle,
+      work_type: workType
+    },
+    success: function(response) {
+      $('#work_subtype_change').empty();
+      for (var i = 0; i < response.choices.length; i++) {
+        var choice = response.choices[i];
+        $('#work_subtype_change').append($('<option>', {
+          value: choice[0],
+          text: choice[1]
+        }));
+      }
+      if (typeof callback === 'function') {
+        callback(); // Call the callback after updating work_subtypes
+      }
+    }
+  });
+}
+
+// A function to update the `work_type` list based on the selection of `work_title`
+function updateWorkTypes(workTitle, callback) {
+  $.ajax({
+    url: '/get_work_types',
+    method: 'POST',
+    data: {
+      work_title: workTitle
+    },
+    success: function(response) {
+      $('#work_type_change').empty();
+      for (var i = 0; i < response.choices.length; i++) {
+        var choice = response.choices[i];
+        $('#work_type_change').append($('<option>', {
+          value: choice[0],
+          text: choice[1]
+        }));
+      }
+      if (typeof callback === 'function') {
+        callback(); // Call the callback after updating work_types
+      }
+    }
+  });
+}
+
+// When clicking on the "Change" button
+$(".edit-button").click(function () {
+  var workId = $(this).find("#workIdInput").val();
+  var workType = $(this).find("#workTypeInput").val();
+
+  $.ajax({
+    type: "POST",
+    url: "/edit_work",
+    data: { work_id: workId, work_type: workType },
+    success: function (data) {
+      // Insert data into work_title_change here
+      $("#editModal #work_title_change").val(data.work_title);
+
+      // Update work_type_change after inserting data into work_title_change
+      updateWorkTypes(data.work_title, function () {
+        // Setting the selected value for work_type_change
+        $("#editModal #work_type_change").val(data.work_type);
+
+        // Update work_subtype_change after inserting data into work_type_change
+        updateWorkSubtypes(data.work_title, data.work_type, function () {
+          // Inserting other data into the second modal window
+          $("#editModal #number_change").val(data.number);
+          $("#editModal #stone_change").val(data.stone_id);
+          $("#editModal #name_stone_change").val(data.stone_name);
+          $("#editModal #thickness_change").val(data.thickness);
+          $("#editModal #value_work_change").val(data.value);
+          $("#editModal #work_subtype_change").val(data.work_subtype);
+          $("#editModal #order_client_change").val(data.order_of_client);
+          $("#editModal #set_worker_change").val(data.worker);
+          $("#editModal #start_date_change").val(data.start_date);
+          $("#editModal #end_date_change").val(data.end_date);
+          // We open the second modal window
+          $("#editModal").modal("show");
+
+        });
+        console.log(data.start_date);
+      });
+    },
+    error: function (xhr, status, error) {
+      console.error(error);
+    }
+  });
+});
+</script>
+<!--this script for change data on page kanban-->
+<script>
+$(document).ready(function() {
+    // Handle the Save button click
+    $("#saveButton").click(function() {
+        // Show a pop-up window with a confirmation request
+        swal({
+            title: "Подтвердите изменения",
+            text: "Вы уверены, что хотите сохранить изменения?",
+            icon: "warning",
+            buttons: ["Отмена", "Сохранить"],
+            dangerMode: true,
+        }).then((willSave) => {
+            // If the user clicked "Save", send the data to the server
+            if (willSave) {
+                var workId = $("#workIdInputModal").val();
+                var workType = $("#workTypeInputModal").val();
+
+                var updatedData = {
+                    number: $("#number_change").val(),
+                    stone_id: $("#stone_change").val(),
+                    stone_name: $("#name_stone_change").val(),
+                    stone_thickness: $("#thickness_change").val(),
+                    value: $("#value_work_change").val(),
+                    order_client: $("#order_client_change").val(),
+                    work_subtype: $("#work_subtype_change").val(),
+                    set_worker: $("#set_worker_change").val(),
+                    start_date: $("#start_date_change").val(),
+                    end_date: $("#end_date_change").val()
+                };
+
+                $.ajax({
+                    url: "/update_work/" + workId,
+                    type: "POST",
+                    data: {
+                        work_type: workType,
+                        updated_data: JSON.stringify(updatedData)
+                    },
+                    success: function(response) {
+                        // Processing a successful save
+                        $("#editModal").modal("hide");
+                        // refresh page
+                        location.reload(true);
+                    },
+                    error: function(xhr) {
+                        console.log(xhr);
+
+                        if (xhr.responseJSON && xhr.responseJSON.error) {
+                            // Display SweetAlert with error text
+                            swal({
+                                title: "Ошибка",
+                                text: xhr.responseJSON.error,
+                                icon: "error",
+                            });
+                        } else {
+                            // Если нет текста ошибки, отображайте общее сообщение об ошибке
+                            swal({
+                                title: "Ошибка",
+                                text: "Произошла ошибка при отправке запроса на сервер.",
+                                icon: "error",
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
+});
+</script>
+<script>
+// Get all button with class  "edit-button"
+const editButtons = document.querySelectorAll('.edit-button');
+
+// add listener of click for all button
+editButtons.forEach(button => {
+  button.addEventListener('click', function () {
+    // find hiden fillds in this row
+    const workTypeInput = this.querySelector('#workTypeInput');
+    const workIdInput = this.querySelector('#workIdInput');
+
+    // Get value this hiden fields
+    const workType = workTypeInput.value;
+    const workId = workIdInput.value;
+
+    // updates value in modal window
+    const workTypeInputModal = document.getElementById('workTypeInputModal');
+    const workIdInputModal = document.getElementById('workIdInputModal');
+    workTypeInputModal.value = workType;
+    workIdInputModal.value = workId;
+  });
+});
+
+</script>
+{% endblock %}

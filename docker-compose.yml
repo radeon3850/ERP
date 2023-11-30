@@ -1,0 +1,26 @@
+version: '3'
+services:
+  flask:  # Змінено на ім'я "flask"
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./ERP:/app
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: sqlite:////app/ERP/erp.db
+    restart: always
+
+  db:
+    image: busybox
+    volumes:
+      - ./ERP/erp.db:/app/ERP/erp.db
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - flask  # Змінено на ім'я "flask"
+    restart: always

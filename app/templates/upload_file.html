@@ -1,0 +1,50 @@
+{% if current_user.specialization_id is ne(2)%}
+{% extends "new_base_bootstrap.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
+{% block content %}
+
+<div class="container-fluid py-4">
+    <h4 class="font-weight-bolder mb-0">Загрузка чертежей</h4>
+    <p>
+    </p>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                <form target="" class="form-container" method="post" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    {{form.csrf_token}}
+                    <div class="input-group">
+                        <p>
+                            {{form.files(class="form-control", id="inputGroupFile04")}}
+                            {% for error in form.files.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </p>
+                        <p>
+                            {{form.submit(class="btn btn-primary", id="inputGroupFileAddon04")}}
+                        </p>
+                    </div>
+                </form>
+                <div>
+                    <h5 class="font-weight-bolder mb-0">Файли</h5>
+                    {% if files %}
+                    <ul>
+                        {% for file in files %}
+                        <li><a href="{{ url_for('download_file', filename=file.filename) }}">{{ file.filename }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>Ще немає жодного завантаженого файлу</p>
+                    {% endif %}
+                </div>
+            </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

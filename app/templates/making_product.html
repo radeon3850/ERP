@@ -1,0 +1,617 @@
+{% if current_user.specialization_id is ne(2)%}
+{% extends "new_base_bootstrap.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<style>
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 24px;
+}
+
+    /* Hide default HTML checkbox */
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 24px;
+}
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+</style>
+
+<div class="container-fluid py-4 min-vh-100">
+    <div class="row mt-4">
+        <div class="col-lg-8">
+            <div class="card mt-4">
+                <div class="card-header pb-0">
+                    <h6>Информация о задании</h6>
+                </div>
+                <div class="card-body px-0 pt-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
+                                    Камень
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
+                                    Задание
+                                </th>
+                                {% if (work.id_work_slabs)!= None or (work.id_work_part)!= None %}
+                                <th class=" text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
+                                    Значение
+                                </th>
+                                {% endif %}
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
+                                    Исполнитель
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
+                                    Коментарий
+                                </th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
+                                    Статус
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <!--        проверкак что отображать в таблице предпроеткные работы, слябы или детали-->
+                                {% if work.id_preproduct != None %}
+                                <td>
+                                    <div class="d-flex px-3 py-1">
+                                        <div>
+                                            <img src="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/img/logos/small-logos/logo-spotify.svg"
+                                                 class="avatar me-3" alt="image">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="align-middle text-center text-sm">
+                                    <p class="text-center font-weight-normal mb-0">-</p>
+                                </td>
+                                <td class="align-middle text-center text-sm">
+                                    <p class="text-center font-weight-normal mb-0">{{work.query_preproduct.work.work_type}}</p>
+                                </td>
+                                <td class="align-middle text-center text-sm">
+                                    <p class="text-center font-weight-normal mb-0">
+                                        {{work.query_preproduct.worker.first_name}}
+                                        {{work.query_preproduct.worker.last_name}}</p>
+                                </td>
+                                {% endif %}
+                                {% if work.id_work_slabs != None %}
+                                <td>
+                                    <div class="d-flex px-3 py-1">
+                                        <div>
+                                            <img src="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/img/logos/small-logos/logo-spotify.svg"
+                                                 class="avatar me-3" alt="image">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="align-middle text-center text-sm">
+                                    <p class="text-center font-weight-normal mb-0">
+                                        {{work.query_slabworks.stone.type_stone}}
+                                    </p>
+                                </td>
+                                <td>
+                                    <div class="d-flex px-3 py-1">
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="mb-0 text-sm">{{work.query_slabworks.work_set.work_type}}</h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="align-middle text-center text-sm">
+                                    <p class="text-center font-weight-normal mb-0">{{work.query_slabworks.value}}</p>
+                                </td>
+                                <td class="align-middle text-center text-sm">
+                                    <p class="text-center font-weight-normal mb-0">
+                                        {{work.query_slabworks.worker.first_name}}
+                                        {{work.query_slabworks.worker.last_name}}</p>
+                                </td>
+                                {% endif %}
+                                {% if (work.id_work_part)!= None %}
+                                <td>
+                                    <div class="d-flex px-3 py-1">
+                                        <div>
+                                            <img src="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/img/logos/small-logos/logo-spotify.svg"
+                                                 class="avatar me-3" alt="image">
+                                        </div>
+                                    </div>
+                                </td>
+                                 <td class="align-middle text-center text-sm">
+                                    <p class="text-center font-weight-normal mb-0">
+                                        {{work.query_partworks.stone.type_stone}}
+                                    </p>
+                                </td>
+                                 <td class="align-middle text-center text-sm">
+                                    <p class="text-center font-weight-normal mb-0">{{work.query_partworks.work_set_part.work_type}}</p>
+                                </td>
+                                <td class="align-middle text-center text-sm">
+                                    <p class="text-center font-weight-normal mb-0">{{work.query_partworks.value}}</p>
+                                </td>
+                                <td class="align-middle text-center text-sm">
+                                    <p class="text-center font-weight-normal mb-0">
+                                        {{work.query_partworks.worker.first_name}}
+                                        {{work.query_partworks.worker.last_name}}</p>
+                                </td>
+                                {% endif %}
+                                <td class="align-middle text-center text-sm">
+                                    <button class="btn btn-primary mt-3" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseExample"
+                                    aria-expanded="false" aria-controls="collapseExample" id="showButton" style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                Показать комментарий
+                            </button>
+                                </td>
+                                <!--        проверка статуса для отображения на странице пользователю (нужно оптимизировать код)-->
+                                {% if (work.status_start)!= None and (work.status_pause)== None and (work.status_end)==
+                                None and
+                                (work.status_problem)== None %}
+                                <td class="mb-0 text-sm" id="status">
+                                    <h6 class="mb-0 text-sm">В работе</h6>
+                                </td>
+                                {% elif (work.status_start)!=None and (work.status_pause)!=None and
+                                (work.status_end)==None and
+                                (work.status_problem)==None %}
+                                <td class="align-middle text-center" id="status"><h6 class="mb-0 text-sm">Приостановлено</h6>
+                                </td>
+                                {% elif (work.status_start)!=None and (work.status_problem)!=None and
+                                (work.status_pause) == None and
+                                (work.status_end) == None %}
+                                <td class="align-middle text-center" id="status"><h6 class="mb-0 text-sm"> Проблема</h6>
+                                </td>
+                                {% elif (work.status_start)==None and (work.status_problem)==None and
+                                (work.status_pause)==None and
+                                (work.status_end)==None %}
+                                <td class="align-middle text-center" id="status" > <h6 class="mb-0 text-sm">Ожидает - нажмите "Начать"</h6>
+                                </td>
+                                {% elif (work.status_start)!=None and (work.status_end)!= None %}
+                                <td class="align-middle text-center" id="status" > <h6 class="mb-0 text-sm">Завершено</h6>
+                                </td>
+                                {% endif %}
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <!--include - вставляет шаблон чата в текущий HTML-файл-->
+                {% include "chat.html" %}
+            </div>
+            <div class="row mt-4">
+                <div class="col-lg-12">
+                    {% include "show_files.html" %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mt-lg-0 mt-4">
+            <div class="card mt-4">
+                <div class="card-header pb-0 p-3">
+                    <div>
+                        <p style="color:red">**Уведомление о проблеме можно отправить только после нажатия кнопки "Начать"</p>
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-outline-danger" id="problemButton" name="submit" {% if(work.status_start)==None %} disabled="true" {% endif %}
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#staticBackdrop"
+                                    style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                                проблема
+                            </button>
+                                {% if status_solved.problem_solved == 1 and status_solved.resume_after_solved == 0 %}
+                                <i class="material-icons text-success" style="font-size: 1.90em">fiber_manual_record</i>
+                                {% elif status_solved.problem_solved == 0 and status_solved.resume_after_solved == 0 %}
+                                <i class="material-icons text-danger" style="font-size: 1.90em">fiber_manual_record</i>
+                                {% else %}
+                                {% endif %}
+                            <!-- Modal -->
+                            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                                 data-bs-keyboard="false"
+                                 tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabel">Трудности</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Отправить уведомление о проблеме
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Закрыть
+                                            </button>
+                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                                                    id="problem">Отправить
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card card-background card-background-mask-dark align-items-start">
+                            <div class="full-background cursor-pointer"></div>
+                            <div class="card-body">
+                                <h5 class="text-white mb-0 text-center">Панель управления</h5>
+                                <div class="d-flex justify-content-between">
+<!--                                    This block is all time shows customer-->
+                                    <div id="checkbox-all">
+                                        <div class="mt-4">
+                                            <!--чек бокс для включения/выключения кнопок-->
+                                            <label class="switch">
+                                                <input type="checkbox" {% if work.status_start!=None %} checked disabled
+                                                       {% endif%}>
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <label class="fw-bold text-white mb-0">
+                                                Материал
+                                                <p>проверил</p>
+                                            </label>
+                                        </div>
+                                        <div class="mt-4">
+                                            <!--чек бокс для включения/выключения кнопок-->
+                                            <label class="switch">
+                                                <input type="checkbox" {% if work.status_start!=None %} checked disabled {% endif%}>
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <label class="fw-bold text-white mb-0">Чертежи
+                                                <p>посмотрел/проверил</p>
+                                            </label>
+                                        </div>
+                                        <div class="mt-4">
+                                            <!--чек бокс для включения/выключения кнопок-->
+                                            <label class="switch">
+                                                <input type="checkbox" {% if work.status_start!=None %} checked disabled
+                                                       {% endif%}>
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <label class="fw-bold text-white mb-0">Коментарий
+                                                <p>посмотрел</p>
+                                            </label>
+                                        </div>
+                                    </div>
+<!--                                    this block is aded if work=="контроль"-->
+                                    <div id="checkbox-control">
+                                        <div class="mt-4">
+                                            <!--чек бокс для включения/выключения кнопок-->
+                                            {% if work.query_preproduct %}
+                                            {% if work.query_preproduct.work.work_type=="Контроль" %}
+                                            <label class="switch">
+                                                <input type="checkbox" {% if work.status_start!=None %} checked disabled
+                                                       {% endif%}>
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <label class="fw-bold text-white mb-0">Поверхность
+                                                <p>проверил</p>
+                                            </label>
+                                            {% endif %}
+                                            {% endif %}
+                                        </div>
+                                        <div class="mt-4">
+                                            <!--чек бокс для включения/выключения кнопок-->
+                                            {% if work.query_preproduct %}
+                                            {% if work.query_preproduct.work.work_type=="Контроль" %}
+                                            <label class="switch">
+                                                <input type="checkbox" {% if work.status_start!=None %} checked disabled
+                                                       {% endif%}>
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <label class="fw-bold text-white mb-0">Фаску
+                                                <p>проверил</p>
+                                            </label>
+                                            {% endif %}
+                                            {% endif %}
+                                        </div>
+                                        <div class="mt-4">
+                                            <!--чек бокс для включения/выключения кнопок-->
+                                            {% if work.query_preproduct %}
+                                            {% if work.query_preproduct.work.work_type=="Контроль" %}
+                                            <label class="switch">
+                                                <input type="checkbox" {% if work.status_start!=None %} checked disabled
+                                                       {% endif%}>
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <label class="fw-bold text-white mb-0">Геометрию
+                                                <p>проверил</p>
+                                            </label>
+                                            {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-wrap justify-content-center mt-4 pt-2">
+                                    {% if work.query_slabworks %}
+                                    <button type="button" class="btn btn-sm rounded-pill btn-success m-1" id="start"
+                                            {% if(work.status_start)==None %} disabled {% endif %}
+                                            style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .70rem;">
+                                        Начать
+                                    </button>
+                                     <button type="button" class="btn btn-sm rounded-pill btn-warning m-1" id="pause"
+                                            {% if(work.status_start)==None %} disabled {% endif %}
+                                            style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .70rem;">
+                                        Приостановить
+                                    </button>
+                                    <button type="button" class="btn btn-sm rounded-pill btn-secondary m-1" id="resume"
+                                            {% if(work.status_start)==None %} disabled {% endif %}
+                                            style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .70rem;">
+                                        Возобновить
+                                    </button>
+                                    <button type="button" class="btn btn-sm rounded-pill btn-danger m-1" id="stop"
+                                            {% if(work.status_start)==None %} disabled {% endif %}
+                                            style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .70rem;">
+                                        Завершить
+                                    </button>
+                                    {% elif work.query_partworks %}
+                                    <button type="button" class="btn btn-sm rounded-pill btn-success m-1" id="start"
+                                            {% if(work.status_start)==None %} disabled {% endif %}
+                                            style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .70rem;">
+                                        Начать
+                                    </button>
+                                     <button type="button" class="btn btn-sm rounded-pill btn-warning m-1" id="pause"
+                                            {% if(work.status_start)==None %} disabled {% endif %}
+                                            style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .70rem;">
+                                        Приостановить
+                                    </button>
+                                    <button type="button" class="btn btn-sm rounded-pill btn-secondary m-1" id="resume"
+                                            {% if(work.status_start)==None %} disabled {% endif %}
+                                            style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .70rem;">
+                                        Возобновить
+                                    </button>
+                                    <button type="button" class="btn btn-sm rounded-pill btn-danger m-1" id="stop"
+                                            {% if(work.status_start)==None %} disabled {% endif %}
+                                            style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .70rem;">
+                                        Завершить
+                                    </button>
+                                    {% else %}
+                                    <button type="button" class="btn btn-sm rounded-pill btn-success m-1" id="start"
+                                            {% if(work.status_start)==None %} disabled {% endif %}
+                                            style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .70rem;">
+                                        Начать
+                                    </button>
+                                     <button type="button" class="btn btn-sm rounded-pill btn-warning m-1" id="pause"
+                                            {% if(work.status_start)==None %} disabled {% endif %}
+                                            style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .70rem;">
+                                        Приостановить
+                                    </button>
+                                    <button type="button" class="btn btn-sm rounded-pill btn-secondary m-1" id="resume"
+                                            {% if(work.status_start)==None %} disabled {% endif %}
+                                            style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .70rem;">
+                                        Возобновить
+                                    </button>
+                                    <button type="button" class="btn btn-sm rounded-pill btn-danger m-1" id="stop"
+                                            {% if(work.status_start)==None %} disabled {% endif %}
+                                            style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .70rem;">
+                                        Завершить
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Отримати всі чекбокси
+const checkboxesAll = document.querySelectorAll('#checkbox-all input[type="checkbox"]');
+// Отримати всі чекбокси у другому наборі
+const checkboxesControl = document.querySelectorAll('#checkbox-control input[type="checkbox"]');
+// Отримати всі кнопки
+const buttons = document.querySelectorAll('.btn');
+// Отримати кнопки, які потрібно змінювати
+const activeButtons = document.querySelectorAll('#start, #pause, #resume');
+// Отримати кнопку "Завершити"
+const stopButton = document.querySelector('#stop');
+
+// Функція для перевірки стану чекбоксів
+function checkAllCheckboxes(checkboxes) {
+  for (let i = 0; i < checkboxes.length; i++) {
+    if (!checkboxes[i].checked) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// Функція для зміни стану кнопок
+function updateButtonState() {
+  const allCheckboxesAllChecked = checkAllCheckboxes(checkboxesAll);
+  const allCheckboxesControlChecked = checkAllCheckboxes(checkboxesControl);
+
+  for (let i = 0; i < activeButtons.length; i++) {
+    activeButtons[i].disabled = !allCheckboxesAllChecked;
+  }
+
+  stopButton.disabled = !(allCheckboxesAllChecked && allCheckboxesControlChecked);
+}
+
+// Викликати функцію під час завантаження сторінки
+updateButtonState();
+
+// Додати обробник події для кожного чекбоксу з першого набору
+for (let i = 0; i < checkboxesAll.length; i++) {
+  checkboxesAll[i].addEventListener('change', updateButtonState);
+}
+
+// Додати обробник події для кожного чекбоксу з другого набору
+for (let i = 0; i < checkboxesControl.length; i++) {
+  checkboxesControl[i].addEventListener('change', updateButtonState);
+}
+</script>
+<script>
+    $(document).ready(function(){
+    function showSweetAlert(icon, title, text) {
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: text
+        });
+    }
+
+    function performAction(signal) {
+        $.ajax({
+            url: '',
+            type: 'get',
+            contentType: 'application/json',
+            data: {
+                signal: signal
+            },
+            success: function(result){
+                if (result.status === 'success') {
+                    showSweetAlert('success', 'Успешно!', result.message);
+                } else {
+                    showSweetAlert('error', 'Ошибка!', result.message);
+                }
+                $("#status").text(result.message);
+                if (signal === 'start') {
+                    activateProblemButton();
+                }
+            },
+            error: function(result) {
+                showSweetAlert('error', 'Ошибка!', 'Произошла ошибка при выполненнии запроса.');
+            }
+        });
+    }
+
+    // Обробник для кнопки #start
+    $("#start").click(function() {
+        Swal.fire({
+            title: 'Вы дествительно хотите начать выполнение работы?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Да',
+            cancelButtonText: 'Нет'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performAction('start');
+            }
+        });
+    });
+
+    // Обробник для кнопки #stop
+    $("#stop").click(function() {
+        Swal.fire({
+            title: 'Вы дествительно хотите завершить выполнение работы?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Да',
+            cancelButtonText: 'Нет'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performAction('stop');
+            }
+        });
+    });
+
+    // Обробник для кнопки #resume
+    $("#resume").click(function() {
+        Swal.fire({
+            title: 'Возобновить выполнение работы?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Да',
+            cancelButtonText: 'Нет'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performAction('resume');
+            }
+        });
+    });
+
+    // Обробник для кнопки #pause
+    $("#pause").click(function() {
+        Swal.fire({
+            title: 'Приостановить выполнение работ?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Да',
+            cancelButtonText: 'Нет'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performAction('pause');
+            }
+        });
+    });
+
+    // Обробник для кнопки #problem
+    $("#problem").click(function() {
+        Swal.fire({
+            title: 'Отправить уведомление о проблеме?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Да',
+            cancelButtonText: 'Нет'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performAction('problem');
+            }
+        });
+    });
+
+    // Функція для активації кнопки "Проблема"
+    function activateProblemButton() {
+        $("#problemButton").prop('disabled', false);
+    }
+});
+
+</script>
+
+{% endblock %}
+

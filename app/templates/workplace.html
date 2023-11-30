@@ -1,0 +1,667 @@
+{% if current_user.specialization_id is ne(2)%}
+{% extends "new_base_bootstrap.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
+
+{% block content %}
+
+<div class="container-fluid ">
+<div class="container-fluid py-4 min-vh-100">
+  <div class="card">
+      <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+          <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+              <h6 class="text-white text-capitalize ps-3">Список задач</h6>
+          </div>
+      </div>
+      <div class="py-4 px-4">
+          <h5 class="font-weight-bolder mb-0">Список задач</h5>
+          <p class="text-sm mb-0">Список всех присвоеных задач</p>
+      </div>
+      <div>
+          <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+              <li class="nav-item" role="presentation">
+                  <a class="nav-link active" id="pills-home-tab" data-bs-toggle="pill"
+                     data-bs-target="#nav-activorder" type="button" role="tab"
+                     aria-selected="true">Активные работы</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill"
+                          data-bs-target="#nav-complitedorder"
+                          type="button" role="tab" aria-controls="pills-profile"
+                          aria-selected="false">Выполненые работы
+                  </button>
+              </li>
+          </ul>
+      </div>
+      <div class="table-responsive min-vh-80"> <!--      min-vh-80 змінює висоту блоку в якому знаходиться таблиця -->
+          <div class="tab-content" id="nav-tabContent">
+              <!--  Вкладка новых и активных работ-->
+              <div class="tab-pane fade show active" id="nav-activorder" role="tabpanel"
+                   aria-labelledby="nav-home-tab" tabindex="0">
+                  <table class="table align-items-center mb-0">
+                      <thead>
+                      <tr>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"></th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                              Тип задания
+                          </th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                              Вид задания
+                          </th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                              Подтип задания
+                          </th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                              Значение
+                          </th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Статус
+                          </th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Дата
+                              начала
+                          </th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Дата
+                              окончания
+                          </th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                              Управление
+                          </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <!--        Блок таблицы отвечающий за отображение работ по "Предпроектной работе" у конкретного работника -->
+                      {% for work in performance_work %}
+                      {% if work.status_end == None %}
+                      {% if (work.id_preproduct)!= None %}
+                      {% if current_user.id == work.query_preproduct.set_worker %}
+                      <tr>
+                          <td>
+                              <div class="d-flex px-2">
+                                  <div>
+                                      <img src="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/img/logos/small-logos/logo-spotify.svg"
+                                           class="avatar avatar-sm rounded-circle me-2">
+                                  </div>
+                                  <div class="my-auto">
+                                      <h6 class="mb-0 text-xs"></h6>
+                                  </div>
+                              </div>
+                          </td>
+                          <td>
+                              <p class="text-xs text-secondary mb-0">Предпроектная работа</p>
+                              <p class="text-xs font-weight-bold mb-0">{{work.query_preproduct.work.work_type}}</p>
+                          </td>
+                          <td>
+                              <p class="text-xs text-secondary mb-0">Предпроектная работа</p>
+                              <p class="text-xs font-weight-bold mb-0">{{work.query_preproduct.work.work_type}}</p>
+                          </td>
+                          <td>
+                              <p class="text-xs text-secondary mb-0">Предпроектная работа</p>
+                              <p class="text-xs font-weight-bold mb-0">{{work.query_preproduct.work.work_type}}</p>
+                          </td>
+                          <td>
+                            <span class="badge badge-dot me-4">
+                            <i class="bg-info"></i>
+                            <span class="text-dark text-xs">-</span>
+                            </span>
+                          </td>
+                          <!-- Управление отображения статусов работ -->
+                          <td>
+                            <span class="badge badge-dot me-4">
+                            {% if work.status_start==True and work.status_pause==None and work.status_problem==None and work.status_end==None %}
+                            <i class="material-icons text-success" style="font-size: 0.90em">fiber_manual_record</i>
+                            <span class="text-muted text-lowercase">В работе</span>
+                            {% elif work.status_start==None %}
+                            <i class="material-icons text-secondary" style="font-size: 0.90em">fiber_manual_record</i>
+                            <span class="text-muted text-lowercase">В ожидании</span>
+                            {% elif work.status_pause==True and work.status_start==True %}
+                            <i class="material-icons text-warning" style="font-size: 0.90em">fiber_manual_record</i>
+                            <span class="text-muted text-lowercase">Приостановлено</span>
+                            {% elif work.status_pause==None and work.status_start==True and work.status_problem==True and work.status_end==None  %}
+                            <i class="material-icons text-danger" style="font-size: 0.90em">fiber_manual_record</i>
+                            <span class="text-muted text-lowercase">Проблема</span>
+                            {% elif work.status_start==True and work.status_end==True and work.status_problem==None and work.status_pause==None %}
+                            <i class="material-icons text-info" style="font-size: 0.90em">fiber_manual_record</i>
+                            <span class="text-muted text-lowercase">Завершён</span>
+                            {% endif %}
+                            </span>
+                          </td>
+                          <td class="text-xs font-weight-normal">
+                                <div class="d-flex align-items-center">
+                                    <span>{{work.query_preproduct.start_work_date.strftime("%Y-%m-%d")}}</span>
+                                </div>
+                            </td>
+                          <td class="text-xs font-weight-normal">
+                            <div class="d-flex align-items-center">
+                                <span>{{work.query_preproduct.end_work_date.strftime("%Y-%m-%d")}}</span>
+                            </div>
+                          </td>
+                          <!--          Блок кнопки "Управление" с выпадающим меню-->
+                          <td class="align-middle">
+                              <div class="d-grid gap-2 d-md-flex justify-content-md">
+                                  <div class="dropdown">
+                                      <button class="btn btn-sm bg-gradient-warning dropdown-toggle"
+                                              type="button" id="dropdownMenuButton"
+                                              data-bs-toggle="dropdown" aria-expanded="false"
+                                              style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                          управление
+                                      </button>
+                                      <ul class="dropdown-menu"
+                                          aria-labelledby="dropdownMenuButton">
+                                          <li>
+                                              <form action="{{ url_for('making_product') }}"
+                                                    method="get" target="_blank">
+                                                  <button class="dropdown-item"
+                                                          type="submit" name="q" value="{{work.id}}">
+                                                      <input type="hidden" name="order"
+                                                             value="{{work.query_preproduct.order_of_client}}">
+                                                      перейти к заданию
+                                                  </button>
+                                              </form>
+                                          </li>
+                                      </ul>
+                                  </div>
+                              </div>
+                          </td>
+                      </tr>
+                      {% endif %}
+                      {% endif %}
+                      {% endif %}
+                      {% endfor %}
+                      <!--        Блок таьлицы отвечающий ща отображение работ по слябам у конкретного работника -->
+                      {% for work in performance_work %}
+                      {% if work.status_end == None %}
+                      {% if (work.id_work_slabs)!= None %}
+                      {% if current_user.id == work.query_slabworks.set_worker %}
+                      <tr>
+                          <td>
+                              <div class="d-flex px-2">
+                                  <div>
+                                      <img src="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/img/logos/small-logos/logo-spotify.svg"
+                                           class="avatar avatar-sm rounded-circle me-2">
+                                  </div>
+                                  <div class="my-auto">
+                                      <h6 class="mb-0 text-xs"></h6>
+                                  </div>
+                              </div>
+                          </td>
+                          <td>
+                              <p class="text-xs text-secondary mb-0">Слябы</p>
+                              <p class="text-xs font-weight-bold mb-0">{{work.query_slabworks.work_set.work_title}}</p>
+                          </td>
+                           <td>
+                              <p class="text-xs text-secondary mb-0">Слябы</p>
+                              <p class="text-xs font-weight-bold mb-0">{{work.query_slabworks.work_set.work_type}}</p>
+                          </td>
+                           <td>
+                              <p class="text-xs text-secondary mb-0">Слябы</p>
+                              <p class="text-xs font-weight-bold mb-0">{{work.query_slabworks.work_set.work_kind}}</p>
+                          </td>
+                          <td>
+                            <span class="badge badge-dot me-4">
+                            <i class="bg-info"></i>
+                            <span class="text-dark text-xs">{{work.query_slabworks.value}}</span>
+                            </span>
+                          </td>
+                          <td>
+                              <!--            управление отображения статусами -->
+                              <span class="badge badge-dot me-4">
+                                {% if work.status_start==True and work.status_pause==None and work.status_problem==None and work.status_end==None %}
+                                <i class="material-icons text-success" style="font-size: 0.90em">fiber_manual_record</i>
+                                <span class="text-muted text-lowercase">В работе</span>
+                                {% elif work.status_start==None %}
+                                <i class="material-icons text-secondary"
+                                   style="font-size: 0.90em">fiber_manual_record</i>
+                                <span class="text-muted text-lowercase">В ожидании</span>
+                                {% elif work.status_pause==True and work.status_start==True %}
+                                <i class="material-icons text-warning" style="font-size: 0.90em">fiber_manual_record</i>
+                                <span class="text-muted text-lowercase">Приостановлено</span>
+                                {% elif work.status_pause==None and work.status_start==True and work.status_problem==True and work.status_end==None  %}
+                                <i class="material-icons text-danger" style="font-size: 0.90em">fiber_manual_record</i>
+                                <span class="text-muted text-lowercase">Проблема</span>
+                                {% elif work.status_start==True and work.status_end==True and work.status_problem==None and work.status_pause==None %}
+                                <i class="material-icons text-info" style="font-size: 0.90em">fiber_manual_record</i>
+                                <span class="text-muted text-lowercase">Завершён</span>
+                                {% endif %}
+                                </span>
+                          </td>
+                          <td class="text-xs font-weight-normal">
+                                <div class="d-flex align-items-center">
+                                    <span>{{work.query_slabworks.start_work_date.strftime("%Y-%m-%d")}}</span>
+                                </div>
+                            </td>
+                          <td class="text-xs font-weight-normal">
+                                <div class="d-flex align-items-center">
+                                    <span>{{work.query_slabworks.end_work_date.strftime("%Y-%m-%d")}}</span>
+                                </div>
+                            </td>
+                          <!--          Блок кнопки "Управление" -->
+                          <td class="align-middle">
+                              <div class="d-grid gap-2 d-md-flex justify-content-md">
+                                  <div class="dropdown">
+                                      <button class="btn btn-sm bg-gradient-warning dropdown-toggle "
+                                              type="button" id="dropdownMenuButton"
+                                              data-bs-toggle="dropdown" aria-expanded="false"
+                                              class="btn btn-link text-secondary mb-0"
+                                              style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                          <span class="material-icons">
+                                            </span>
+                                          управление
+                                      </button>
+                                      <ul class="dropdown-menu"
+                                          aria-labelledby="dropdownMenuButton">
+                                          <li>
+                                              <form action="{{ url_for('making_product') }}"
+                                                    method="get" target="_blank">
+                                                  <button class="dropdown-item"
+                                                          type="submit" name="q" value="{{work.id}}">
+                                                      <input type="hidden" name="order"
+                                                             value="{{work.query_slabworks.order_of_client}}">
+                                                      перейти к выполенению
+                                                  </button>
+                                              </form>
+                                          </li>
+                                      </ul>
+                                  </div>
+                              </div>
+                          </td>
+                      </tr>
+                      {% endif %}
+                      {% endif %}
+                      {% endif %}
+                      {% endfor %}
+                      <!--        Блок таблицы отвечающий ща отображение работ по деталям у конкретного работника -->
+                      {% for work in performance_work %}
+                      {% if work.status_end == None %}
+                      {% if (work.id_work_part)!= None %}
+                      {% if current_user.id == work.query_partworks.set_worker %}
+                      <tr>
+                          <td>
+                              <div class="d-flex px-2">
+                                  <div>
+                                      <img src="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/img/logos/small-logos/logo-spotify.svg"
+                                           class="avatar avatar-sm rounded-circle me-2">
+                                  </div>
+                                  <div class="my-auto">
+                                      <h6 class="mb-0 text-xs"></h6>
+                                  </div>
+                              </div>
+                          </td>
+                          <td>
+                              <p class="text-xs text-secondary mb-0">Детали</p>
+                              <p class="text-xs font-weight-bold mb-0">
+                                  {{work.query_partworks.work_set_part.work_title}}
+                              </p>
+                          </td>
+                           <td>
+                              <p class="text-xs text-secondary mb-0">Детали</p>
+                              <p class="text-xs font-weight-bold mb-0">
+                                  {{work.query_partworks.work_set_part.work_type}}
+                              </p>
+                          </td>
+                           <td>
+                              <p class="text-xs text-secondary mb-0">Детали</p>
+                              <p class="text-xs font-weight-bold mb-0">
+                                  {{work.query_partworks.work_set_part.work_kind}}
+                              </p>
+                          </td>
+                          <td>
+                            <span class="badge badge-dot me-4">
+                            <i class="bg-info"></i>
+                            <span class="text-dark text-xs">{{work.query_partworks.value}}</span>
+                            </span>
+                          </td>
+                          <td>
+                              <!--     Отображение статуса работ в таблице -->
+                              <span class="badge badge-dot me-4">
+                                {% if work.status_start==True and work.status_pause==None and work.status_problem==None and work.status_end==None %}
+                                <i class="material-icons text-success" style="font-size: 0.90em">fiber_manual_record</i>
+                                <span class="text-muted text-lowercase">В работе</span>
+                                {% elif work.status_start==None %}
+                                <i class="material-icons text-secondary"
+                                   style="font-size: 0.90em">fiber_manual_record</i>
+                                <span class="text-muted text-lowercase">В ожидании</span>
+                                {% elif work.status_pause==True and work.status_start==True %}
+                                <i class="material-icons text-warning" style="font-size: 0.90em">fiber_manual_record</i>
+                                <span class="text-muted text-lowercase">Приостановлено</span>
+                                {% elif work.status_pause==None and work.status_start==True and work.status_problem==True and work.status_end==None  %}
+                                <i class="material-icons text-danger" style="font-size: 0.90em">fiber_manual_record</i>
+                                <span class="text-muted text-lowercase">Проблема</span>
+                                {% elif work.status_start==True and work.status_end==True and work.status_problem==None and work.status_pause==None %}
+                                <i class="material-icons text-info" style="font-size: 0.90em">fiber_manual_record</i>
+                                <span class="text-muted text-lowercase">Завершён</span>
+                                {% endif %}
+                                </span>
+                          </td>
+                          <td class="text-xs font-weight-normal">
+                                <div class="d-flex align-items-center">
+                                    <span>{{work.query_partworks.start_work_date.strftime("%Y-%m-%d")}}</span>
+                                </div>
+                            </td>
+                          <td class="text-xs font-weight-normal">
+                                <div class="d-flex align-items-center">
+                                    <span>{{work.query_partworks.end_work_date.strftime("%Y-%m-%d")}}</span>
+                                </div>
+                            </td>
+                          <td class="align-middle">
+                              <div class="d-grid gap-2 d-md-flex justify-content-md">
+                                  <!--              Кнопка "управелнеие"-->
+                                  <div class="dropdown">
+                                      <button class="btn btn-sm bg-gradient-warning dropdown-toggle "
+                                              type="button" id="dropdownMenuButton"
+                                              data-bs-toggle="dropdown" aria-expanded="false"
+                                              class="btn btn-link text-secondary mb-0"
+                                              style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                                <span class="material-icons">
+                                                </span>
+                                          управление
+                                      </button>
+                                      <ul class="dropdown-menu"
+                                          aria-labelledby="dropdownMenuButton">
+                                          <li>
+                                              <form action="{{ url_for('making_product') }}"
+                                                    method="get" target="_blank">
+                                                  <button class="dropdown-item"
+                                                          type="submit" name="q" value="{{work.id}}">
+                                                      <input type="hidden" name="order"
+                                                             value="{{work.query_partworks.order_of_client}}">
+                                                      перейти к выполенению
+                                                  </button>
+                                              </form>
+                                          </li>
+                                      </ul>
+                                  </div>
+                              </div>
+                          </td>
+                      </tr>
+                      {% endif %}
+                      {% endif %}
+                      {% endif %}
+                      {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+              <!--Вкладк выполненые работы -->
+              <div class="tab-pane fade" id="nav-complitedorder" role="tabpanel"
+                   aria-labelledby="nav-profile-tab" tabindex="0">
+                  <table class="table align-items-center mb-0">
+                      <thead>
+                          <tr>
+                              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"></th>
+                              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Задание</th>
+                              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Значение</th>
+                              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Статус</th>
+                              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Дата начала</th>
+                              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Дата окончания</th>
+                              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Управление</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                      <!--        Блок таблицы отвечающий за отображение работ по "Предпроектной работе" у конкретного работника -->
+                      {% for work in finish_performance_work %}
+                      {% if work.status_end == true %}
+                      {% if (work.id_preproduct) != None %}
+                      {% if current_user.id == work.query_preproduct.set_worker %}
+                      <tr>
+                          <td>
+                              <div class="d-flex px-2">
+                                  <div>
+                                      <img src="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/img/logos/small-logos/logo-spotify.svg" class="avatar avatar-sm rounded-circle me-2">
+                                  </div>
+                                  <div class="my-auto">
+                                      <h6 class="mb-0 text-xs"></h6>
+                                  </div>
+                              </div>
+                          </td>
+                          <td>
+                              <p class="text-xs text-secondary mb-0">Предпроектная работа</p>
+                              <p class="text-xs font-weight-bold mb-0">{{work.query_preproduct.work.work_type}}</p>
+                          </td>
+                          <td>
+                            <span class="badge badge-dot me-4">
+                            <i class="bg-info"></i>
+                            <span class="text-dark text-xs">-</span>
+                            </span>
+                          </td>
+                          <!-- Управление отображения статусов работ -->
+                          <td>
+                            <span class="badge badge-dot me-4">
+                            {% if work.status_start==True and work.status_pause==None and work.status_problem==None and work.status_end==None %}
+                            <i class="material-icons text-success" style="font-size: 0.90em">fiber_manual_record</i>
+                            <span class="text-muted text-lowercase">В работе</span>
+                            {% elif work.status_start==None %}
+                            <i class="material-icons text-secondary" style="font-size: 0.90em">fiber_manual_record</i>
+                            <span class="text-muted text-lowercase">В ожидании</span>
+                            {% elif work.status_pause==True and work.status_start==True %}
+                            <i class="material-icons text-warning" style="font-size: 0.90em">fiber_manual_record</i>
+                            <span class="text-muted text-lowercase">Приостановлено</span>
+                            {% elif work.status_pause==None and work.status_start==True and work.status_problem==True and work.status_end==None  %}
+                            <i class="material-icons text-danger" style="font-size: 0.90em">fiber_manual_record</i>
+                            <span class="text-muted text-lowercase">Проблема</span>
+                            {% elif work.status_start==True and work.status_end==True and work.status_problem==None and work.status_pause==None %}
+                            <i class="material-icons text-info" style="font-size: 0.90em">fiber_manual_record</i>
+                            <span class="text-muted text-lowercase">Завершён</span>
+                            {% endif %}
+                            </span>
+                          </td>
+                          <td class="text-xs font-weight-normal">
+                              {% if work.query_preproduct.start_work_date %}
+                              {{work.query_preproduct.start_work_date.strftime("%Y-%m-%d")}}
+                              {% endif %}
+                          </td>
+                          <td class="text-xs font-weight-normal">
+                              {% if work.query_preproduct.end_work_date %}
+                              {{work.query_preproduct.end_work_date.strftime("%Y-%m-%d")}}
+                              {% endif %}
+                          </td>
+                          <!--          Блок кнопки "Управление" с выпадающим меню-->
+                          <td class="align-middle">
+                              <div class="d-grid gap-2 d-md-flex justify-content-md">
+                                  <div class="dropdown">
+                                      <button class="btn btn-sm bg-gradient-warning dropdown-toggle"
+                                              type="button" id="dropdownMenuButton"
+                                              data-bs-toggle="dropdown" aria-expanded="false"
+                                              style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                          управление
+                                      </button>
+                                      <ul class="dropdown-menu"
+                                          aria-labelledby="dropdownMenuButton">
+                                          <li>
+                                              <form action="{{ url_for('making_product') }}"
+                                                    method="get" target="_blank">
+                                                  <button class="dropdown-item"
+                                                          type="submit" name="q" value="{{work.id}}">
+                                                      <input type="hidden" name="order"
+                                                             value="{{work.query_preproduct.order_of_client}}">
+                                                      перейти к заданию
+                                                  </button>
+                                              </form>
+                                          </li>
+                                      </ul>
+                                  </div>
+                              </div>
+                          </td>
+                      </tr>
+                      {% endif %}
+                      {% endif %}
+                      {% endif %}
+                      {% endfor %}
+                      <!--        Блок таьлицы отвечающий ща отображение работ по слябам у конкретного работника -->
+                      {% for work in finish_performance_work %}
+                      {% if work.status_end == true %}
+                      {% if (work.id_work_slabs)!= None %}
+                      {% if current_user.id == work.query_slabworks.set_worker %}
+                      <tr>
+                          <td>
+                              <div class="d-flex px-2">
+                                  <div>
+                                      <img src="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/img/logos/small-logos/logo-spotify.svg"
+                                           class="avatar avatar-sm rounded-circle me-2">
+                                  </div>
+                                  <div class="my-auto">
+                                      <h6 class="mb-0 text-xs"></h6>
+                                  </div>
+                              </div>
+                          </td>
+                          <td>
+                              <p class="text-xs text-secondary mb-0">Слябы</p>
+                              <p class="text-xs font-weight-bold mb-0">{{work.query_slabworks.work_set.work_type}}</p>
+                          </td>
+                          <td>
+                            <span class="badge badge-dot me-4">
+                            <i class="bg-info"></i>
+                            <span class="text-dark text-xs">{{work.query_slabworks.value}}</span>
+                            </span>
+                          </td>
+
+                          <td>
+                              <!--            управление отображения статусами -->
+                              <span class="badge badge-dot me-4">
+                                {% if work.status_start==True and work.status_pause==None and work.status_problem==None and work.status_end==None %}
+                                <i class="material-icons text-success" style="font-size: 0.90em">fiber_manual_record</i>
+                                <span class="text-muted text-lowercase">В работе</span>
+                                {% elif work.status_start==None %}
+                                <i class="material-icons text-secondary"
+                                   style="font-size: 0.90em">fiber_manual_record</i>
+                                <span class="text-muted text-lowercase">В ожидании</span>
+                                {% elif work.status_pause==True and work.status_start==True %}
+                                <i class="material-icons text-warning" style="font-size: 0.90em">fiber_manual_record</i>
+                                <span class="text-muted text-lowercase">Приостановлено</span>
+                                {% elif work.status_pause==None and work.status_start==True and work.status_problem==True and work.status_end==None  %}
+                                <i class="material-icons text-danger" style="font-size: 0.90em">fiber_manual_record</i>
+                                <span class="text-muted text-lowercase">Проблема</span>
+                                {% elif work.status_start==True and work.status_end==True and work.status_problem==None and work.status_pause==None %}
+                                <i class="material-icons text-info" style="font-size: 0.90em">fiber_manual_record</i>
+                                <span class="text-muted text-lowercase">Завершён</span>
+                                {% endif %}
+                                </span>
+                          </td>
+                          <td class="text-xs font-weight-normal">{{work.query_slabworks.start_work_date.strftime("%Y-%m-%d")}}</td>
+                          <td class="text-xs font-weight-normal">{{work.query_slabworks.end_work_date.strftime("%Y-%m-%d")}}</td>
+                          <!--          Блок кнопки "Управление" -->
+                          <td class="align-middle">
+                              <div class="d-grid gap-2 d-md-flex justify-content-md">
+                                  <div class="dropdown">
+                                      <button class="btn btn-sm bg-gradient-warning dropdown-toggle "
+                                              type="button" id="dropdownMenuButton"
+                                              data-bs-toggle="dropdown" aria-expanded="false"
+                                              class="btn btn-link text-secondary mb-0"
+                                              style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                          <span class="material-icons"> </span>
+                                          управление
+                                      </button>
+                                      <ul class="dropdown-menu"
+                                          aria-labelledby="dropdownMenuButton">
+                                          <li>
+                                              <form action="{{ url_for('making_product') }}"
+                                                    method="get" target="_blank">
+                                                  <button class="dropdown-item"
+                                                          type="submit" name="q" value="{{work.id}}">
+                                                      <input type="hidden" name="order"
+                                                             value="{{work.query_slabworks.order_of_client}}">
+                                                      перейти к выполенению
+                                                  </button>
+                                              </form>
+                                          </li>
+                                      </ul>
+                                  </div>
+                              </div>
+                          </td>
+                      </tr>
+                      {% endif %}
+                      {% endif %}
+                      {% endif %}
+                      {% endfor %}
+                      <!--        Блок таблицы отвечающий ща отображение работ по деталям у конкретного работника -->
+                      {% for work in finish_performance_work %}
+                      {% if work.status_end == true %}
+                      {% if (work.id_work_part)!= None %}
+                      {% if current_user.id == work.query_partworks.set_worker %}
+                      <tr>
+                          <td>
+                              <div class="d-flex px-2">
+                                  <div>
+                                      <img src="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/img/logos/small-logos/logo-spotify.svg"
+                                           class="avatar avatar-sm rounded-circle me-2">
+                                  </div>
+                                  <div class="my-auto">
+                                      <h6 class="mb-0 text-xs"></h6>
+                                  </div>
+                              </div>
+                          </td>
+                          <td>
+                              <p class="text-xs text-secondary mb-0">Детали</p>
+                              <p class="text-xs font-weight-bold mb-0">
+                                  {{work.query_partworks.work_set_part.work_type}}</p>
+                          </td>
+                          <td>
+                            <span class="badge badge-dot me-4">
+                            <i class="bg-info"></i>
+                            <span class="text-dark text-xs">{{work.query_partworks.value}}</span>
+                            </span>
+                          </td>
+                          <td>
+                              <!--     Отображение статуса работ в таблице -->
+                              <span class="badge badge-dot me-4">
+                            {% if work.status_start==True and work.status_pause==None and work.status_problem==None and work.status_end==None %}
+                            <i class="material-icons text-success" style="font-size: 0.90em">fiber_manual_record</i>
+                            <span class="text-muted text-lowercase">В работе</span>
+                            {% elif work.status_start==None %}
+                            <i class="material-icons text-secondary" style="font-size: 0.90em">fiber_manual_record</i>
+                            <span class="text-muted text-lowercase">В ожидании</span>
+                            {% elif work.status_pause==True and work.status_start==True %}
+                            <i class="material-icons text-warning" style="font-size: 0.90em">fiber_manual_record</i>
+                            <span class="text-muted text-lowercase">Приостановлено</span>
+                            {% elif work.status_pause==None and work.status_start==True and work.status_problem==True and work.status_end==None  %}
+                            <i class="material-icons text-danger" style="font-size: 0.90em">fiber_manual_record</i>
+                            <span class="text-muted text-lowercase">Проблема</span>
+                            {% elif work.status_start==True and work.status_end==True and work.status_problem==None and work.status_pause==None %}
+                            <i class="material-icons text-info" style="font-size: 0.90em">fiber_manual_record</i>
+                            <span class="text-muted text-lowercase">Завершён</span>
+                            {% endif %}
+                            </span>
+                          </td>
+                          <td class="text-xs font-weight-normal">{{work.query_partworks.start_work_date.strftime("%Y-%m-%d")}}</td>
+                          <td class="text-xs font-weight-normal">{{work.query_partworks.end_work_date.strftime("%Y-%m-%d")}}</td>
+                          <td class="align-middle">
+                              <div class="d-grid gap-2 d-md-flex justify-content-md">
+                                  <!--              Кнопка "управелнеие"-->
+                                  <div class="dropdown">
+                                      <button class="btn btn-sm bg-gradient-warning dropdown-toggle "
+                                              type="button" id="dropdownMenuButton"
+                                              data-bs-toggle="dropdown" aria-expanded="false"
+                                              class="btn btn-link text-secondary mb-0"
+                                              style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                          <span class="material-icons"> </span>
+                                          управление
+                                      </button>
+                                      <ul class="dropdown-menu"
+                                          aria-labelledby="dropdownMenuButton">
+                                          <li>
+                                              <form action="{{ url_for('making_product') }}"
+                                                    method="get" target="_blank">
+                                                  <button class="dropdown-item"
+                                                          type="submit" name="q" value="{{work.id}}">
+                                                      <input type="hidden" name="order"
+                                                             value="{{work.query_partworks.order_of_client}}">
+                                                      перейти к выполенению
+                                                  </button>
+                                              </form>
+                                          </li>
+                                      </ul>
+                                  </div>
+                              </div>
+                          </td>
+                      </tr>
+                      {% endif %}
+                      {% endif %}
+                      {% endif %}
+                      {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,400 @@
+{% if current_user.specialization_id is ne(2)%}
+{% extends "new_base_bootstrap.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body p-3 position-relative">
+                    <div class="row">
+                        <div class="col-7 text-start">
+                            <p class="text-sm mb-1 text-capitalize font-weight-bold">Заказы в работе</p>
+                            <h5 class="font-weight-bolder mb-0">
+                                {{number_order}} {% if number_order == 1 %} заказ {% else %} заказов {% endif %}
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4 mt-sm-0 mt-4">
+            <div class="card">
+                <div class="card-body p-3 position-relative">
+                    <div class="row">
+                        <div class="col-7 text-start">
+                            <p class="text-sm mb-1 text-capitalize font-weight-bold">Заданий в работе</p>
+                            <h5 class="font-weight-bolder mb-0">
+                                {{number_works}} {% if number_works == 1 %} Задание {% else %} Задания {% endif %}
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4 mt-sm-0 mt-4">
+            <div class="card">
+                <div class="card-body p-3 position-relative">
+                    <div class="row">
+                        <div class="col-7 text-start">
+                            <p class="text-sm mb-1 text-capitalize font-weight-bold">Пользователей онлайн</p>
+                            <h5 class="font-weight-bolder mb-0" >
+                                {{number_user_online}}
+                                {% if number_user_online==1 %}
+                                Пользователь
+                                {% else %}
+                                Пользователя
+                                {% endif %}
+                            </h5>
+                        </div>
+                        <div class="col-5">
+                            <div class="dropdown text-end">
+                                <a href="javascript:;" class="cursor-pointer text-secondary" id="dropdownUsers3"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="badge badge-sm bg-gradient-success">Online</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end px-2 py-3" aria-labelledby="dropdownUsers3"
+                                    style="">
+                                    <li>
+                                        {% for user in online_user %}
+                                        <a class="dropdown-item border-radius-md" href="javascript:;">
+                                            <div class="text-xs font-weight-bold mb-0 text-center">{{user.first_name}} {{user.last_name}}</div>
+                                            <div class="text-center">({{user.employee.job_title}})</div>
+                                        </a>
+                                        {% endfor%}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-lg-5 col-sm-6 mt-sm-0 mt-4">
+            <div class="card">
+                <div class="card-header pb-0 p-3">
+                    <div class="d-flex justify-content-between">
+                        <h6 class="mb-0">Заказы в работе</h6>
+                    </div>
+                </div>
+                <div class="card-body p-3"
+                     style="display: block; box-sizing: border-box; height: 500px">
+                    <div class="dataTable-container min-vh-80">
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-pane fade show active" id="nav-activorder"
+                                     role="tabpanel" aria-labelledby="nav-home-tab"
+                                     tabindex="0">
+                                    <!-- Таблица Order_clients -->
+                                    <table class="table table-flush dataTable-table"
+                                           id="datatable-search">
+                                        <thead class="thead-light">
+                                        <tr>
+                                            <th data-sortable="" style="width: 17.0259%;"
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                <a href="#" class="dataTable-sorter">Заказ</a>
+                                            </th>
+                                            <th data-sortable="" style="width: 15.9483%;"
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                <a href="#"
+                                                   class="dataTable-sorter">Название</a>
+                                            </th>
+                                            <th data-sortable="" style="width: 21.2284%;"
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                <a href="#" class="dataTable-sorter">Прогрес</a>
+                                            </th>
+                                            <th data-sortable="" style="width: 10.9914%;"
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 ">
+                                                <a href="#"
+                                                   class="dataTable-sorter">управление</a>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for order in client_order %}
+                                        {% if order.order_status == None or order.order_status
+                                        == 'work'%}
+                                        <tr>
+                                            <td class="font-weight-normal">
+                                                <span class="my-2 text-xs">{{order.id}}</span>
+                                            </td>
+                                            <td class="text-xs font-weight-normal">
+                                                <div class="d-flex align-items-center">
+                                                    <span>{{order.title_order}}</span>
+                                                </div>
+                                            </td>
+                                            <td class="text-xs font-weight-normal">
+                                                <div class="progress-wrapper">
+                                                    <div class="progress-info">
+                                                        <div class="progress-percentage">
+                                                            <span class="text-sm font-weight-normal">{{ order.progres |int }}%</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-primary"
+                                                             role="progressbar"
+                                                             aria-valuenow="60"
+                                                             aria-valuemin="0"
+                                                             aria-valuemax="100"
+                                                             style="width:{{ order.progres |int }}%;"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <!-- Выпадаюцее меню управления заказом-->
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm bg-gradient-warning dropdown-toggle"
+                                                            type="button"
+                                                            id="dropdownMenuButton"
+                                                            data-bs-toggle="dropdown"
+                                                            aria-expanded="false"
+                                                            style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                                        управление
+                                                    </button>
+                                                    <ul class="dropdown-menu"
+                                                        aria-labelledby="dropdownMenuButton">
+                                                        <li class="text-center">
+                                                            <form action="{{ url_for('order_client') }}"
+                                                                  method="get"
+                                                                  target="_blank">
+                                                                <button class="btn btn-warning"
+                                                                        type="submit"
+                                                                        name="q"
+                                                                        value="{{order.id}}"
+                                                                        style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                                                    Перейти в заказ
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {%endif%}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7 col-sm-6 mt-sm-0 mt-4">
+            <div class="card">
+                <div class="card-header pb-0 p-3">
+                    <div class="d-flex justify-content-between">
+                        <h6 class="mb-0">Выполняемые работы (слябы/детали)</h6>
+                    </div>
+                </div>
+                <div class="card-body p-3"
+                     style="display: block; box-sizing: border-box; height: 500px; overflow-y: auto;">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                    S/P
+                                </th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                    #
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                    Заказ №
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                    Вид работ
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                    Тип работ
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                    Значение
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                    Ответсвенный
+                                </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for work in list_active_work %}
+                            <tr class="task-row"
+                            {% if work.query_preproduct %}
+                            {% for value in work.query_preproduct %}
+                            data-task-id="{{value.id}}"
+                            {% if value.status_problem %}
+                            style="background-color: rgba(235, 62, 120, 0.5); color:black"
+                            {% endif %}
+                            {% endfor %}
+                            {% elif work.query_slabworks %}
+                            {% for value in work.query_slabworks %}
+                            data-task-id="{{value.id}}"
+                            {% if value.status_problem %}
+                            style="background-color: rgba(235, 62, 120, 0.5); color:black"
+                            {% endif %}
+                            {% endfor %}
+                            {% elif work.query_partworks %}
+                            {% for value in work.query_partworks %}
+                            data-task-id="{{value.id}}"
+                            {% if value.status_problem %}
+                            style="background-color: rgba(235, 62, 120, 0.5); color:black"
+                            {% endif %}
+                            {% endfor %}
+                            {% endif %} >
+                                <td class="align-middle text-center">
+                                    {% if work.stone_name %}
+                                    <span class="text-secondary text-xs font-weight-normal">S</span>
+                                    {% else %}
+                                    <span class="text-secondary text-xs font-weight-normal">P</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <p class="text-xs font-weight-bold mb-0">{% if work.number_slab %}
+                                        {{work.number_slab}} {% else %} {{work.number_part}} {% endif %}</p>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <span class="text-secondary text-xs font-weight-normal">{{work.order_of_client}}</span>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <span class="text-secondary text-xs font-weight-normal">
+                                        {% if work.work_set %}
+                                        {{work.work_set.work_title}}
+                                        {% endif %}
+                                    </span>
+                                    <span class="text-secondary text-xs font-weight-normal">
+                                        {% if work.work_set_part %}{{work.work_set_part.work_title}}{% endif %}
+                                    </span>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <span class="text-xs font-weight-bold mb-0">
+                                        {% if work.work_set %} {{work.work_set.work_type}} {% endif %}
+                                    </span>
+                                    <p class="text-xs mb-0">{% if work.work_set %} {{work.work_set.work_kind}} {% endif %}</p>
+                                    <span class="text-xs font-weight-bold mb-0">
+                                        {% if work.work_set_part %} {{work.work_set_part.work_type}} {% endif %}
+                                    </span>
+                                    <p class="text-xs mb-0">{% if work.work_set_part %} {{work.work_set_part.work_kind}} {% endif %}</p>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <span class="text-secondary text-xs font-weight-normal">{{work.value}}</span>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <span class="text-center text-xs font-weight-bold mb-0">
+                                        {{work.worker.first_name}} {{work.worker.last_name}}</span>
+                                    <p class="text-center text-xs mb-0">{{work.worker.employee.job_title}}</p>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <div class="dropdown">
+                                        <button class="btn btn-link text-secondary mb-0" aria-haspopup="true"
+                                                aria-expanded="false" title="Перейти" id="dropdownMenuButton"
+                                                data-bs-toggle="dropdown">
+                                        <span class="material-icons">
+                                          more_vert
+                                        </span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
+                                            id="dropdownMenu">
+                                            <li>
+                                                <a class="dropdown-item" target="_blank"
+                                                   href="/making_product?q=
+                                                   {% if work.query_partworks %}
+                                                    {% for wk in work.query_partworks %}
+                                                    {{wk.id}}
+                                                    {% endfor %}
+                                                    {% else %}
+                                                    {% for wk in work.query_slabworks %}
+                                                    {{wk.id}}
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                   &order={{work.order_of_client}}">Открыть работу
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="javascript:;">Разрешить выполнение
+                                                    <input type="hidden" name="q"
+                                                    {% if work.query_partworks %}
+                                                    {% for wk in work.query_partworks %} value="{{wk.id}}"
+                                                    {% endfor %}
+                                                    {% else %}
+                                                    {% for wk in work.query_slabworks %} value="{{wk.id}}"
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                    >
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{url_for('static', filename='js/kanban/get_status_problem.js')}}"></script>
+<script>
+// Отримання всіх кнопок в dropdown-меню
+const dropdownButtons = document.querySelectorAll('.dropdown-item');
+
+// Додайте обробник подій кліку для кожної кнопки
+dropdownButtons.forEach(button => {
+  button.addEventListener('click', function(event) {
+    // Забираємо значення value з прихованого поля
+    const value = this.querySelector('input[name="q"]').value;
+
+    // Отримуємо URL, який потрібно використовувати для відправки даних на сервер
+    const url = '/problem_solved';
+
+    // Підтвердження відправлення з SweetAlert
+    Swal.fire({
+      title: 'Ви впевнені?',
+      text: 'Ви хочете відправити дані на сервер?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Так, відправити',
+      cancelButtonText: 'Скасувати'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Виконуємо Ajax-запит на сервер Flask з методом POST
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        // Обробник події завершення запиту
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            // Розпарсіть JSON-відповідь від сервера
+            const response = JSON.parse(xhr.responseText);
+
+            if ('success' in response) {
+              Swal.fire('Успіх!', response.success, 'success');
+              // Оновити сторінку або виконати інші дії за потреби
+            } else if ('error' in response) {
+              Swal.fire('Помилка!', response.error, 'error');
+            }
+          } else {
+            Swal.fire('Ошибка!', 'Ошибка отправки данных', 'error');
+            console.error('Помилка відправки даних на сервер');
+          }
+        };
+
+        // Відправка даних на сервер у вигляді POST-запиту
+        xhr.send('q=' + value);
+      }
+    });
+  });
+});
+</script>
+
+{% endblock %}
+

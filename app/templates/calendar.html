@@ -1,0 +1,37 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.8/fullcalendar.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.8/fullcalendar.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar-scheduler/6.1.8/scheduler.min.css">
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+ <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.8/index.global.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.8/index.global.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core/locales/ru.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/list/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/moment/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment/moment.min.js"></script>
+
+
+<div id='calendar'></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth'
+      },
+      themeSystem: 'bootstrap5',
+      locale: 'ru',
+      initialView: 'dayGridMonth',
+      editable: false,
+      events: '/get_events'
+    });
+    calendar.render();
+  });
+</script>

@@ -1,0 +1,553 @@
+{% if current_user.specialization_id is ne(2)%}
+{% extends "new_base_bootstrap.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
+
+{% block content %}
+
+<div class="container-fluid py-4 min-vh-100">
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="container-fluid py-4">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                                <div class="d-sm-flex justify-content-between mb-4">
+                                    <div>
+                                        <form action="{{ url_for('add_order') }}" method="get" target="_blank">
+                                            <button type="submit" class="btn btn-icon bg-gradient-primary">
+                                                <i class="fa fa-plus"></i>
+                                                Добавить
+                                            </button>
+                                        </form>
+                                    </div>
+<!--                                    <div class="d-flex">-->
+<!--                                        <div class="dropdown d-inline">-->
+<!--                                            <a href="#" class="btn btn-outline-dark dropdown-toggle"-->
+<!--                                               data-bs-toggle="dropdown"-->
+<!--                                               id="navbarDropdownMenuLink2" aria-expanded="false">-->
+<!--                                                Filters-->
+<!--                                            </a>-->
+<!--                                            <ul class="dropdown-menu dropdown-menu-lg-start px-2 py-3"-->
+<!--                                                aria-labelledby="navbarDropdownMenuLink2">-->
+<!--                                                <li><a class="dropdown-item border-radius-md" href="#"-->
+<!--                                                       id="filter-paid">Статус:В работе</a></li>-->
+<!--                                                <li><a class="dropdown-item border-radius-md" href="#"-->
+<!--                                                       id="filter-refunded">Статус:Ожидает</a></li>-->
+<!--                                                <li><a class="dropdown-item border-radius-md" href="#"-->
+<!--                                                       id="filter-canceled">Статус:Завершён</a></li>-->
+<!--                                                <li>-->
+<!--                                                <hr class="horizontal dark my-2">-->
+<!--                                                </li>-->
+<!--                                                <li><a class="dropdown-item border-radius-md text-danger"-->
+<!--                                                       href="#" id="filter-remove">Удалить фильтры</a></li>-->
+<!--                                            </ul>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                                                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                                                    <h6 class="text-white text-capitalize ps-3">Заказы
+                                                        покупателя</h6>
+                                                </div>
+                                            </div>
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Талблица всех заказов</h5>
+                                            </div>
+                                            <!--    Навигация для вкладок-->
+                                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link active" id="pills-home-tab"
+                                                       data-bs-toggle="pill"
+                                                       data-bs-target="#nav-activorder" type="button" role="tab"
+                                                       aria-selected="true">Заказы в работе</a>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <button class="nav-link" id="pills-profile-tab"
+                                                            data-bs-toggle="pill"
+                                                            data-bs-target="#nav-complitedorder"
+                                                            type="button" role="tab" aria-controls="pills-profile"
+                                                            aria-selected="false">Заказы завершённые
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                            <div class="dataTable-top">
+                                                <div class="d-sm-flex justify-content-between">
+                                                    <div>
+                                                    </div>
+                                                    <!--Блок поиска в таблице -->
+                                                    <div class="dropdown d-inline py-1 px-3">
+                                                        <div class="container">
+                                                            <div class="input-group input-group-outline">
+                                                                <label class="form-label">Поиск...</label>
+                                                                <input type="text" class="form-control"
+                                                                       id="searchInput">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="dataTable-container min-vh-80">
+                                                <div class="tab-content" id="nav-tabContent">
+                                                        <!--  Вкладка заказы новые и в работе-->
+                                                        <div class="tab-pane fade show active" id="nav-activorder"
+                                                             role="tabpanel" aria-labelledby="nav-home-tab"
+                                                             tabindex="0">
+                                                            <!-- Таблица Order_clients -->
+                                                            <table class="table table-flush dataTable-table"
+                                                                   id="datatable-search">
+                                                                <thead class="thead-light">
+                                                                <tr>
+                                                                    <th data-sortable="" style="width: 17.0259%;"
+                                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                        <a href="#" class="dataTable-sorter">Заказ</a>
+                                                                    </th>
+                                                                    <th data-sortable="" style="width: 15.9483%;"
+                                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                        <a href="#"
+                                                                           class="dataTable-sorter">Название</a>
+                                                                    </th>
+                                                                    <th data-sortable="" style="width: 15.5172%;"
+                                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                        <a href="#" class="dataTable-sorter">Статус</a>
+                                                                    </th>
+                                                                    <th data-sortable="" style="width: 19.2888%;"
+                                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                        <a href="#" class="dataTable-sorter">Камень</a>
+                                                                    </th>
+                                                                    <th data-sortable="" style="width: 21.2284%;"
+                                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                        <a href="#" class="dataTable-sorter">Адрес</a>
+                                                                    </th>
+                                                                    <th data-sortable="" style="width: 21.2284%;"
+                                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                        <a href="#" class="dataTable-sorter">Прогрес</a>
+                                                                    </th>
+                                                                    <th data-sortable="" style="width: 10.9914%;"
+                                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                        <a href="#" class="dataTable-sorter">Файлы</a>
+                                                                    </th>
+                                                                    <th data-sortable="" style="width: 10.9914%;"
+                                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+                                                                    ><a href="#" class="dataTable-sorter">Дедлайн</a>
+                                                                    </th>
+                                                                    <th data-sortable="" style="width: 10.9914%;"
+                                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 ">
+                                                                        <a href="#"
+                                                                           class="dataTable-sorter">управление</a>
+                                                                    </th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                {% for order in client_order %}
+                                                                {% if order.order_status == None or order.order_status
+                                                                == 'work'%}
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="d-flex align-items-center">
+                                                                            <p class="text-xs font-weight-normal ms-2 mb-0">
+                                                                                # {{order.id}}</p>
+                                                                            <!-- проверяем специализацю для правильном ототбражении статуса утвержд'н заказ или нет-->
+                                                                            {% if current_user.specialization_id == 4 %}
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input"
+                                                                                       type="checkbox"
+                                                                                       id="customCheck{{loop.index}}"
+                                                                                       {% if order.order_apruved== True
+                                                                                       %} checked disabled {% endif %}>
+                                                                                Утверждён
+                                                                            </div>
+                                                                            {% else %}
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input"
+                                                                                       type="checkbox" {% if
+                                                                                       order.order_apruved== True %}
+                                                                                       checked {% endif %} disabled>
+                                                                                Утверждён
+                                                                            </div>
+                                                                            {% endif %}
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="font-weight-normal">
+                                                                        <span class="my-2 text-xs">{{order.title_order}}</span>
+                                                                    </td>
+                                                                    <td class="text-xs font-weight-normal">
+                                                                        <div class="d-flex align-items-center">
+                                                                            <!--проерка статуса None, work, completed  для отображения статуса-->
+                                                                            {% if order.order_status == None %}
+                                                                            <span class="badge badge-sm bg-gradient-secondary">Ожидает</span>
+                                                                            {% else %}
+                                                                            <span class="badge badge-sm bg-gradient-success">В работе</span>
+                                                                            {% endif %}
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="text-xs font-weight-normal">
+                                                                            {% for stone in stone_list%}
+                                                                            {% if stone.order_of_client == order.id %}
+                                                                        <div class="d-flex align-items-center">
+                                                                            <span>{{stone.query_stone.type_stone}} ({{stone.stone_name}})</span>
+                                                                             </div>
+                                                                            {% endif %}
+                                                                            {% endfor %}
+                                                                    </td>
+                                                                    <td class="text-xs font-weight-normal">
+                                                                        <span class="my-2 text-xs">{{order.address}}</span>
+                                                                    </td>
+                                                                    <td class="text-xs font-weight-normal">
+                                                                        <div class="progress-wrapper">
+                                                                            <div class="progress-info">
+                                                                                <div class="progress-percentage">
+                                                                                    <span class="text-sm font-weight-normal">{{ order.progres |int }}%</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="progress">
+                                                                                <div class="progress-bar bg-primary"
+                                                                                     role="progressbar"
+                                                                                     aria-valuenow="60"
+                                                                                     aria-valuemin="0"
+                                                                                     aria-valuemax="100"
+                                                                                     style="width:{{ order.progres |int }}%;"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="text-xs font-weight-normal">
+                                                                        <!-- Выпадаюцее меню управления заказом-->
+                                                                        <div class="dropdown">
+                                                                            <button class="btn btn-sm bg-gradient-default dropdown-toggle"
+                                                                                    type="button"
+                                                                                    id="dropdownMenuButton"
+                                                                                    data-bs-toggle="dropdown"
+                                                                                    aria-expanded="false"
+                                                                                    style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                                                                Файлы
+                                                                            </button>
+                                                                            <ul class="dropdown-menu"
+                                                                                aria-labelledby="dropdownMenuButton">
+                                                                                {% if files %}
+                                                                                {% for file in files %}
+                                                                                {% if file.order_client_id == order.id
+                                                                                %}
+                                                                                <li>
+                                                                                    <a href="{{ url_for('download_file', filename=file.filename) }}">{{file.filename
+                                                                                        }}</a></li>
+                                                                                {% endif %}
+                                                                                {% endfor %}
+                                                                                {% else %}
+                                                                                <p style="color: red">Ще немає
+                                                                                    жодного завантаженого файлу</p>
+                                                                                {% endif %}
+                                                                            </ul>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="text-xs font-weight-normal">
+                                                                        <span class="my-2 text-xs" {% if
+                                                                              order.deadline < datetime_now %}
+                                                                        style="color: #e32f6e;" {% endif %}> До
+                                                                        {{order.deadline.strftime("%Y-%m-%d")}}
+                                                                        ({{(order.deadline - datetime_now).days}}
+                                                                        дней)</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <!-- Выпадаюцее меню управления заказом-->
+                                                                        <div class="dropdown">
+                                                                            <button class="btn btn-sm bg-gradient-warning dropdown-toggle"
+                                                                                    type="button"
+                                                                                    id="dropdownMenuButton"
+                                                                                    data-bs-toggle="dropdown"
+                                                                                    aria-expanded="false"
+                                                                                    style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                                                                управление
+                                                                            </button>
+                                                                            <ul class="dropdown-menu"
+                                                                                aria-labelledby="dropdownMenuButton">
+                                                                                <li class="text-center">
+                                                                                    <form action="{{ url_for('order_client') }}"
+                                                                                          method="get"
+                                                                                          target="_blank">
+                                                                                        <button class="btn btn-warning"
+                                                                                                type="submit"
+                                                                                                name="q"
+                                                                                                value="{{order.id}}"
+                                                                                                style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                                                                            Перейти в заказ
+                                                                                        </button>
+                                                                                    </form>
+                                                                                </li>
+                                                                                <li class="text-center">
+                                                                                    <form action="{{ url_for('del_data') }}"
+                                                                                          method="post">
+                                                                                        {% if order.order_status ==
+                                                                                        "work" %}
+                                                                                        <button class="btn btn-outline-danger"
+                                                                                                type="submit"
+                                                                                                name="q_or_cl"
+                                                                                                value="{{order.id}}"
+                                                                                                style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;"
+                                                                                                disabled>
+                                                                                            Удалить заказ
+                                                                                        </button>
+                                                                                        {% else %}
+                                                                                        {% if
+                                                                                        current_user.specialization_id
+                                                                                        in [3,4,7] %}
+                                                                                        <button class="btn btn-outline-danger"
+                                                                                                type="submit"
+                                                                                                name="q_or_cl"
+                                                                                                value="{{order.id}}"
+                                                                                                style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                                                                            Удалить заказ
+                                                                                        </button>
+                                                                                        {% endif %}
+                                                                                        {% endif %}
+                                                                                    </form>
+                                                                                </li>
+                                                                                <li class="text-center">
+                                                                                    <form id="orderForm{{loop.index}}" action="" method="get">
+                                                                                        <button class="btn btn-outline-secondary"
+                                                                                                type="submit"
+                                                                                                id="disabledbutton{{loop.index}}"
+                                                                                                name="q"
+                                                                                                value="{{order.id}}"
+                                                                                                onclick="showConfirmation({{loop.index}})"
+                                                                                                style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;"
+                                                                                                disabled>
+                                                                                            Изменить заказ
+                                                                                        </button>
+                                                                                    </form>
+                                                                                    <script>
+                                                                                    // Отримуємо посилання на конкретний checkbox та відповідну кнопку
+                                                                                    const checkbox{{loop.index}} = document.getElementById('customCheck{{loop.index}}');
+                                                                                    const button{{loop.index}} = document.getElementById('disabledbutton{{loop.index}}');
+
+                                                                                    // Функція, яка відслідковує зміну стану checkbox
+                                                                                    function handleCheckboxChange{{loop.index}}() {
+                                                                                        if (checkbox{{loop.index}}.checked) {
+                                                                                            button{{loop.index}}.disabled = false;
+                                                                                        } else {
+                                                                                            button{{loop.index}}.disabled = true;
+                                                                                        }
+                                                                                    }
+                                                                                    // Додаємо обробник події на зміну стану checkbox
+                                                                                    checkbox{{loop.index}}.addEventListener('change', handleCheckboxChange{{loop.index}});
+
+                                                                                    </script>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                {%endif%}
+                                                                {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <!--Вкладк Закрытые проекты-->
+                                                        <div class="tab-pane fade" id="nav-complitedorder"
+                                                             role="tabpanel" aria-labelledby="nav-profile-tab"
+                                                             tabindex="0">
+                                                            <!-- Таблица Order_clients complited-->
+                                                            <table class="table table-flush dataTable-table"
+                                                                       id="datatable-search">
+                                                                    <thead class="thead-light">
+                                                                    <tr>
+                                                                        <th data-sortable=""
+                                                                            style="width: 17.0259%;"
+                                                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                            <a href="#"
+                                                                               class="dataTable-sorter">Заказ</a>
+                                                                        </th>
+                                                                        <th data-sortable=""
+                                                                            style="width: 15.9483%;"
+                                                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                            <a href="#" class="dataTable-sorter">Название</a>
+                                                                        </th>
+                                                                        <th data-sortable=""
+                                                                            style="width: 15.5172%;"
+                                                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                            <a href="#"
+                                                                               class="dataTable-sorter">Статус</a>
+                                                                        </th>
+                                                                        <th data-sortable=""
+                                                                            style="width: 19.2888%;"
+                                                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                            <a href="#"
+                                                                               class="dataTable-sorter">Камень</a>
+                                                                        </th>
+                                                                        <th data-sortable=""
+                                                                            style="width: 21.2284%;"
+                                                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                            <a href="#"
+                                                                               class="dataTable-sorter">Адрес</a>
+                                                                        </th>
+                                                                        <th data-sortable=""
+                                                                            style="width: 10.9914%;"
+                                                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                            <a href="#"
+                                                                               class="dataTable-sorter">Файлы</a>
+                                                                        </th>
+                                                                        <th data-sortable=""
+                                                                            style="width: 10.9914%;"
+                                                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                            <a href="#"
+                                                                               class="dataTable-sorter">Дедлайн</a>
+                                                                        </th>
+                                                                        <th data-sortable="" style="width: 10.9914%;"
+                                                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                            <a href="#" class="dataTable-sorter">управление</a>
+                                                                        </th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                    {% for order in client_order %}
+                                                                    {% if order.order_status == 'closed'%}
+                                                                    <tr>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center">
+                                                                                <p class="text-xs font-weight-normal ms-2 mb-0">
+                                                                                    # {{order.id}}</p>
+                                                                                <!-- проверяем специализацю для правильном ототбражении статуса утвержд'н заказ или нет-->
+                                                                                {% if current_user.specialization_id ==
+                                                                                4 %}
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input"
+                                                                                           type="checkbox"
+                                                                                           id="customCheck{{loop.index}}"
+                                                                                           {% if order.order_apruved==
+                                                                                           True %} checked disabled {%
+                                                                                           endif %}>
+                                                                                    Утверждён
+                                                                                </div>
+                                                                                {% else %}
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input"
+                                                                                           type="checkbox" {% if
+                                                                                           order.order_apruved== True %}
+                                                                                           checked {% endif %} disabled>
+                                                                                    Утверждён
+                                                                                </div>
+                                                                                {% endif %}
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="font-weight-normal">
+                                                                            <span class="my-2 text-xs">{{order.title_order}}</span>
+                                                                        </td>
+                                                                        <td class="text-xs font-weight-normal">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <!--проdерка статуса None, work, completed  для отображения статуса-->
+                                                                                {% if order.order_status == 'closed' %}
+                                                                                <span class="badge badge-sm bg-gradient-info">Завершён</span>
+                                                                                {% endif %}
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="text-xs font-weight-normal">
+                                                                            {% for stone in stone_list%}
+                                                                            {% if stone.order_of_client == order.id %}
+                                                                        <div class="d-flex align-items-center">
+                                                                            <span>{{stone.query_stone.type_stone}} ({{stone.stone_name}})</span>
+                                                                             </div>
+                                                                            {% endif %}
+                                                                            {% endfor %}
+                                                                        </td>
+                                                                        <td class="text-xs font-weight-normal">
+                                                                            <span class="my-2 text-xs">{{order.address}}</span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <!-- Выпадаюцее меню управления заказом-->
+                                                                            <div class="dropdown">
+                                                                                <button class="btn btn-sm bg-gradient-default dropdown-toggle"
+                                                                                        type="button"
+                                                                                        id="dropdownMenuButton"
+                                                                                        data-bs-toggle="dropdown"
+                                                                                        aria-expanded="false"
+                                                                                        style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                                                                    Файлы
+                                                                                </button>
+                                                                                <ul class="dropdown-menu"
+                                                                                    aria-labelledby="dropdownMenuButton">
+                                                                                    {% if files %}
+                                                                                    {% for file in files %}
+                                                                                    {% if file.order_client_id ==
+                                                                                    order.id %}
+                                                                                    <li>
+                                                                                        <a href="{{ url_for('download_file', filename=file.filename) }}">{{file.filename}}</a>
+                                                                                    </li>
+                                                                                    {% endif %}
+                                                                                    {% endfor %}
+                                                                                    {% else %}
+                                                                                    <p>
+                                                                                    </p>
+                                                                                    <p style="color: red">Ще немає
+                                                                                        жодного завантаженого
+                                                                                        файлу</p>
+                                                                                    {% endif %}
+                                                                                </ul>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="text-xs font-weight-normal"><span
+                                                                                class="my-2 text-xs" {% if
+                                                                                order.deadline < datetime_now %}
+                                                                            style="color: #e32f6e;" {% endif %}> До
+                                                                            {{order.deadline.strftime("%Y-%m-%d")}}
+                                                                            ({{(order.deadline - datetime_now).days}}
+                                                                            дней)</span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <!-- Выпадаюцее меню управления заказом-->
+                                                                            <div class="dropdown">
+                                                                                <button class="btn btn-sm bg-gradient-warning dropdown-toggle"
+                                                                                        type="button"
+                                                                                        id="dropdownMenuButton"
+                                                                                        data-bs-toggle="dropdown"
+                                                                                        aria-expanded="false"
+                                                                                        style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                                                                    управление
+                                                                                </button>
+                                                                                <ul class="dropdown-menu"
+                                                                                    aria-labelledby="dropdownMenuButton">
+                                                                                    <li class="text-center">
+                                                                                        <form action="{{ url_for('order_client') }}"
+                                                                                              method="get"
+                                                                                              target="_blank">
+                                                                                            <button class="btn btn-warning"
+                                                                                                    type="submit"
+                                                                                                    name="q"
+                                                                                                    value="{{order.id}}"
+                                                                                                    style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                                                                                Перейти в заказ
+                                                                                            </button>
+                                                                                        </form>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    {% endif %}
+                                                                    {% endfor %}
+                                                                    </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Javascript -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table/dist/bootstrap-table.min.js"></script>
+<script src="{{url_for('static', filename='js/index.js')}}"></script>
+
+{% endblock %}

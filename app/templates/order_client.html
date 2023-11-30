@@ -1,0 +1,933 @@
+{% if current_user.specialization_id is ne(2)%}
+{% extends "new_base_bootstrap.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
+
+
+{% block content %}
+<style>
+    .block_content{
+      background-color: #E3F2FD;
+      width: auto;
+      padding: 50px;
+      margin: 0;
+      border: 5px solid #dcf3f3
+      -webkit-text-size-adjust: 100%;
+
+        font-size: 15px;
+        line-height: 1.5;
+        box-sizing: inherit;
+        padding: 0 8px;
+        text-align: left;
+        margin: 0 -16px;
+    }
+
+    #customers {
+      font-family: Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    #customers td, #customers th {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    #customers tr:nth-child(even){background-color: #f2f2f2;}
+
+    #customers tr:hover {background-color: #F5D1D1;}
+
+    #customers th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+      background-color: #97c9c7;
+      color: white;
+    }
+</style>
+<style>
+    .alert--error {
+      background-color: red;
+    }
+      .open-button {
+      background-color: red;
+      border: none;
+      color: white;
+      padding: 15px 24px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 20px;
+      margin: 4px 2px;
+      cursor: pointer;
+      }
+      {box-sizing: border-box;}
+
+    /* Всплывающая форма-скрыта по умолчанию */
+    .form-popup {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 5px solid #f1f1f1;
+    z-index: 8;
+    background-color: white;
+    }
+
+    /* Добавить стили для контейнера формы */
+    .form-container {
+    max-width: 500px;
+    padding: 10px;
+    }
+
+    /* Поля ввода полной ширины */
+    .form-container input[type=text], .form-container input[type=password] {
+      padding: 10px;
+      margin: 5px 0 10px 0;
+      background: #f1f1f1;
+    }
+
+    /* Когда входы получают фокус, сделайте что-нибудь */
+    .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+      background-color: #ddd;
+      outline: none;
+    }
+
+    /* Установите стиль для кнопки отправить/войти */
+    .form-container .btn {
+      background-color: #e73673;
+      color: white;
+      padding: 16px 20px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom:10px;
+      opacity: 1;
+    }
+
+    .form-control {
+      margin: 10px 0 10px 0;
+      background-color: #f1f1f1;
+      border-width: 1px;
+      border-style: solid;
+      border-color: #D5D2D2;
+      border-radius: 8px;
+      padding-left: 10px;
+    }
+
+    /* Добавить красный цвет фона для кнопки "Отмена" */
+    .form-container .cancel {
+      background-color: grey;
+    }
+
+    /* Добавить некоторые эффекты наведения на кнопки */
+    .form-container .btn:hover, .open-button:hover {
+      opacity: 1;
+    }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<hr>
+<!--Чек бокс/кнопка закрытия заказа-->
+<div class="d-inline-flex">
+    <div>
+        {% if current_user.specialization_id == 4 %}
+        <div class="form-check mx-3">
+            <input class="form-check-input" type="checkbox" id="closecustomCheck"
+                   {% if order_client.order_status=="closed" %} checked disabled {% endif %}>
+            Заказ закрыт
+        </div>
+        {% else %}
+        <div class="form-check mx-3">
+            <input class="form-check-input" type="checkbox"
+            id="closecustomCheck" {% if order_client.order_status=="closed" %} checked {% endif %} disabled>
+            Заказ закрыт
+        </div>
+        {% endif %}
+    </div>
+    {% if current_user.specialization_id == 4 %}
+    <div class="ms-sm-auto">
+        <div class="dropdown d-inline">
+            <button class="btn bg-gradient-warning mb-0" type="submit"
+                    onclick="showConfirmation1('{{order_client.id}}')" id="closedisabledbutton"
+                    name="q" value="{{order_client.id}}" disabled
+                    style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                Закрить
+            </button>
+        </div>
+    </div>
+    {% endif %}
+</div>
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-8 col-md-12">
+            <div class="card my-4 h-100">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                        <h6 class="text-white text-capitalize ps-3">Карта заказа №{{order_client.id}}</h6>
+                    </div>
+                    <p>
+                    <div class="d-inline-flex justify-content-between">
+                        <div>
+                            {% if current_user.specialization_id == 4 %}
+                            <div class="form-check mx-3">
+                                <input class="form-check-input" type="checkbox" id="customCheck"
+                                       {% if order_client.order_apruved == True
+                                       %} checked disabled {% endif %}>
+                                Заказ утверждён
+                            </div>
+                            {% else %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="customCheck" {% if
+                                       order.order_apruved == True %} checked {% endif %} disabled>
+                                Утверждён
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% if current_user.specialization_id == 4 %}
+                        <div class="d-flex">
+                            <div class="dropdown d-inline">
+                                <button class="btn bg-gradient-warning mb-0" type="submit"
+                                        onclick="showConfirmation('{{order_client.id}}')" id="disabledbutton"
+                                        name="q" value="{{order_client.id}}" disabled
+                                        style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                    Утвердить
+                                </button>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    </p>
+                </div>
+                <div class="card-body px-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Название
+                                    заказа
+                                </th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                    Статус
+                                </th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                    Конечная дата
+                                </th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                    Коментарий
+                                </th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                    Прогрес
+                                </th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                    Адрес заказа
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="align-middle text-sm">
+                                    <div class="d-flex px-2 py-1">
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="mb-0 text-sm">{{order_client.title_order}}</h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <!--                                проерка статуса None, work, completed  для отображения статуса-->
+                                <td class="align-middle text-sm">
+                                    {% if order_client.order_status == None %}
+                                    <span class="badge badge-sm bg-gradient-secondary">Ожидает</span>
+                                    {% elif order_client.order_status == 'work' %}
+                                    <span class="badge badge-sm bg-gradient-success">В работе</span>
+                                    {% else %}
+                                    <span class="badge badge-sm bg-gradient-info">Завершён</span>
+                                    {% endif %}
+                                </td>
+                                <td class="align-middle text-sm">
+                                    <span class="text-secondary text-xs font-weight-bold">
+                                        {{order_client.deadline.strftime("%Y-%m-%d")}}
+                                    </span>
+                                </td>
+                                <td class="text-xs font-weight-normal">
+                                    <button class="btn btn-primary mt-3" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseExample"
+                                            aria-expanded="false" aria-controls="collapseExample" id="showButton"
+                                            style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                        <i class="material-icons opacity-10">receipt_long</i>
+                                        Коментарий
+                                    </button>
+                                </td>
+                                <td class="align-middle text-center text-sm">
+                                    <div class="progress-wrapper">
+                                        <div class="progress-info">
+                                            <div class="progress-percentage">
+                                                <span class="text-sm font-weight-normal">{{ order_client.progres |int }}%</span>
+                                            </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-primary"
+                                                 role="progressbar"
+                                                 aria-valuenow="60"
+                                                 aria-valuemin="0"
+                                                 aria-valuemax="100"
+                                                 style="width:{{ order_client.progres |int }}%;"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="align-middle text-sm">
+                                    <a href="#" id="show-map" class="text-center font-weight-bold text-xs"
+                                       data-toggle="tooltip" data-original-title="Show on map">
+                                        {{order_client.address}}
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-12 mt-4 mt-lg-0">
+            <div class="card my-4 h-100">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                        <h6 class="text-white text-capitalize ps-3">Камень</h6>
+                    </div>
+                    <div class="card-body px-0 pb-2">
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0">
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary mx-4" data-bs-toggle="modal"
+                                            style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;"
+                                            data-bs-target="#ModalAddStone">
+                                        <i class="fa fa-plus"></i>
+                                        Добавить камень
+                                    </button>
+                                </div>
+                                <thead>
+                                <tr>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        Камень
+                                    </th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        Название камня
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for stone in stone_lits_orders %}
+                                <tr>
+                                    <td class="text-center">
+                                        <p class="text-xs font-weight-bold mb-0">{{stone.query_stone.type_stone}}</p>
+                                    </td>
+                                    <td class="text-center">
+                                        {% if stone.stone_name %}
+                                        <p class="text-xs font-weight-bold mb-0">{{stone.stone_name}}</p>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--модальное окно с формой добавления камня -->
+<div class="modal fade" id="ModalAddStone">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-body">
+                <form action="{{ url_for('add_stone') }}" class="form-container" id="add_stone" method="post">
+                    {{ stone_form.hidden_tag() }}
+                    {{ stone_form.csrf_token }}
+                    <table>
+                        <tr>
+                            <input type="button" class="btn cancel"
+                                   onclick="clearFunctionWorkSet()"
+                                   value="Очистить данные формы">
+                        </tr>
+                        <tr>
+                            {{ stone_form.stone(class="form-control", placeholder="Направление")}}
+                            {% for error in stone_form.stone.errors %}
+                            <p><span style="color: red;">{{ error }}</span></p>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {{ stone_form.stone_name(class="form-control", id="formGroupExampleInput", placeholder="Введите №")}}
+                            {% for error in stone_form.stone_name.errors %}
+                            <p><span style="color: red;">{{ error }}</span></p>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <button type="submit" name="q" value={{order_client.id}} class="btn">Добавить</button>
+                            <button type="button" class="btn cancel" data-bs-dismiss="modal">Закрыть</button>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--include - вставляет шаблон чата в текущий HTML-файл-->
+<div class="container-fluid">
+    {% include "chat.html" %}
+</div>
+<!--Чертежи/фото проекта проекта-->
+<div class="container-fluid py-4">
+    {% include "show_files.html" %}
+</div>
+<div class="row mt-4">
+    <div class="col-12">
+        <!--    Навигация для вкладок-->
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="pills-home-tab" data-bs-toggle="pill"
+                   data-bs-target="#nav-preproduct" type="button" role="tab" aria-selected="true">Проектная работа</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#nav-slab-part"
+                        type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Слябы/Детали
+                </button>
+            </li>
+        </ul>
+        <div class="container-fluid py-4">
+            <div class="tab-content" id="nav-tabContent">
+                <!--  вкладка препродукт-->
+                <div class="tab-pane fade show active" id="nav-preproduct" role="tabpanel"
+                     aria-labelledby="nav-home-tab" tabindex="0">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card my-4">
+                                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                                        <h6 class="text-white ps-3">Проектные работы</h6>
+                                    </div>
+                                </div>
+                                <div class="card-body px-0 pb-2">
+                                    <div class="table-responsive p-0">
+                                        <table class="table align-items-center mb-0">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                    №
+                                                </th>
+                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                    Работа
+                                                </th>
+                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                    Исполнитель
+                                                </th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                    Статус
+                                                </th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                    Дата начала
+                                                </th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                    Конечная дата
+                                                </th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                    Назначить
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for work in preproduct_work %}
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex px-2 py-1">
+                                                        <div class="d-flex flex-column justify-content-center">
+                                                            <h6 class="mb-0 text-sm">{{loop.index}}</h6>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{work.work.work_type}}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{work.worker.last_name}} {{work.worker.first_name}}</p>
+                                                    <p class="text-xs text-secondary mb-0">
+                                                        {% if work.worker == None%}
+                                                        Пусто
+                                                        {% else %}
+                                                        {{work.worker.employee.job_title}}</p>
+                                                    {% endif %}
+                                                </td>
+                                                <td class="align-middle text-center text-sm">
+                                                    {% for status_work in work.query_preproduct %}
+
+                                                    {% if status_work.status_start == None %}
+                                                    <span class="badge badge-sm bg-gradient-secondary">Ожидает</span>
+
+                                                    {% elif status_work.status_start != None and
+                                                    status_work.status_end == None and
+                                                    status_work.status_problem == None %}
+                                                    <span class="badge badge-sm bg-gradient-success">В работе</span>
+
+                                                    {% elif status_work.status_start != None and
+                                                    status_work.status_end != None %}
+                                                    <span class="badge badge-sm bg-gradient-info">Завершён</span>
+                                                    {% elif status_work.status_problem != None %}
+                                                    <span class="badge badge-sm bg-gradient-danger">Проблема</span>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <span class="text-secondary text-xs font-weight-bold">{%if work.start_work_date %} {{work.start_work_date.strftime("%Y-%m-%d")}} {% endif %}</span>
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <span class="text-secondary text-xs font-weight-bold">{%if work.end_work_date %}{{work.end_work_date.strftime("%Y-%m-%d")}}{% endif %}</span>
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <button type="submit" class="btn btn-primary"
+                                                            id="{{work.id}}"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#ModalAddWorker"
+                                                            onclick="clearFunction1()"
+                                                            style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                                        <i class="material-icons">face</i>
+                                                        Назначить
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="ModalAddWorker">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Введите данные</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="" class="form-container" id="set_worker" method="post">
+                                        {{ set_worker_form.hidden_tag() }}
+                                        <table>
+                                            <tr>
+                                                <input type="button" class="btn cancel"
+                                                       onclick="clearFunctionWorkSet()"
+                                                       value="Очистить данные формы">
+                                            </tr>
+                                            <tr>
+                                                {{ set_worker_form.set_worker.label }}<br>
+                                                {{ set_worker_form.set_worker(class="form-control", id="worker",
+                                                placeholder="Значение")
+                                                }}<br>
+                                                {% for error in set_worker_form.set_worker.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </tr>
+                                            <tr>
+                                                {{ set_worker_form.start_date.label }}<br>
+                                                {{ set_worker_form.start_date(class="form-control",
+                                                id="start_date",
+                                                placeholder="Значение", type="date")
+                                                }}<br>
+                                                {% for error in set_worker_form.start_date.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </tr>
+                                            <tr>
+                                                {{ set_worker_form.end_date.label }}<br>
+                                                {{ set_worker_form.end_date(class="form-control", id="end_date",
+                                                placeholder="Значение", type='date')
+                                                }}<br>
+                                                {% for error in set_worker_form.end_date.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </tr>
+                                            <button type="submit" class="btn">Назначить</button>
+                                            <button type="button" class="btn cancel" data-bs-dismiss="modal">
+                                                Закрыть
+                                            </button>
+                                        </table>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Вкладка слябы-->
+                <div class="tab-pane fade" id="nav-slab-part" role="tabpanel" aria-labelledby="nav-profile-tab"
+                     tabindex="0">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card my-4">
+                                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                                        <h6 class="text-white ps-3">Слябы/Детали</h6>
+                                    </div>
+
+                                    <div class="row">
+                                        <!--Блок  кнопки управления "Опции"-->
+                                        <div class="d-grid gap-2 my-4 d-md-flex justify-content-md-end">
+                                            <div class="dropdown">
+                                                {% if current_user.employee.job_title != "менеджер" %}
+                                                <button class="btn btn-sm bg-gradient-warning dropdown-toggle"
+                                                        type="button" id="dropdownMenuButton"
+                                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                                        style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .60rem;">
+                                                    Опции
+                                                </button>
+                                                {% endif %}
+                                                <ul class="dropdown-menu"
+                                                    aria-labelledby="dropdownMenuButton">
+                                                    {% if current_user.employee.job_title != "начальник производства" %}
+                                                    <li>
+                                                        <form name="form-btn"
+                                                              action="{{ url_for('manage_work_order') }}"
+                                                              method="get" target="_blank">
+                                                            <button type="submit" name="q"
+                                                                    value="{{order_client.id}}"
+                                                                    class="dropdown-item">
+                                                                Добавить работы
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                    {% endif %}
+                                                    {% if current_user.employee.job_title in access %}
+                                                    <li>
+                                                        <div>
+                                                            <form name="form-btn"
+                                                                  action="{{ url_for('manage_work_order') }}"
+                                                                  method="get"
+                                                                  target="_blank">
+                                                                <button type="submit" name="q"
+                                                                        value="{{order_client.id}}"
+                                                                        class="dropdown-item">
+                                                                    Назначить ответсвенного
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </li>
+                                                    {% endif %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body px-0 pb-2">
+                                        <div class="table-responsive p-0">
+                                            <table class="table align-items-center mb-0">
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                        S/P
+                                                    </th>
+                                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                        S/P №
+                                                    </th>
+                                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                        Заказ клиента №
+                                                    </th>
+                                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                        Тип работ
+                                                    </th>
+                                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                        Значение
+                                                    </th>
+                                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                        Статус
+                                                    </th>
+                                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                        Исполнитель работ
+                                                    </th>
+                                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                        Начальная дата
+                                                    </th>
+                                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                        Конечная дата
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for sl in slab %}
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex px-2 py-1">
+                                                            <div class="d-flex flex-column justify-content-center">
+                                                                <h6 class="mb-0 text-sm">S</h6>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                         <p class="text-xs font-weight-bold mb-0">
+                                                            {{sl.number_slab}}
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="text-xs font-weight-bold mb-0">
+                                                            {{sl.order_of_client}}
+                                                        </p>
+                                                    </td>
+                                                    <td class="align-middle">
+                                                        <div class="text-xs font-weight-bold mb-0">
+                                                            <span class="text-xs font-weight-bold mb-0">{{sl.work_set.work_type}}</span>
+                                                        </div>
+                                                        <p class="text-xs mb-0">{{sl.work_set.work_kind}}</p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="text-xs font-weight-bold mb-0">
+                                                            {{sl.value}}</p>
+                                                    </td>
+                                                    <td class="align-middle text-center text-sm">
+                                                        {% for status_work in sl.query_slabworks %}
+                                                        {% if status_work.status_start == None %}
+                                                        <span class="badge badge-sm bg-gradient-secondary">Ожидает</span>
+                                                        {% endif %}
+                                                        {% if status_work.status_start != None and
+                                                        status_work.status_end == None and
+                                                        status_work.status_problem == None and
+                                                        status_work.status_pause == None %}
+                                                        <span class="badge badge-sm bg-gradient-success">В работе</span>
+                                                        {% endif %}
+                                                        {% if status_work.status_start != None and
+                                                        status_work.status_end == None and
+                                                        status_work.status_problem == None and
+                                                        status_work.status_pause != None %}
+                                                        <span class="badge badge-sm bg-gradient-warning">Приостановлен</span>
+                                                        {% endif %}
+                                                        {% if status_work.status_start != None and
+                                                        status_work.status_end != None %}
+                                                        <span class="badge badge-sm bg-gradient-info">Завершён</span>
+                                                        {% endif %}
+                                                        {% if status_work.status_problem != None %}
+                                                        <span class="badge badge-sm bg-gradient-danger">Проблема</span>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </td>
+                                                    {% if sl.set_worker is eq(0) %}
+                                                    <td class="align-middle text-center" style="color: red">
+                                                        <p class="text-xs font-weight-bold mb-0">Не назначен</p>
+                                                    </td>
+                                                    {% else %}
+                                                    <td class="align-middle text-center">
+                                                        <span class="text-secondary text-xs font-weight-bold">{{sl.worker.first_name}} {{sl.worker.last_name}}</span>
+                                                    </td>
+                                                    {% endif %}
+                                                    <td class="align-middle text-center">
+                                                        <span class="text-secondary text-xs font-weight-bold">{% if sl.start_work_date %}{{sl.start_work_date.strftime("%Y-%m-%d")}} {% endif %}</span>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="text-secondary text-xs font-weight-bold">{% if sl.end_work_date %}{{sl.end_work_date.strftime("%Y-%m-%d")}} {% endif %}</span>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                {% for part in parts %}
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex px-2 py-1">
+                                                            <div class="d-flex flex-column justify-content-center">
+                                                                <h6 class="mb-0 text-sm">P</h6>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                         <p class="text-xs font-weight-bold mb-0">
+                                                            {{part.number_part}}
+                                                        </p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="text-xs font-weight-bold mb-0">
+                                                            {{part.order_of_client}}</p>
+                                                    </td>
+                                                    <td class="align-middle">
+                                                        <div class="text-xs font-weight-bold mb-0">
+                                                            <span class="text-xs font-weight-bold mb-0">{{part.work_set_part.work_type}}</span>
+                                                        </div>
+                                                        <p class="text-xs mb-0">{{part.work_set_part.work_kind}}</p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="text-xs font-weight-bold mb-0">
+                                                            {{part.value}}</p>
+                                                    </td>
+                                                    <td class="align-middle text-center text-sm">
+                                                        {% for status_work in part.query_partworks %}
+                                                        {% if status_work.status_start == None %}
+                                                        <span class="badge badge-sm bg-gradient-secondary">Ожидает</span>
+                                                        {% endif %}
+                                                        {% if status_work.status_start != None and
+                                                        status_work.status_end == None and
+                                                        status_work.status_problem == None and
+                                                        status_work.status_pause == None %}
+                                                        <span class="badge badge-sm bg-gradient-success">В работе</span>
+                                                        {% endif %}
+                                                        {% if status_work.status_start != None and
+                                                        status_work.status_end == None and
+                                                        status_work.status_problem == None and
+                                                        status_work.status_pause != None %}
+                                                        <span class="badge badge-sm bg-gradient-warning">Приостановлен</span>
+                                                        {% endif %}
+                                                        {% if status_work.status_start != None and
+                                                        status_work.status_end != None %}
+                                                        <span class="badge badge-sm bg-gradient-info">Завершён</span>
+                                                        {% endif %}
+                                                        {% if status_work.status_problem != None %}
+                                                        <span class="badge badge-sm bg-gradient-danger">Проблема</span>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </td>
+                                                        {% if part.set_worker is eq(0) %}
+                                                    <td class="align-middle text-center" style="color: red">
+                                                        <p class="text-xs font-weight-bold mb-0">Не назначен</p>
+                                                    </td>
+                                                    {% else %}
+                                                    <td class="align-middle text-center">
+                                                        <span class="text-secondary text-xs font-weight-bold">
+                                                            {{part.worker.first_name}} {{part.worker.last_name}}
+                                                        </span>
+                                                    </td>
+                                                    {% endif %}
+                                                    <td class="align-middle text-center">
+                                                        <span class="text-secondary text-xs font-weight-bold">
+                                                            {% if part.start_work_date %}
+                                                            {{part.start_work_date.strftime("%Y-%m-%d")}}
+                                                            {% endif %}
+                                                        </span>
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="text-secondary text-xs font-weight-bold">
+                                                            {% if part.end_work_date %}
+                                                            {{part.end_work_date.strftime("%Y-%m-%d")}}
+                                                            {% endif %}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+//open modal-window "googl-map" and transfer address to serch
+
+    // Отримання елемента по id
+const showMapButton = document.getElementById("show-map");
+
+// Додавання слухача подій
+showMapButton.addEventListener("click", () => {
+  // Отримання адреси з елемента
+  const address = showMapButton.innerText;
+
+  // Створення URL-адреси з параметром пошуку
+  const url = `https://www.google.com/maps/search/?api=1&query=${address}`;
+
+  // Відкриття модального вікна з Google-картою
+  window.open(url, "_blank", "width=800,height=600");
+});
+
+//Изменить активность кнопки
+
+// Получаем ссылки на элементы кнопки и чекбокса
+const disabledbutton = document.getElementById("disabledbutton");
+const customCheck = document.getElementById("customCheck");
+
+// Слушаем изменения состояния чекбокса
+customCheck.addEventListener("change", function() {
+  if (customCheck.checked) {
+    disabledbutton.removeAttribute("disabled");
+  } else {
+    disabledbutton.setAttribute("disabled", "disabled");
+  }
+});
+
+//Изменить активность кнопки
+
+// Получаем ссылки на элементы кнопки и чекбокса
+const closedisabledbutton = document.getElementById("closedisabledbutton");
+const closecustomCheck = document.getElementById("closecustomCheck");
+
+// Слушаем изменения состояния чекбокса
+closecustomCheck.addEventListener("change", function() {
+  if (closecustomCheck.checked) {
+    closedisabledbutton.removeAttribute("disabled");
+  } else {
+    closedisabledbutton.setAttribute("disabled", "disabled");
+  }
+});
+
+//clear form fields
+function clearFunction() {
+  document.getElementById("form1").reset();
+}
+
+//clear data of ofields forms id=set_worker
+function clearFunctionWorkSet(){
+  document.getElementById("start_date").value = "";
+  document.getElementById("end_date").value = "";
+  document.getElementById("worker").selectedIndex = 0;
+}
+//send data part_id to server
+$(document).ready(function(){
+    $(".btn-primary").click(function() {
+        $.ajax({
+            url: '',
+            type: 'get',
+            contentType: 'aplication/json',
+            data:{
+                work_id: $(this).attr('id') // part_id - post to server
+            },
+            success: function(data) {
+                clearFunctionWorkSet();
+            }
+        });
+    });
+});
+</script>
+<script>
+// this function is check of field, which is empty and if field empty will stoped send form and showing alert
+    document.getElementById('add_stone').addEventListener('submit', function (event) {
+        var stoneSelect = document.getElementById('stone');
+        var stoneNameInput = document.getElementById('formGroupExampleInput');
+        var selectedValue = stoneSelect.value;
+        var stoneNameValue = stoneNameInput.value.trim(); // correct
+
+        // check if choice value is "0"
+        if (selectedValue === '0') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Ошибка',
+                text: 'Не выбран камень'
+            });
+            event.preventDefault(); // stop send form
+            return;
+        }
+
+        // check if field is not empty
+        if (stoneNameValue === '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Ошибка',
+                text: 'Название камня не может быть пустым'
+            });
+            event.preventDefault(); // if empty field - stope send form
+        }
+    });
+</script>
+<!--      this script sends data to the server about order approval with a confirmation window + controls the logic of button activity-->
+<script src="{{url_for('static', filename='js/order_client.js')}}"></script>
+
+{% endblock %}

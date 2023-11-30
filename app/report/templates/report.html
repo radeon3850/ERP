@@ -1,0 +1,234 @@
+{% if current_user.specialization_id is ne(0)%}
+{% extends "new_base_bootstrap.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
+
+{% block content %}
+<div class="container-fluid my-0 py-0 min-vh-100">
+    <div class="d-flex justify-content-end">
+    <button class="btn btn-outline-dark btn-sm inline" type="button" id="download-excel">Excel файл</button>
+    </div>
+    <div class="row mb-5">
+        <div class="card mt-4" id="basic-info">
+            <div class="card-header d-flex justify-content-between">
+                <div>
+                <h5 class="mb-0">Отчёт выполненых работ</h5>
+                    <p class="text-sm mb-0">
+                        Отчёт всех работ по сотрудникам и стоимости оплаты
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <div class="input-group input-group-static mb-0">
+                        {{ form.hidden_tag()}}
+                        {{ form.csrf_token }}
+                        {{form.set_worker(class="form-control")}}
+                    </div>
+                    <div class="input-group input-group-static my-0 mx-2">
+                        <input type="date" id="start-date" class="form-control" name="start_date" required>
+                        <input type="date" id="end-date" class="form-control" name="end_date" required>
+                    </div>
+                    <div class="mx-4">
+                        <button class="btn btn-outline-warning btn-sm" type="button" id="filter-button">Фильтр</button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive p-0">
+                <div class="table-responsive p-0" style="max-height: 80vh; overflow-y: auto;">
+                    <table id="work-table" class="table align-items-center mb-0">
+                        <thead>
+                        <tr>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                №
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Вид работ
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Работа
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Значение
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Дата завершения
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Исполнитель работ
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Стоимость работ
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for work in all_statistic %}
+                        <tr>
+                            <td>
+                                <div class="d-flex px-2 py-1">
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="mb-0 text-sm">{{loop.index}}</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="align-middle text-center">
+                                <p class="text-xs font-weight-bold mb-0">
+                                    {{work.query_works.work_title}}
+                                </p>
+                            </td>
+                            <td class="align-middle text-center">
+                                <p class="text-xs font-weight-bold mb-0">
+                                    {{work.query_works.work_type}}
+                                </p>
+                                <p class="text-xs text-secondary mb-0">
+                                    {{work.query_works.work_kind}}
+                                </p>
+                            </td>
+                            <td class="align-middle text-center">
+                                <p class="text-xs font-weight-bold mb-0">
+                                    {% if work.value_work == None %}
+                                    -
+                                    {% else %}
+                                    {{work.value_work}}
+                                    {% endif %}
+                                </p>
+                            </td>
+                            <td class="align-middle text-center">
+                                <p class="text-xs font-weight-bold mb-0">
+                                    {{work.date_fact_end.strftime("%Y-%m-%d")}}
+                                </p>
+                            </td>
+                            <td class="align-middle text-center">
+                                <p class="text-xs font-weight-bold mb-0">
+                                    {{work.query_user.first_name}} {{work.query_user.last_name}}
+                                </p>
+                            </td>
+                            <td class="align-middle text-center">
+                                <span class="text-secondary text-xs font-weight-bold">{% if work.price_work %} {{ '%.2f' % work.price_work }} {% endif %}</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const table = document.getElementById('work-table');
+    const filterButton = document.getElementById('filter-button');
+    const selectUsername = document.getElementById('set_worker');
+
+    function clearTable() {
+        const tbody = table.querySelector('tbody');
+        while (tbody.firstChild) {
+            tbody.removeChild(tbody.firstChild);
+        }
+    }
+
+    function updateTable(startDate, endDate, username) {
+        fetch(`/get_data?start_date=${startDate}&end_date=${endDate}&username=${username}`)
+            .then(response => response.json())
+            .then(data => {
+                clearTable();
+
+                data.forEach((work, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <div class="d-flex flex-column justify-content-center">
+                                <h6 class="mb-0 text-sm">${index + 1}</h6>
+                            </div>
+                        </td>
+                        <td class="align-middle text-center">
+                            <p class="text-xs font-weight-bold mb-0">
+                                ${work.work_title}
+                            </p>
+                        </td>
+                        <td class="align-middle text-center">
+                            <p class="text-xs font-weight-bold mb-0">
+                                ${work.work_type}
+                            </p>
+                            <p class="text-xs text-secondary mb-0">
+                                ${work.work_kind}
+                            </p>
+                        </td>
+                        <td class="align-middle text-center">
+                            <p class="text-xs font-weight-bold mb-0">
+                                ${work.value_work}
+                            </p>
+                        </td>
+                        <td class="align-middle text-center">
+                            <p class="text-xs font-weight-bold mb-0">
+                                ${work.date}
+                            </p>
+                        </td>
+                        <td class="align-middle text-center">
+                            <p class="text-xs font-weight-bold mb-0">
+                                ${work.name}
+                            </p>
+                        </td>
+                        <td class="align-middle text-center">
+                            <span class="text-secondary text-xs font-weight-bold">${work.costs ? work.costs.toFixed(2) : ''}</span>
+                        </td>
+                    `;
+                    table.querySelector('tbody').appendChild(row);
+                });
+                const totalRow = document.createElement('tr');
+                totalRow.innerHTML = `
+                    <td class="text-primary">Всего:</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="align-middle text-primary text-center font-weight-bold">${calculateTotalCost(data).toFixed(2)}</td>
+                `;
+                table.querySelector('tbody').appendChild(totalRow);
+            });
+    }
+
+    filterButton.addEventListener('click', function () {
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
+        const selectedOption = selectUsername.options[selectUsername.selectedIndex];
+        const username = selectedOption.text;
+
+        updateTable(startDate, endDate, username);
+    });
+
+    // Закоментуйте або видаліть виклик updateTable('', ''); після додавання обробника події для кнопки "Filter"
+});
+</script>
+<script>
+    function calculateTotalCost(data) {
+    let total = 0;
+    data.forEach(work => {
+        if (work.costs) {
+            total += work.costs;
+        }
+    });
+    return total;
+}
+</script>
+<script>
+    // Обробник події для кнопки завантаження Excel-файлу
+    document.getElementById('download-excel').addEventListener('click', () => {
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
+        const selectUsername = document.getElementById('set_worker');
+        const selectedOption = selectUsername.options[selectUsername.selectedIndex];
+        const username = selectedOption.text;
+
+        // Формуємо URL для виклику серверної функції
+        const url = `/generate_excel?start_date=${startDate}&end_date=${endDate}&username=${username}`;
+
+        // Відкриваємо нове вікно для завантаження файлу
+        window.open(url, '_blank');
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,218 @@
+{% if current_user.specialization_id is ne(0)%}
+{% extends "new_base_bootstrap.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
+
+{% block content %}
+<div class="container-fluid my-3 py-3 min-vh-100">
+    <div class="my-3">
+    <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card  mb-2">
+                <div class="card-header p-3 pt-2">
+                    <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark shadow text-center border-radius-xl mt-n4 position-absolute">
+                        <i class="material-icons opacity-10">inventory_2</i>
+                    </div>
+                    <div class="text-end pt-1">
+                        <p class="text-sm mb-0 text-capitalize">Количество выполненых работ</p>
+                        <h4 class="mb-0">{{ dict_work['count'] }}</h4>
+                    </div>
+                </div>
+                <hr class="dark horizontal my-0">
+<!--                <div class="card-footer p-3">-->
+<!--                    <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+55% </span>than last week</p>-->
+<!--                </div>-->
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 mt-sm-0 mt-4">
+            <div class="card  mb-2">
+                <div class="card-header p-3 pt-2">
+                    <div class="icon icon-lg icon-shape bg-gradient-primary shadow-primary shadow text-center border-radius-xl mt-n4 position-absolute">
+                        <i class="material-icons opacity-10">leaderboard</i>
+                    </div>
+                    <div class="text-end pt-1">
+                        <p class="text-sm mb-0 text-capitalize">Среднее время выполнения работ</p>
+                        <h4 class="mb-0">{{ dict_work['average_time_work'] }} мин.</h4>
+                    </div>
+                </div>
+                <hr class="dark horizontal my-0">
+<!--                <div class="card-footer p-3">-->
+<!--                    <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+3% </span>than last month</p>-->
+<!--                </div>-->
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 mt-lg-0 mt-4">
+            <div class="card  mb-2">
+                <div class="card-header p-3 pt-2 bg-transparent">
+                    <div class="icon icon-lg icon-shape bg-gradient-success shadow text-center border-radius-md mt-n4 position-absolute">
+                        <i class="material-icons opacity-10">person</i>
+                    </div>
+                    <div class="text-end pt-1">
+                        <p class="text-sm mb-0 text-capitalize ">Количество на сотрудника</p>
+                        <h4 class="mb-0 ">{{ dict_work['count_worker'] }}</h4>
+                    </div>
+                </div>
+                <hr class="horizontal my-0 dark">
+<!--                <div class="card-footer p-3">-->
+<!--                    <p class="mb-0 "><span class="text-success text-sm font-weight-bolder">+1% </span>than yesterday</p>-->
+<!--                </div>-->
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 mt-lg-0 mt-4">
+            <div class="card ">
+                <div class="card-header p-3 pt-2 bg-transparent">
+                    <div class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
+                        <i class="material-icons opacity-10">event</i>
+                    </div>
+                    <div class="text-end pt-1">
+                        <p class="text-sm mb-0 text-capitalize ">Работ за неделю</p>
+                        <h4 class="mb-0 ">+{{ dict_work['count_week'] }}</h4>
+                    </div>
+                </div>
+                <hr class="horizontal my-0 dark">
+<!--                <div class="card-footer p-3">-->
+<!--                    <p class="mb-0 ">Just updated</p>-->
+<!--                </div>-->
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="row mb-5">
+        <div class="card mt-4" id="basic-info">
+            <div class="card-header d-flex justify-content-between">
+                <div>
+                    <h5 class="mb-0">Отчёт по количеству выполненых работ</h5>
+                    <p class="text-sm mb-0">
+                        Отчёт "Количество выполненных работ за период" для слябов и деталей
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <div class="input-group input-group-static mb-0">
+                        -
+                    </div>
+                    <div class="input-group input-group-static my-0 mx-2">
+                        {{ form.hidden_tag()}}
+                        {{ form.csrf_token }}
+                        {{form.set_worker(class="form-control")}}
+                        <input type="date" id="start-date" class="form-control" name="start_date" required>
+                        <input type="date" id="end-date" class="form-control" name="end_date" required>
+                    </div>
+                    <div class="mx-4">
+                        <button class="btn btn-outline-warning btn-sm" type="button" id="filter-button">Фильтр</button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive p-0">
+                <div class="table-responsive p-0">
+                    <table id="work-table" class="table align-items-center mb-0">
+                        <thead>
+                        <tr>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                №
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Исполнитель работ
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Количество работ
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Среднее время (мин.)
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody id="table-body">
+                        {% for work in list_statistic %}
+                        <tr>
+                            <td>
+                                <div class="d-flex px-2 py-1">
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="mb-0 text-sm">{{loop.index}}</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="align-middle text-center">
+                                <p class="text-xs font-weight-bold mb-0">
+                                    {{work['name']}}
+                                </p>
+                                <p class="text-xs text-secondary mb-0">
+                                    ({{work['specialization']}})
+                                </p>
+                            </td>
+                            <td class="align-middle text-center">
+                                <p class="text-xs font-weight-bold mb-0">
+                                    {{work['count_work']}}
+                                </p>
+                            </td>
+                            <td class="align-middle text-center">
+                                <p class="text-xs font-weight-bold mb-0">
+                                    {% if work['average_time_work'] == None %}
+                                    -
+                                    {% else %}
+                                    {{work['average_time_work']}}
+                                    {% endif %}
+                                </p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+   $("#filter-button").click(function() {
+      // We get the filter values from the page
+      var worker = $("#set_worker").val();
+      var startDate = $("#start-date").val();
+      var endDate = $("#end-date").val();
+
+      // We check whether the user is selected
+      if (worker === "0") {
+         worker = null; // If the user is not selected, we set the value of worker to null
+      }
+
+      // We send an AJAX request to the server with filter parameters
+      $.ajax({
+         url: "/filter_data",
+         method: "POST",
+         data: {
+            worker: worker,
+            startDate: startDate,
+            endDate: endDate
+         },
+         dataType: "json",
+         success: function(data) {
+            $("#table-body").empty();
+            $.each(data, function(index, item) {
+                var row = '<tr>' +
+                    '<td>' + item.number + '</td>' +
+                    '<td class="align-middle text-center">' +
+                    '<p class="text-xs font-weight-bold mb-0">' + item.worker + '</p>' +
+                    '<p class="text-xs text-secondary mb-0">' + item.specialization + '</p>' +
+                    '</td>' +
+                    '<td class="align-middle text-center">' +
+                    '<p class="text-xs font-weight-bold mb-0">' + item.workCount + '</p>' +
+                    '</td>' +
+                    '<td class="align-middle text-center">' +
+                    '<p class="text-xs font-weight-bold mb-0">' + item.averageTime + '</p>' +
+                    '</td>' +
+                    '</tr>';
+                $("#table-body").append(row);
+            });
+         },
+         error: function() {
+            console.error("An error occurred during an AJAX request");
+         }
+      });
+   });
+});
+</script>
+
+
+{% endblock %}

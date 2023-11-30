@@ -1,0 +1,115 @@
+<!--Блок отправки коментария по производству + отобраєжение других коментариев процесса производства-->
+<!--h-25 - це висота для увімкнення скрол бара  "overflow-auto" - цe параметр що оприділяє коли скрол бар має увімкнутися-->
+
+  <div class="collapse my-3" id="collapsewindow">
+    <div class="card card-body">
+        <div class="card-body pt-3">
+            <div class="mb-1">
+                <div class="mb-1" id="text-list" class="my-block" style="height: 300px; overflow: auto;">
+                <div class="d-flex">
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="h7 mt-0">Менеджер</h6>
+                        <!-- Проверка на какой странице для отображения коментария менеджера-->
+                        {% if order_client %}
+
+                        <p class="text-sm" id="none">
+                            {{order_client.object_description}}
+                        </p>
+                        {% endif %}
+                        <p class="text-sm">
+                            <!-- получаем описание обєкта (коментарий менеджера) при переходе к выполению работ подтягиваем описание-->
+                            {% if work %}
+                            {% if (work.id_preproduct)!= None %}
+                            {{work.query_preproduct.order_client.object_description}}
+                            {% elif (work.id_work_slabs)!= None %}
+                            {{work.query_slabworks.order_client.object_description}}
+                            {% elif (work.id_work_part)!= None %}
+                            {{work.query_partworks.order_client.object_description}}
+                            {% endif %}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                {% for post in posts %}
+                <div class="d-flex">
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="h7 mt-0">{{post.author.first_name}} {{post.author.last_name}} <div class="text-sm">({{post.author.employee.job_title}})</div> </h6>
+                        <div class="text-sm">{{post.timestamp}}</div>
+                        <p class="text-sm">
+                            <!-- получаем описание обєкта (коментарий менеджера) при переходе к выполению работ подтягиваем описание-->
+                            {{post.body}}
+                        </p>
+                    </div>
+                </div>
+                {% endfor %}
+                </div>
+                <form id="text-form">
+                    <div class="d-flex mt-4">
+                        <div class="flex-grow-1 my-auto">
+                            <div class="input-group input-group-static">
+                                <textarea class="form-control" placeholder="Введите ваш текст" rows="4" spellcheck="false" id="content"></textarea>
+                            </div>
+                        </div>
+                        <button class="btn bg-gradient-primary btn-sm mt-auto mb-0 ms-2" type="submit" name="button" id="order" value="{{order}}"><i class="material-icons text-sm">send</i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //спрятать-паказать коментарии к заказу
+const showButton = document.getElementById('showButton');
+const collapseExample = document.getElementById('collapsewindow');
+
+showButton.addEventListener('click', function() {
+  if (collapseExample.classList.contains('show')) {
+    collapseExample.classList.remove('show');
+    showButton.textContent = 'Показать';
+    showButton.classList.remove('btn-secondary');
+    showButton.classList.add('btn-primary');
+  } else {
+    collapseExample.classList.add('show');
+    showButton.textContent = 'Спрятать комментарий';
+    showButton.classList.remove('btn-primary');
+    showButton.classList.add('btn-secondary');
+  }
+});
+
+    // Отображение коментария, также отправка на сервер
+    $(document).ready(function() {
+    $('#text-form').submit(function(event) {
+        event.preventDefault();
+        var content = $('#content').val();
+        var value = $('#order').val();
+        if (content.trim() === '') {
+            alert('Коментарий не может быть пустым.');
+            return;
+        }
+        var now = new Date();
+        var timestamp = now.toLocaleString('uk-UA', { dateStyle: 'short', timeStyle: 'short' });
+        var html = '<div class="mb-1" id="text-list">';
+        html += '<div class="d-flex">';
+        html += '<div class="flex-grow-1 ms-3">';
+        html += '<h6 class="h5 mt-0">{{current_user.first_name}} {{current_user.last_name}} <div class="text-sm"></div> </h6>';
+        html += '<div class="text-sm">' + timestamp + '</div>';
+        html += '<p class="text-sm">' + content + '</p>';
+        html += '</div></div></div>';
+        $.ajax({
+            url:'',
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify({content: content, value:value}),
+            success: function(response) {
+                if (response.success) {
+                    $('#text-list').append(html);
+                    $('#content').val('');
+                }
+            }
+        });
+    });
+});
+
+</script>

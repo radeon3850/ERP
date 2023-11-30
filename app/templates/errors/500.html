@@ -1,0 +1,20 @@
+{% extends "errors/base_error.html" %}
+
+{% block content %}
+
+<div class="page-header align-items-start min-vh-100"
+     style="background-image: url('{{ url_for('static', filename='img/errors/my1z3xpc.png') }}');">
+  <span class="mask bg-gradient-dark opacity-6"></span>
+  <div class="container my-auto">
+    <div class="row">
+      <div class="col-lg-12 m-auto text-center">
+        <h1 class="display-1 text-bolder text-white">Error 500</h1>
+        <h2 class="text-white">Что-то пошло не так</h2>
+        <p class="lead text-white">Мы предлагаем вам перейти на главную страницу, пока мы решаем эту проблему.</p>
+        <a type="button" class="btn btn-outline-white mt-4" href="{{ url_for('index') }}">Перейти на главную</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,167 @@
+{% if current_user.specialization_id is ne(2)%}
+{% extends "new_base_bootstrap.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row justify-content-md-center">
+        <div class="col-12">
+            <div class="card min-vh-100">
+                <!-- Modal -->
+                <div class="modal fade" id="addclientModalSignUp" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body p-0">
+                                <div class="card card-plain">
+                                    <div class="card-header pb-0 text-left">
+                                        <h5 class="text-center">Добавить клиента</h5>
+                                        <p class="text-center mb-0">Введите данные клиента</p>
+                                    </div>
+                                    <div class="card-body pb-3">
+                                        <form action="" role="form text-left"  method="post">
+                                            {{ form_add_client.hidden_tag() }}
+                                            <div class="input-group input-group-outline my-3">
+                                                {{ form_add_client.first_name.label(class="form-label") }}
+                                                {{ form_add_client.first_name(class="form-control") }}
+                                                {% for error in form_add_client.first_name.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="input-group input-group-outline my-3">
+                                                {{ form_add_client.last_name.label(class="form-label") }}
+                                                {{ form_add_client.last_name(class="form-control") }}
+                                                {% for error in form_add_client.last_name.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="input-group input-group-outline my-3">
+                                                {{ form_add_client.phone.label(class="form-label") }}
+                                                {{ form_add_client.phone(class="form-control") }}
+                                                {% for error in form_add_client.phone.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </div>
+                                             <div class="row">
+                                                 <div class="col-lg-6 col-md-8 col-12 my-0 mx-auto">
+                                                    <div class="text-center">
+                                                {{form_add_client.submit( class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0")}}
+                                            </div>
+                                                 </div>
+                                            </div>
+                                            <div class="row">
+                                                 <div class="col-lg-6 col-md-8 col-12 my-0 mx-auto">
+                                                    <button type="button"
+                                                            class="btn bg-gradient-secondary btn-lg btn-rounded w-100 mt-4 mb-0"
+                                                            data-bs-dismiss="modal">
+                                                        Отмена
+                                                    </button>
+                                                 </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="card-footer text-center pt-0 px-sm-4 px-1">
+                                        <div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container my-auto">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-8 col-12 mx-auto">
+                            <div class="card z-index-0 fadeIn3 fadeInBottom">
+                                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                                    <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+                                        <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Введите данные по заказу</h4>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <button class="btn bg-gradient-warning w-100 my-4 mb-2" data-bs-toggle="modal"
+                                                data-bs-target="#addclientModalSignUp">Добавить клиента
+                                        </button>
+                                    </div>
+                                    <p></p>
+                                    <form action="" method="post" class="text-start" id="form_addorder">
+                                        {{ form.hidden_tag() }}
+                                        <div class="input-group input-group-static mb-4">
+                                            <label for="clientIdmControlSelect1" class="ms-0"></label>
+                                            {{form.client_id(class="form-control", id="clientIdmControlSelect1")}}
+                                        </div>
+                                        <div class="input-group input-group-outline my-3">
+                                            {{ form.name_order.label(class="form-label") }}
+                                            {{ form.name_order(size=64, class="form-control") }}
+                                            {% for error in form.name_order.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="input-group input-group-outline my-3">
+                                            <label id="object-label" class="form-label">Описание объека</label>
+                                            {{ form.object_description(class="form-control", id="object-input") }}
+                                            {% for error in form.object_description.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="input-group input-group-outline my-3">
+                                            {{ form.address.label(class="form-label") }}
+                                            {{form.address (size=150, class="form-control") }}
+                                            {% for error in form.name_order.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="input-group input-group-outline my-3">
+                                            {{form.deadline (type="date", class="form-control") }}
+                                            {% for error in form.name_order.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="form-check form-switch d-flex align-items-center mb-3">
+                                            {{ form.checkbox_measurements(class="form-check-input", type="checkbox")}}
+                                            {{ form.checkbox_measurements.label(class="form-check-label mb-0 ms-3") }}
+
+                                        </div>
+                                        <div class="form-check form-switch d-flex align-items-center mb-3">
+                                            {{ form.checkbox_blueprint(class="form-check-input", type="checkbox")}}
+                                            {{ form.checkbox_blueprint.label(class="form-check-label mb-0 ms-3") }}
+                                        </div>
+                                        <div class="form-check form-switch d-flex align-items-center mb-3">
+                                            {{ form.checkbox_control(class="form-check-input", type="checkbox",
+                                            disabled=True)}}
+                                            {{ form.checkbox_control.label(class="form-check-label mb-0 ms-3") }}
+                                        </div>
+
+                                        <div class="text-center">
+                                            {{ form.submit(class="btn bg-gradient-primary w-100 my-4 mb-2") }}
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Removes the label-text signature of the field after the user starts entering text
+    const inputField = document.querySelector('#object-input');
+    const label = document.querySelector('#object-label');
+
+    inputField.addEventListener('input', () => {
+      if (inputField.value.trim() !== '') {
+        label.style.display = 'none';
+      } else {
+        label.style.display = 'block';
+      }
+    });
+</script>
+<script src="{{ url_for('static', filename='js/sweet_alert.js') }}"></script>
+{% endblock %}

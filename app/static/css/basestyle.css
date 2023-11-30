@@ -1,0 +1,17 @@
+    body {
+      position: relative;
+      //background-image: url('images/15185970_5575468.jpg');
+      opacity:0.99;
+    }
+     body::before {
+      content: ''; /* додатковий шар для картинки */
+      position: absolute; /* відносно батьківського елемента */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: inherit; /* успадковуємо фонову картинку від батьківського елемента */
+      filter: blur(0px); /* застосовуємо ефект розмиття тільки до шару з картинкою */
+      z-index: -1; /* розміщуємо шар під змістом */
+      background-attachment: fixed;
+    }
