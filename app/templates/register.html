@@ -5,59 +5,136 @@
 {% endif %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h4>Регистрация нового пользователя</h4>
-            <form action="" method="post">
-                {{ form.hidden_tag() }}
-                <p>
-                    {{ form.first_name.label }}<br>
-                    {{ form.first_name(size=64) }}<br>
-                    {% for error in form.first_name.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </p>
-                <p>
-                    {{ form.last_name.label }}<br>
-                    {{ form.last_name(size=64) }}<br>
-                    {% for error in form.last_name.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </p>
-                {{ form.specialization_id.label }}<br>
-                {{ form.specialization_id }}<br>
-                <p>
-                    {{ form.username.label }}<br>
-                    {{ form.username(size=64) }}<br>
-                    {% for error in form.username.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </p>
-                <p>
-                    {{ form.phone.label }}<br>
-                    {{ form.phone(size=64) }}<br>
-                    {% for error in form.phone.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </p>
-                <p>
-                    {{ form.password.label }}<br>
-                    {{ form.password(size=64) }}<br>
-                    {% for error in form.password.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </p>
-                <p>
-                    {{ form.password2.label }}<br>
-                    {{ form.password2(size=64) }}<br>
-                    {% for error in form.password2.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </p>
-                <p>{{ form.submit(class='btn btn-primary') }}</p>
-            </form>
+<div class="container-fluid py-4">
+    <div class="row justify-content-md-center">
+        <div class="col-12">
+            <div class="card min-vh-100">
+                <div class="container my-auto">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-8 col-12 mx-auto">
+                            <div class="card z-index-0 fadeIn3 fadeInBottom">
+                                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                                    <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+                                        <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Регистрация нового пользователя</h4>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <form action="" method="post" class="text-start" id="form_addorder">
+                                            {{ form.hidden_tag() }}
+                                        <div class="input-group input-group-outline my-3">
+                                            {{ form.first_name.label(class="form-label") }}
+                                            {{ form.first_name(size=64, class="form-control") }}
+                                            {% for error in form.first_name.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="input-group input-group-outline my-3">
+                                            {{ form.last_name.label(class="form-label") }}
+                                            {{ form.last_name(size=64, class="form-control") }}
+                                            {% for error in form.last_name.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="input-group input-group-static mb-4">
+                                            {{form.specialization_id(class="form-control")}}
+                                        </div>
+                                        <div class="input-group input-group-outline my-3">
+                                            {{ form.username.label(class="form-label") }}
+                                            {{ form.username(size=64, class="form-control") }}
+                                            {% for error in form.username.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="input-group input-group-outline my-3">
+                                            {{ form.phone.label(class="form-label") }}
+                                            {{ form.phone(size=64, class="form-control") }}
+                                            {% for error in form.phone.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="input-group input-group-outline my-3">
+                                            {{ form.password.label(class="form-label") }}
+                                            {{ form.password(size=64, class="form-control", type="text") }}
+                                            {% for error in form.password.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="input-group input-group-outline my-3">
+                                            {{ form.password2.label(class="form-label") }}
+                                            {{ form.password2(size=64, class="form-control", type="text") }}
+                                            {% for error in form.password2.errors %}
+                                            <span style="color: red;">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="text-center">
+                                            {{ form.submit(class="btn bg-gradient-primary w-100 my-4 mb-2") }}
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<!--<div class="container">-->
+<!--    <div class="row justify-content-center">-->
+<!--        <div class="col-md-6">-->
+<!--            <h4>Регистрация нового пользователя</h4>-->
+<!--            <form action="" method="post">-->
+<!--                {{ form.hidden_tag() }}-->
+<!--                <p>-->
+<!--                    {{ form.first_name.label }}<br>-->
+<!--                    {{ form.first_name(size=64) }}<br>-->
+<!--                    {% for error in form.first_name.errors %}-->
+<!--                    <span style="color: red;">[{{ error }}]</span>-->
+<!--                    {% endfor %}-->
+<!--                </p>-->
+<!--                <p>-->
+<!--                    {{ form.last_name.label }}<br>-->
+<!--                    {{ form.last_name(size=64) }}<br>-->
+<!--                    {% for error in form.last_name.errors %}-->
+<!--                    <span style="color: red;">[{{ error }}]</span>-->
+<!--                    {% endfor %}-->
+<!--                </p>-->
+<!--                {{ form.specialization_id.label }}<br>-->
+<!--                {{ form.specialization_id }}<br>-->
+<!--                <p>-->
+<!--                    {{ form.username.label }}<br>-->
+<!--                    {{ form.username(size=64) }}<br>-->
+<!--                    {% for error in form.username.errors %}-->
+<!--                    <span style="color: red;">[{{ error }}]</span>-->
+<!--                    {% endfor %}-->
+<!--                </p>-->
+<!--                <p>-->
+<!--                    {{ form.phone.label }}<br>-->
+<!--                    {{ form.phone(size=64) }}<br>-->
+<!--                    {% for error in form.phone.errors %}-->
+<!--                    <span style="color: red;">[{{ error }}]</span>-->
+<!--                    {% endfor %}-->
+<!--                </p>-->
+<!--                <p>-->
+<!--                    {{ form.password.label }}<br>-->
+<!--                    {{ form.password(size=64) }}<br>-->
+<!--                    {% for error in form.password.errors %}-->
+<!--                    <span style="color: red;">[{{ error }}]</span>-->
+<!--                    {% endfor %}-->
+<!--                </p>-->
+<!--                <p>-->
+<!--                    {{ form.password2.label }}<br>-->
+<!--                    {{ form.password2(size=64) }}<br>-->
+<!--                    {% for error in form.password2.errors %}-->
+<!--                    <span style="color: red;">[{{ error }}]</span>-->
+<!--                    {% endfor %}-->
+<!--                </p>-->
+<!--                <p>{{ form.submit(class='btn btn-primary') }}</p>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+
 {% endblock %}

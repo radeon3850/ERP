@@ -20,6 +20,7 @@ class RegistrationForm(FlaskForm):
     first_name = StringField('Имя', validators=[DataRequired()])
     last_name = StringField('Фамилия', validators=[DataRequired()])
     choices = [(spec.id, spec.job_title) for spec in (db.session.query(Specialization).all())]
+    choices.insert(0, (0, 'Выбрать специализацию'))
     specialization_id = SelectField('Выбрать специализацию', choices=choices)
     username = StringField('Логин', validators=[DataRequired()])
     phone = StringField('Телефон', validators=[DataRequired()])
@@ -51,7 +52,6 @@ class AddOrder(FlaskForm):
     # get data for db Table "clietn" and creat list for transfer to choices
     choices_client = [(client.id, (client.first_name, client.last_name, client.phone_number)
                 ) for client in (db.session.query(Clients).all())]
-
     client_id = SelectField('Выбрать Клиента', choices=choices_client)
     name_order = StringField('Название заказа: ', validators=[DataRequired()])
     object_description = TextField('Описание Обэкта: ', validators=[validators.Optional()], widget=TextArea())

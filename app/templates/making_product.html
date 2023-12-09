@@ -104,7 +104,7 @@ input:checked + .slider:before {
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
                                     Коментарий
                                 </th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">
                                     Статус
                                 </th>
                             </tr>
@@ -116,8 +116,7 @@ input:checked + .slider:before {
                                 <td>
                                     <div class="d-flex px-3 py-1">
                                         <div>
-                                            <img src="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/img/logos/small-logos/logo-spotify.svg"
-                                                 class="avatar me-3" alt="image">
+                                           <img src="/static/img/small-logos/health-svgrepo-com.svg" width="30" height="30">
                                         </div>
                                     </div>
                                 </td>
@@ -137,8 +136,7 @@ input:checked + .slider:before {
                                 <td>
                                     <div class="d-flex px-3 py-1">
                                         <div>
-                                            <img src="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/img/logos/small-logos/logo-spotify.svg"
-                                                 class="avatar me-3" alt="image">
+                                            <img src="/static/img/small-logos/health-svgrepo-com.svg" width="30" height="30">
                                         </div>
                                     </div>
                                 </td>
@@ -147,10 +145,12 @@ input:checked + .slider:before {
                                         {{work.query_slabworks.stone.type_stone}}
                                     </p>
                                 </td>
-                                <td>
+                                <td class="align-middle text-center text-sm">
                                     <div class="d-flex px-3 py-1">
                                         <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="mb-0 text-sm">{{work.query_slabworks.work_set.work_type}}</h6>
+                                            <p class="text-xs text-secondary mb-0">Сляб</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{work.query_slabworks.work_set.work_type}}</p>
+                                            <h6 class="mb-0 text-sm">{{work.query_slabworks.work_set.work_kind}}</h6>
                                         </div>
                                     </div>
                                 </td>
@@ -167,8 +167,7 @@ input:checked + .slider:before {
                                 <td>
                                     <div class="d-flex px-3 py-1">
                                         <div>
-                                            <img src="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/img/logos/small-logos/logo-spotify.svg"
-                                                 class="avatar me-3" alt="image">
+                                           <img src="/static/img/small-logos/health-svgrepo-com.svg" width="30" height="30">
                                         </div>
                                     </div>
                                 </td>
@@ -178,7 +177,9 @@ input:checked + .slider:before {
                                     </p>
                                 </td>
                                  <td class="align-middle text-center text-sm">
-                                    <p class="text-center font-weight-normal mb-0">{{work.query_partworks.work_set_part.work_type}}</p>
+                                     <p class="text-xs text-secondary mb-0">Деталь</p>
+                                     <p class="text-xs font-weight-bold mb-0">{{work.query_partworks.work_set_part.work_type}}</p>
+                                     <h6 class="mb-0 text-sm">{{work.query_partworks.work_set_part.work_kind}}</h6>
                                 </td>
                                 <td class="align-middle text-center text-sm">
                                     <p class="text-center font-weight-normal mb-0">{{work.query_partworks.value}}</p>
@@ -262,7 +263,7 @@ input:checked + .slider:before {
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="staticBackdropLabel">Трудности</h5>
+                                            <h5 class="modal-title" id="staticBackdropLabel">Проблема при выполнении задания?</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                         </div>
@@ -274,7 +275,7 @@ input:checked + .slider:before {
                                                 Закрыть
                                             </button>
                                             <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                                                    id="problem">Отправить
+                                                    id="problem" {% if work.id_preproduct != None %} disabled {% endif %}>Отправить
                                             </button>
                                         </div>
                                     </div>

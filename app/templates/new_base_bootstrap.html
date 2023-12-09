@@ -70,6 +70,7 @@
 <hr class="horizontal light mt-0 mb-2">
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
+        {% if current_user.specialization_id != 2 and current_user.specialization_id != 5 and current_user.specialization_id != 7 %}
         <li class="nav-item">
           <a class="nav-link text-white {% if current_page == 'Главная' %}active bg-gradient-primary{% endif %}" href="{{ url_for('index') }}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -78,6 +79,8 @@
             <span class="nav-link-text ms-1">Главная</span>
           </a>
         </li>
+        {% endif %}
+        {% if current_user.specialization_id != 2 and current_user.specialization_id != 5 %}
         <li class="nav-item">
           <a class="nav-link text-white {% if current_page == 'Заказы' %}active bg-gradient-primary{% endif %}" href="{{ url_for('orders') }}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -86,6 +89,8 @@
             <span class="nav-link-text ms-1">Заказы</span>
           </a>
         </li>
+        {% endif %}
+        {% if current_user.specialization_id != 2 and current_user.specialization_id != 5 and current_user.specialization_id != 7 %}
         <li class="nav-item">
           <a class="nav-link text-white {% if current_page == 'Kanban' %}active bg-gradient-primary{% endif %}" href="{{ url_for('kanban') }}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -94,14 +99,17 @@
             <span class="nav-link-text ms-1">Канбан</span>
           </a>
         </li>
+        {% endif %}
+        {% if current_user.specialization_id != 7 %}
         <li class="nav-item">
-          <a class="nav-link text-white {% if current_page == 'Workplace' %}active bg-gradient-primary{% endif %}" href="{{ url_for('workplace') }}">
+          <a class="nav-link text-white {% if current_page == 'Задания' %}active bg-gradient-primary{% endif %}" href="{{ url_for('workplace') }}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">view_in_ar</i>
             </div>
             <span class="nav-link-text ms-1">Задания</span>
           </a>
         </li>
+        {% endif %}
       <!--change for the show-->
         {% if current_user.specialization_id == 4 or current_user.specialization_id == 6 %}
         <li class="nav-item">
@@ -131,7 +139,7 @@
         </li>
         {% endif %}
         <li class="nav-item">
-          <a class="nav-link text-white {% if current_page == 'Profile' %}active bg-gradient-primary{% endif %} " href="{{url_for('profile')}}">
+          <a class="nav-link text-white {% if current_page == 'Личный профиль' %}active bg-gradient-primary{% endif %} " href="{{url_for('profile')}}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">person</i>
             </div>

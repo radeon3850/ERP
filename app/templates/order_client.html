@@ -432,9 +432,11 @@
                                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                     Конечная дата
                                                 </th>
+                                                {% if current_user.specialization_id != 7 %}
                                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                     Назначить
                                                 </th>
+                                                {% endif %}
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -486,6 +488,8 @@
                                                 <td class="align-middle text-center">
                                                     <span class="text-secondary text-xs font-weight-bold">{%if work.end_work_date %}{{work.end_work_date.strftime("%Y-%m-%d")}}{% endif %}</span>
                                                 </td>
+                                            <!--cant show this column of table if specialization of customer is account Manager-->
+                                                {% if current_user.specialization_id != 7 %}
                                                 <td class="align-middle text-center">
                                                     <button type="submit" class="btn btn-primary"
                                                             id="{{work.id}}"
@@ -497,6 +501,7 @@
                                                         Назначить
                                                     </button>
                                                 </td>
+                                                {% endif %}
                                             </tr>
                                             {% endfor %}
                                             </tbody>

@@ -13,7 +13,7 @@
         Добавить работы
     </button>
 </div>
-<!-- Modal added work-->
+<!-- Modal add work-->
 <div class="modal fade" id="addEventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle"
      aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
@@ -33,7 +33,7 @@
                         {{ kanban_form.hidden_tag() }}
                         {{ kanban_form.csrf_token }}
                         <div class="row mt-1">
-                            <div class="col-3">
+                            <div class="col-2">
                                 <div class="form-group">
                                     {% for subfield in kanban_form.radio_field %}
                                     <div class="form-check mb-3">
@@ -44,9 +44,9 @@
                                     {% endfor %}
                                 </div>
                             </div>
-                            <div class="border col-9">
+                            <div class="border col-10">
                                 <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                                    <table class="table align-items-center" style="width: 822px;">
+                                    <table class="table align-items-center" style="width: 920px;">
                                         <thead>
                                         <tr>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
@@ -83,7 +83,7 @@
                                             </th>
                                         </tr>
                                         </thead>
-                                        <!--  body Table DONT DELL!!! this block is for paste data from server when dinamic added data to page in table from Modal Window-->
+                                        <!--  body Table DON'T DELL!!! this block is for paste data from server when dinamic added data to page in table from Modal Window-->
 
                                         <!--   In this tbody we past work that we added in modal window -->
                                         <tbody>

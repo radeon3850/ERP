@@ -51,10 +51,9 @@ def check_data(value):
 @login_required
 def index():
     current_page = "Основная панель"
-    user_spec = current_user.specialization_id  # user specialization
 
     try:
-        if user_spec == 2:
+        if current_user.employee.job_title not in access_list:
             next_page = request.args.get('next')
             if not next_page or url_parse(next_page).netloc != '':
                 next_page = url_for('workplace')
@@ -507,7 +506,7 @@ def kanban():
 @app.route('/workplace', methods=['GET', 'POST'])
 @login_required
 def workplace():
-    current_page = 'Workplace'
+    current_page = 'Задания'
 
     performance_work = PerformanceWork.query.order_by(PerformanceWork.id).filter_by(
         status_end=None).all()  # get all performance work
@@ -1473,8 +1472,6 @@ def get_form_kanban():
         # блок добавления в соответсвующую таблицу workslabs/workparts
         if get_sp == 'slab':
             if checked_value is not None and checked_number_value is not None:
-                print(checked_value)
-                print(checked_number_value)
                 work_data = SlabWorks(order_of_client=number_order, number_slab=number, stone_id=stone_id,
                                       stone_name=stone_name, thickness=thickness, value=checked_value, set_worker=0,
                                       slab_works=work_id, date_time=date_time_now())
