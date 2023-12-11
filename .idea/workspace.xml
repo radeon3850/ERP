@@ -4,18 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="56595b86-a89c-49c4-afe9-cff898115f0c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="56595b86-a89c-49c4-afe9-cff898115f0c" name="Changes" comment="changes - acsses list">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/report/templates/report.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/report/templates/report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/report/templates/report_work_count.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/report/templates/report_work_count.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/kanban.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/kanban.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/making_product.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/making_product.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/change_login_password.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/change_login_password.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/templates/new_base_bootstrap.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/new_base_bootstrap.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/templates/order_client.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/order_client.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/templates/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/profile.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/workplace.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/workplace.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/timeline.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/timeline.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/erp.db" beforeDir="false" afterPath="$PROJECT_DIR$/erp.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -75,6 +74,14 @@
       <option name="presentableId" value="Default" />
       <updated>1701371770461</updated>
     </task>
+    <task id="LOCAL-00001" summary="changes - acsses list">
+      <created>1702156245934</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1702156245934</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -87,5 +94,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="changes - acsses list" />
+    <option name="LAST_COMMIT_MESSAGE" value="changes - acsses list" />
   </component>
 </project>

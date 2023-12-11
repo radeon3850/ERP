@@ -78,7 +78,7 @@ document.querySelector('select[name="pets"]').addEventListener('change', functio
                 timelineContent.className = 'timeline-content pt-1';
                 timelineContent.innerHTML = '<h6 class="text-dark text-sm font-weight-bold mb-0">' + event.amount + ', ' + event.title + '</h6>' +
                     '<p class="text-secondary text-xs mt-1 mb-0">' + event.date + '</p>' +
-                    '<p class="text-sm text-dark mt-3 mb-2">' + event.description + '</p>';
+                    '<p class="text-sm text-dark mt-3 mb-2">' + event.type + '</p>';
 
                 timelineBlock.appendChild(timelineStep);
                 timelineBlock.appendChild(timelineContent);

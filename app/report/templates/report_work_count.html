@@ -88,16 +88,15 @@
                     </p>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <div class="input-group input-group-static mb-0">
-                        -
-                    </div>
-                    <div class="input-group input-group-static my-0 mx-2">
-                        {{ form.hidden_tag()}}
-                        {{ form.csrf_token }}
-                        {{form.set_worker(class="form-control")}}
-                        <input type="date" id="start-date" class="form-control" name="start_date" required>
-                        <input type="date" id="end-date" class="form-control" name="end_date" required>
-                    </div>
+                        <div class="input-group input-group-static my-0 mx-2">
+                            {{ form.hidden_tag()}}
+                            {{ form.csrf_token }}
+                            {{form.set_worker(class="form-control")}}
+                        </div>
+                        <div class="input-group input-group-static my-0 mx-2">
+                            <input type="date" id="start-date" class="form-control" name="start_date" required>
+                            <input type="date" id="end-date" class="form-control" name="end_date" required>
+                        </div>
                     <div class="mx-4">
                         <button class="btn btn-outline-warning btn-sm" type="button" id="filter-button">Фильтр</button>
                     </div>

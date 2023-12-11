@@ -1979,7 +1979,7 @@ def refresh_timeline():
                         'title': f'{event.work_set_part.work_type}',
                         'type': f'{event.work_set_part.work_kind}',
                         'date': f'{event.start_work_date.isoformat()}',
-                        'description': f'{event.work_set_part.work_type}'
+                        'description': f'{event.work_set_part.work_kind}'
                     }
                     events.append(event_data)  # add  data to list
             else:
@@ -1988,11 +1988,28 @@ def refresh_timeline():
                     'title': f'{event.work_set_part.work_type}',
                     'type': f'{event.work_set_part.work_kind}',
                     'date': f'{event.start_work_date.isoformat()}',
-                    'description': f'{event.work_set_part.work_type}'
+                    'description': f'{event.work_set_part.work_kind}'
                 }
                 events.append(event_data)  # add  data to list
 
         return jsonify(events)
     except Exception as error:
         return jsonify({'error': str(error)}), 400
+
+# this function is dell stone from order - get ajax responce from page after click button
+@app.route('/delstone', methods=['POST'])
+def delstone():
+    # responce data from page q - id_order, s - stone_id
+    stone_id = request.form.get('s')
+    order_client_id = request.form.get('q')
+    # get data from db table ListOrderStone
+    dell_stone = ListOrderStone.query.filter_by(order_of_client=order_client_id, id_stone=stone_id).first_or_404()
+
+    # dell data from table
+    db.session.delete(dell_stone)
+    db.session.commit()
+
+    response = {'success':'successfuly'}
+
+    return jsonify(response)
 
