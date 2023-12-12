@@ -1,0 +1,7 @@
+.git
+*.log
+send_email.py
+venv
+__pycache__
+myenv
+shpora.py
