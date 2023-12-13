@@ -5,8 +5,8 @@ from flask_login import current_user, login_required
 
 class MyAdminIndexView(AdminIndexView):
     def is_accessible(self):
-        allowed_user_ids = [4]  # Список ідентифікаторів користувачів, які мають доступ до адмін-панелі
-        if current_user.id in allowed_user_ids:
+        allowed_user_ids = ['главный менеджер', 'директор']  # List of user IDs that have access to the admin panel
+        if current_user.employee.job_title in allowed_user_ids:
             return current_user.is_authenticated
         return False
 

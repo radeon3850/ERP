@@ -127,10 +127,13 @@ def reportworkcount():
         get_list_all_work_finish = db.session.query(StatisticsUser).filter(StatisticsUser.id_works <= 57).all() #Все работы законченные для слябов и деталей
         get_count_user_work = db.session.query(StatisticsUser.id_user).distinct().filter(StatisticsUser.id_works <= 57).all()# получение уникальных значений (юзеров выполнявших работу)
         all_time_work = db.session.query(db.func.sum(StatisticsUser.all_time_work))\
-        .filter(StatisticsUser.id_works <= 57)\
-        .scalar() # cумма по столбцу all_time_work - время работы
-        average_time_work = round((all_time_work/len(get_list_all_work_finish))*60, 2) # среднее время работы
-        average_count_work_user = (len(get_list_all_work_finish)/len(get_count_user_work)) # среднее количество работ на сотрудника
+        .filter(StatisticsUser.id_works <= 57).scalar() # cумма по столбцу all_time_work - время работы
+        if get_list_all_work_finish is None:
+            average_time_work = round((all_time_work/len(get_list_all_work_finish))*60, 2) # среднее время работы
+            average_count_work_user = (len(get_list_all_work_finish)/len(get_count_user_work)) # среднее количество работ на сотрудника
+        else:
+            average_time_work = 0
+            average_count_work_user = 0
 
         today = datetime.now()
 
